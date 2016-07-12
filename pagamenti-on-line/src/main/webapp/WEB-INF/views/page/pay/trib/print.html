@@ -1,0 +1,79 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+    <title></title>
+</head>
+
+<body>
+
+<div class="container">
+    <div class="row">
+
+        <div style="margin: 0 auto; width: 600px; border: 1px solid #CCC; border-radius: 10px; padding: 20px;">
+            <div style="text-align: left;">
+                <div  >
+                    <img style=" width: 25%;float: right;" th:src="@{'/resources/img/logo_pagopa.png'}" src="#"
+                         alt="Stemma"/>
+                    </div>
+                <div >
+                    <img style="width: 25%;" th:src="@{'/resources/img/logo_comune.png'}" src="#"
+                         alt="Stemma"/>
+                    </div>
+                <div style="border-bottom: 1px solid #ccc;" >
+                    <h4 style="text-align: center">
+                        <!--b><span th:text="#{app.comune}">ENTE</span></b-->
+                        <br/>
+                        Ricevuta di Pagamento Online
+                    </h4>
+                </div>
+
+                <div class="row" style="margin: 5px 0 0;">
+                    <div>
+                        <h5>PAGAMENTO EFFETTUATO PER: <b th:text="${pagamento.tributo.nome}">TRIBUTO</b></h5>
+                        <h5>RATA: <b th:text="${pagamento.rata.nome}">RATA</b></h5>
+                    </div>
+                </div>
+
+                <div class="row" style="margin: 5px 0 0;">
+                    <div style="border-top: 1px solid #ccc;">
+                        <h5>EFFETTUATO SUL C/C n. <b th:text="${pagamento.tributo.ente.provider.name}">NCC</b></h5>
+                        <h5>DI &euro; <b th:text="${#numbers.formatDecimal(pagamento.importo, 1,'POINT',2,'COMMA')}">IMPORTO</b>
+                        </h5>
+                        <h5>INTESTATO A: <b th:text="${pagamento.tributo.ente.name}">INTESTATO</b></h5>
+                    </div>
+                </div>
+
+                <div class="row" style="margin: 5px 0 0;">
+                    <div style="border-top: 1px solid #ccc;">
+                        <h5>ESEGUITO DA: <b><span th:if="${pagamento.esecutore.firstname != null}"
+                                                  th:text="${pagamento.esecutore.firstname}">NOME</span> <span
+                                th:text="${pagamento.esecutore.lastname}">COGNOME</span> (<span
+                                th:text="${pagamento.esecutore.lastname}">CF</span>)</b></h5>
+                        <h5>IN DATA: <b th:text="${#dates.format(pagamento.dataPagamento, 'dd/MM/yyyy HH:mm:ss')}">DATA</b></h5>
+                        <h5>N. OPERAZIONE: <b th:text="${pagamento.refnumber}"> NOPER</b></h5>
+                        <h5>CAUSALE: <b th:text="${pagamento.causale}">CAUSALE</b></h5>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row text-center no-print">
+                <button type="submit" class="print btn btn-primary btn-sm" onclick="window.print();">
+                    <i class="glyphicon glyphicon-print"></i> Stampa
+                </button>
+
+                <button type="submit" class="print btn btn-warning btn-sm" onclick="window.close();">
+                    <i class="glyphicon glyphicon-log-out"></i> Chiudi
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

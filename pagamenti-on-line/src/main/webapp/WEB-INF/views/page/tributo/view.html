@@ -1,0 +1,307 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Tributo
+                </div>
+
+                <div class="panel-body">
+                    <form th:action="@{${T(app.App).TRIBUTO}}" class="form-horizontal" th:object="${tributo}"
+                          method="post">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <input type="hidden" class="form-control" th:field="*{id}"/>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="enti" class="control-label">Ente</label>
+                            <div>
+                                <select th:field="*{ente.id}" class="form-control">
+                                    <option th:each="ente : ${enti}"
+                                            th:value="${ente.id}" th:text="${ente.name}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="code" class="control-label">Codice</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{codice}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="name" class="control-label">Nome</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{nome}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="responsabile" class="control-label">Responsabile</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{responsabile}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="name" class="control-label">Tipologia</label>
+                            <div>
+                                <select th:field="*{tipologiaTributo.id}" class="form-control">
+                                    <option th:each="tipologia : ${tipologie}"
+                                            th:value="${tipologia.id}" th:text="${tipologia.nome}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="anno" class="control-label">Anno di riferimento</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{anno}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="descrizione" class="control-label">Descrizione</label>
+                            <div>
+                                <textarea th:field="*{descrizione}" class="form-control" name="editor1" id="editor1"
+                                          rows="10"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">
+                                Salva
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="panel panel-default" th:if="${tributo.id != null}">
+                <div class="panel-heading">
+                    <i class="glyphicon glyphicon-th"></i>&nbsp;&nbsp;RATA
+                    <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).RATA}(tribid=${tributo.id})}">
+                        <i class="glyphicon glyphicon-plus"></i> Nuova
+                    </a>
+                </div>
+
+                <table class="table table-condensed table-striped table-bordered table-hover table-responsive" th:unless="${#lists.isEmpty(rate)}">
+                    <tr class="info">
+                        <th class="text-center">Custom ID</th>
+                        <th class="text-center">Nome</th>
+                        <th class="text-center">Descrizione:</th>
+                        <th class="text-center">Data Da:</th>
+                        <th class="text-center">Data A:</th>
+                        <th class="text-center">Conto Corrente:</th>
+                        <th></th>
+                    </tr>
+
+                    <tr th:each="rata : ${rate}">
+                        <td th:text="${rata.customId}"></td>
+                        <td th:text="${rata.nome}"></td>
+                        <td th:text="${rata.descrizione}"></td>
+                        <td th:text="${#dates.format(rata.dataDa, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${#dates.format(rata.dataA, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${rata.causale}"></td>
+                        <td class="text-center">
+                            <a class="btn btn-primary btn-xs" th:href="@{|${T(app.App).RATA}/${rata.id}|}">
+                                <i class="glyphicon glyphicon-edit"></i> Apri
+                            </a>
+                            &nbsp;&nbsp;&nbsp;
+                            <a class="btn btn-danger btn-xs" th:href="@{|${T(app.App).RATA}/${rata.id}|(op=D)}">
+                                <i class="glyphicon glyphicon-remove"></i> Elimina
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="panel-body" th:if="${#lists.isEmpty(rate)}">
+                    Nessuna rata presente.
+                </div>
+
+            </div>
+        </div>
+        <!--div class="row row-offcanvas row-offcanvas-left row-container">
+            <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+                <div>
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;AGGIUNGI UN NUOVO TRIBUTO
+                            <a th:href="@{|${T(app.App).TRIBUTO}/${tributo.id}|}" th:if="${tributo.id != null}">
+                                #<span th:text="${tributo.id}"></span>
+                            </a>
+
+                            <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).TRIBUTI}}">
+                                <i class="glyphicon glyphicon-list"></i> Visualizza tutti
+                            </a>
+                        </div>
+                        <div class="panel-body">
+
+                            <form th:action="@{${T(app.App).TRIBUTO}}" class="form-horizontal" th:object="${tributo}"
+                                  method="post" >
+
+                                <fieldset>
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                                        <span th:text="${message}"></span>
+                                    </div>
+                                    <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                                        <span th:text="${error}"></span>
+                                    </div>
+
+                                    <input type="hidden" class="form-control" th:field="*{id}" />
+
+                                    <div class="form-group">
+                                        <label for="ente.id" class="col-md-3 control-label">Ente:</label>
+                                        <div class="col-md-8">
+                                            <select th:field="*{ente.id}" class="form-control">
+                                                <option th:each ="ente : ${enti}"
+                                                        th:value="${ente.id}" th:text="${ente.name}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="codice" class="col-md-3 control-label">Codice:</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" th:field="*{codice}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="nome" class="col-md-3 control-label">Nome:</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" th:field="*{nome}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="responsabile" class="col-md-3 control-label">Responsabile:</label>
+                                        <div class="col-md-8">
+                                            <input type="text" class="form-control" th:field="*{responsabile}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="tipologiaTributo.id" class="col-md-3 control-label">Tipologia:</label>
+                                        <div class="col-md-8">
+                                            <select th:field="*{tipologiaTributo.id}" class="form-control">
+                                                <option th:each ="tipologia : ${tipologie}"
+                                                        th:value="${tipologia.id}" th:text="${tipologia.nome}"></option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="anno" class="col-md-3 control-label">Anno di Riferimento:</label>
+                                        <div class="col-md-8">
+                                            <input type="number" class="form-control" th:field="*{anno}" />
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="descrizione" class="col-md-3 control-label">Descrizione:</label>
+                                        <div class="col-md-8">
+                                            <textarea th:field="*{descrizione}" class="form-control" name="editor1" id="editor1" rows="10" ></textarea>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                <i class="glyphicon glyphicon-floppy-disk"></i> Salva
+                                            </button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default" th:if="${tributo.id != null}">
+                        <div class="panel-heading">
+                            <i class="glyphicon glyphicon-th"></i>&nbsp;&nbsp;RATA
+                            <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).RATA}(tribid=${tributo.id})}">
+                                <i class="glyphicon glyphicon-plus"></i> Nuova
+                            </a>
+                        </div>
+
+                        <table class="table table-condensed table-striped table-bordered table-hover table-responsive" th:unless="${#lists.isEmpty(rate)}">
+                            <tr class="info">
+                                <th class="text-center">Custom ID</th>
+                                <th class="text-center">Nome</th>
+                                <th class="text-center">Descrizione:</th>
+                                <th class="text-center">Data Da:</th>
+                                <th class="text-center">Data A:</th>
+                                <th class="text-center">Conto Corrente:</th>
+                                <th></th>
+                            </tr>
+
+                            <tr th:each="rata : ${rate}">
+                                <td th:text="${rata.customId}"></td>
+                                <td th:text="${rata.nome}"></td>
+                                <td th:text="${rata.descrizione}"></td>
+                                <td th:text="${#dates.format(rata.dataDa, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${#dates.format(rata.dataA, 'dd/MM/yyyy')}"></td>
+                                <td th:text="${rata.causale}"></td>
+                                <td class="text-center">
+                                    <a class="btn btn-primary btn-xs" th:href="@{|${T(app.App).RATA}/${rata.id}|}">
+                                        <i class="glyphicon glyphicon-edit"></i> Apri
+                                    </a>
+                                    &nbsp;&nbsp;&nbsp;
+                                    <a class="btn btn-danger btn-xs" th:href="@{|${T(app.App).RATA}/${rata.id}|(op=D)}">
+                                        <i class="glyphicon glyphicon-remove"></i> Elimina
+                                    </a>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <div class="panel-body" th:if="${#lists.isEmpty(rate)}">
+                            Nessuna rata presente.
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <hr/>
+                <footer th:substituteby="page/fragments/footerTag :: footerTag" />
+
+                <script type="text/javascript">
+                    CKEDITOR.replace('editor1');
+                </script>
+            </div-->
+    </div>
+
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+
+</body>
+</html>

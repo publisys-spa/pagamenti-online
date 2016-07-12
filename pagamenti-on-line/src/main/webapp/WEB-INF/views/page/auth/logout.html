@@ -1,0 +1,23 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+    <head><title></title></head>
+
+    <body th:onload="'window.location='+@{#{url.ims.service}}+';'" >
+
+       <div class="container" style="display:none;">
+           <hr/>
+            <footer th:substituteby="page/fragments/footerTag :: footerTag" />
+        </div>
+       
+       <script type="text/javascript" th:inline="javascript">
+            $(document).ready(function() {
+                //window.location= [[@{#{url.ims.service}}]];
+                window.location=[[@{'/'}]];
+            });
+        </script>
+       
+    </body>
+</html>

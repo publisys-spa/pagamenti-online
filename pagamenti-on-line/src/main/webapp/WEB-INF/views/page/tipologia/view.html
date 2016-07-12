@@ -1,0 +1,158 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Tipologia</div>
+
+                <div class="panel-body">
+                    <form th:action="@{${T(app.App).TIPOLOGIA}}" class="form-horizontal" th:object="${tipologia}"
+                          method="post">
+
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <input type="hidden" class="form-control" th:field="*{id}" />
+
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="name"  class="control-label">Nome</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{nome}" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="name"  class="control-label">Denominazione</label>
+                            <div>
+                                <input type="text" class="form-control"  th:field="*{descrizione}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="fiscalcode" class="control-label">Tipo</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{tipo}" />
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit" >
+                                Salva
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!--div class="panel panel-default">
+                    <div class="panel-heading">
+                        <i class="glyphicon glyphicon-th-list"></i>&nbsp;&nbsp;AGGIUNGI UNA NUOVA TIPOLOGIA
+                        <a th:href="@{|${T(app.App).TIPOLOGIA}/${tipologia.id}|}" th:if="${tipologia.id != null}">
+                            #<span th:text="${tipologia.id}"></span>
+                        </a>
+
+                        <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).TIPOLOGIE}}">
+                            <i class="glyphicon glyphicon-list"></i> Visualizza tutte
+                        </a>
+
+                    </div>
+                    <div class="panel-body">
+
+                        <form th:action="@{${T(app.App).TIPOLOGIA}}" class="form-horizontal" th:object="${tipologia}"
+                              method="post" >
+
+                            <fieldset>
+                                <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                                    <ul>
+                                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                                    </ul>
+                                </div>
+
+                                <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                                    <span th:text="${message}"></span>
+                                </div>
+                                <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                                    <span th:text="${error}"></span>
+                                </div>
+
+                                <input type="hidden" class="form-control" th:field="*{id}" />
+
+                                <div class="form-group">
+                                    <label for="nome" class="col-md-3 control-label">Nome:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" th:field="*{nome}" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="descrizione" class="col-md-3 control-label">Descrizione:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" th:field="*{descrizione}" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tipo" class="col-md-3 control-label">Tipo:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" th:field="*{tipo}" />
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label for="codiceRadice" class="col-md-3 control-label">Codice radice:</label>
+                                    <div class="col-md-8">
+                                        <input type="text" class="form-control" th:field="*{codiceRadice}" />
+                                    </div>
+                                </div>
+
+                                <div class="form-group text-center">
+                                    <div class="col-md-12">
+                                        <button type="submit" class="btn btn-primary btn-sm">
+                                            <i class="glyphicon glyphicon-floppy-disk"></i> Salva
+                                        </button>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </form>
+
+                    </div>
+                </div-->
+
+            </div>
+
+            <hr/>
+            <footer th:substituteby="page/fragments/footerTag :: footerTag" />
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-container">
+        <div class="col-lg-12 col-md-12">
+            <br class="hidden-xs hidden-sm"/>
+            <p><img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo.png}"
+                    alt="PagoPA Logo"/><b>Benvenuto su pagoPA</b>
+                della Regione Basilicata, un'iniziativa che consente a cittadini e imprese di pagare in modalit&agrave;
+                elettronica la Pubblica Amministrazione.<br/>
+                <br/><img class="hidden-xs hidden-sm img-responsive box-shadow"
+                          th:src="@{/resources/css/img/pagopabanner.jpg}" alt="PagoPA Banner"/>
+            </p>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <p>Garantisce a privati e aziende:<br/>
+                - sicurezza e affidabilit&agrave; nei pagamenti;<br/>
+                - semplicit&agrave; e flessibilit&agrave; nella scelta delle modalit&agrave; di pagamento;<br/>
+                - trasparenza nei costi di commissione.<br/>
+            </p>
+        </div>
+        <div class="col-md-6 col-lg-6">
+            <p>
+                Garantisce alle pubbliche amministrazioni:<br/>
+                - certezza e automazione nella riscossione degli incassi;<br/>
+                - riduzione dei costi e standardizzazione dei processi interni;<br/>
+                - semplificazione e digitalizzazione dei servizi.<br/>
+                <br/>
+            </p>
+        </div>
+        <div class="col-md-12 col-lg-12 hidden-xs hidden-sm">
+            <div class="slider1">
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+                <div class="slide">
+                    <div class="media thumbnail carousel-element">
+                        <img class="img-responsive pull-left logopa" th:src="@{/resources/css/img/logo1x1.png}"
+                             alt="PagoPA Logo"/>
+                        <div class="media-body">
+                            <h6 class="media-heading">
+                                <small>Addizionale Gas Naturale</small>
+                            </h6>
+                            <a class="pull-right" href="#">Paga&nbsp;<i class="fa fa-arrow-circle-o-right"
+                                                                        aria-hidden="true"></i>&nbsp;</a></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-12 col-lg-12" sec:authorize="isAnonymous()">
+            <p>Per ricercare pagamenti gi&agrave; effettuati accedi alla sezione Storico Pagamenti.<br/>
+                Stai accedendo al sistema in modalit&agrave; non autenticata.<br/>
+                Accedendo a pagoPA in modalit&agrave; autenticata potrai consultare la tua Posizione Debitoria in forma
+                protetta e riservata.<br/>
+                Per l'accesso autenticato, se sei in possesso la Carta Nazionale dei Servizi (CNS), inserisci la carta
+                nel lettore e utilizza il pulsante Accedi mediante CNS. </p>
+            <p class="text-center"><a th:href="@{${T(app.App).HOME}}">
+                <button class="btn btn-default btn-facebook"  type="button">Clicca qui per accedere</button>
+            </a></p>
+            <p>
+                <br/><b>pagoPA</b> &egrave; stato realizzato da AgID in attuazione dell'art. 5 del Codice
+                dell'Amministrazione Digitale e dal D.L. 179/2012.
+            </p>
+        </div>
+
+        <div class="section-heading col-md-12" sec:authorize="hasRole('ROLE_USER')">
+
+            <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+                   th:unless="${#lists.isEmpty(debiti)}">
+                <thead>
+                <tr class="info">
+                    <th colspan="6">Versamenti in Scadenza</th>
+                </tr>
+                </thead>
+                <thead>
+                <tr class="info">
+                    <th>Scadenza</th>
+                    <th>Causale - (Ente - Tributo)</th>
+                    <th>N&deg; Operazione</th>
+                    <th>Importo Dovuto</th>
+                    <th>Stato Pagamento</th>
+                    <th>Operazioni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="debito : ${debiti}">
+
+                    <td th:if="${debito.dataScadenza != null}" th:text="${#dates.format(debito.dataScadenza, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                    <td th:if="${debito.dataScadenza == null}" ></td>
+                    <td th:text='${debito.causale}'></td>
+                    <td th:text='${debito.codVersamentoEnte}'></td>
+                    <td th:text='${#numbers.formatDecimal(debito.importoDovuto, 1,"POINT",2,"COMMA")}'></td>
+                    <td th:text='${debito.stato}'></td>
+                    <td class="text-center">
+                        <table>
+                            <tr>
+                                <td><a th:href='@{|${T(app.App).PAGAMENTO_SPONTANEO +"?pid=" + debito.codVersamentoEnte}|}'  class="btn btn-primary btn-sm" target="_blank">
+                                    <i class="fa fa-info" aria-hidden="true"></i>
+                                </a></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+                   th:if="${#lists.isEmpty(debiti)}">
+                <thead>
+                <tr class="info">
+                    <th>Versamenti in Scadenza</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Nessun debito presente</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="section-heading col-md-12" sec:authorize="hasRole('ROLE_USER')">
+            <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+                   th:unless="${#lists.isEmpty(pagamenti)}">
+                <thead>
+                <tr class="info">
+                    <th colspan="6">Ultimi 5 pagamenti Effettuati</th>
+                </tr>
+                </thead>
+                <thead>
+                <tr class="info">
+                    <th>Data Pagamento</th>
+                    <th>Causale - (Ente - Tributo)</th>
+                    <th>N&deg; Operazione</th>
+                    <th>Importo Pagato</th>
+                    <th>Stato Pagamento</th>
+                    <th>Operazioni</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pagamento : ${pagamenti}">
+                    <td th:text="${#dates.format(pagamento.dataPagamento, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                    <td th:text='${pagamento.causale + " - (" + pagamento.ente.name + " - "+ pagamento.tributo.nome+")"}'></td>
+                    <td th:text='${pagamento.refnumber}'></td>
+                    <td th:text='${#numbers.formatDecimal(pagamento.importo, 1,"POINT",2,"COMMA")}'></td>
+                    <td th:text='${pagamento.statoPagamento}'></td>
+                    <td class="text-center">
+                        <table>
+                            <tr>
+                                <td><a th:href='@{|${T(app.App).PAGAMENTO_SPONTANEO +"?pid=" + pagamento.pid}|}' class="btn btn-primary btn-sm" target="_blank">
+                                    <i class="fa fa-info" aria-hidden="true"></i>
+                                </a></td>
+                                <td> <a th:href="@{|${T(app.App).PAGAMENTO_PRINT}/${pagamento.id}|}"
+                                        th:if="${pagamento.statoPagamento == 'ESEGUITO'}"
+                                        class="btn btn-info btn-sm" target="_blank">
+                                    <i class="fa fa-print" aria-hidden="true"></i>
+                                </a></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+                   th:if="${#lists.isEmpty(pagamenti)}">
+                <thead>
+                <tr class="info">
+                    <th>Ultimi 5 pagamenti Effettuati</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Nessun pagamento presente.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+
+</body>
+</html>

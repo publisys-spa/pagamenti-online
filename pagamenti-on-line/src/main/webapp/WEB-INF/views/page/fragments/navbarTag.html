@@ -1,0 +1,36 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
+<header class="navbar navbar-default navbar-fixed-top hidden-print" id="navbar" th:fragment="navbarTag">
+
+    <div class="navbar-header container" th:inline="text">
+        <div class="row">
+            <div class="navbar__title_container">
+                <h1>
+                    <img class="navbar_banner__logo fluid" th:src="@{/resources/css/img/loghi/regbas.png}"
+                         alt="Regione Basilicata"/>
+                    <a class="hidden-xs hidden-sm hidden-md">
+                        <span>Regione Basilicata</span>
+                    </a>
+                </h1>
+                <ul class="nav nav-tabs">
+                    <li><a href="#" th:href="@{${T(app.App).HOME}}">Home</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_SPONTANEO}}">Pagamenti Spontanei</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_DEBITORIO}}">Posizione Debitoria</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_STORICO}}">Storico Pagamenti</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_STORICO}}"><i class="fa fa-shopping-cart"></i></a></li>
+                    <li sec:authorize="${!isAuthenticated()}"><a href="#" th:href="@{${T(app.App).HOME}}"><i
+                            class="fa fa-sign-in"></i>&nbsp;&nbsp;[[#{menu.accedi}]]</a></li>
+                    <li sec:authorize="${isAuthenticated()}"><a class="cursor-default" href="#" th:inline="text"><i
+                            class="fa fa-user"></i>&nbsp;&nbsp;[[${session.ulogged.firstname}]]
+                        [[${session.ulogged.lastname}]]</a></li>
+                    <li sec:authorize="${isAuthenticated()}"><a th:href="@{${T(app.App).LOGOUT}}"><span
+                            class="fa fa-sign-out"></span>&nbsp;&nbsp;[[#{menu.logout}]]</a></li>
+                </ul>
+            </div><!--/.navbar-collapse -->
+        </div>
+    </div>
+</header>
+</html>

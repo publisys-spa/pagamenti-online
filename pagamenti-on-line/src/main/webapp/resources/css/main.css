@@ -1,0 +1,379 @@
+/* ==========================================================================
+   custom styles
+   ========================================================================== */
+
+.clearfix {
+    display: block;
+    clear: both;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+}
+html,body {
+    height:100%;
+}
+body {
+    /*color: #838383;*/
+    padding-top: 90px;
+}
+footer {
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 20px;
+}
+.input-group[class*=col-] {
+    padding-left: 15px;
+}
+
+.navbar-inverse {
+    background-color: #28416e;
+    border-color: #122952;
+    /*    background-color: #000;
+        border-color: #080808;*/
+}
+.navbar-inverse .navbar-nav>li>a {
+    color: #f1f1f1;
+}
+.navbar-inverse .navbar-nav>.open>a, .navbar-inverse .navbar-nav>.open>a:focus, .navbar-inverse .navbar-nav>.open>a:hover {
+    background-color: #28416e;
+    border-color: #122952;
+}
+
+.navbar-inverse a.navbar-brand img{
+    height: auto;
+    width: 80px;
+}
+
+.navbar-nav > li > a {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.datepicker {
+    padding: 6px 12px;
+}
+
+/* BOX */
+.bs-box {
+    position: relative;
+    padding: 45px 15px 15px;
+    margin: 0 0 15px;
+    border-color: #e5e5e5 #eee #eee;
+    border-style: solid;
+    border-width: 1px 0;
+}
+
+.bs-box:after {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #959595;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.bs-intestatario:after {
+    content: "Dati Intestatario Veicolo"
+}
+.bs-beneficiario:after {
+    content: "Dati Beneficiario"
+}
+.bs-pagamento:after {
+    content: "Dati Pagamento"
+}
+.bs-contravvenzione:after {
+    content: "Dati Contravvenzione"
+}
+.bs-carta-credito:after {
+    content: "Dati Carta di Credito"
+}
+
+
+/* back-to-top */
+#back-to-top:hover {
+    text-decoration: none;
+    color: #fff;
+    /*color: #428bca;*/
+}
+#back-to-top {
+    color: #999;
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 9999;
+    width: 45px;
+    height: 45px;
+    display: block;
+    background: #222;
+    background: rgba(0, 0, 0, 0.75);
+    font-size: 16px;
+    text-align: center;
+    line-height: 45px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+a.top-link:hover{
+    text-decoration: none;
+}
+
+
+/* icon loading */
+.icon-refresh {
+    font-size: 12px;
+}
+.icon-refresh-animate {
+    -webkit-animation-name: rotateThis;
+    -webkit-animation-duration: .5s;
+    -webkit-animation-timing-function: linear;
+    -webkit-animation-iteration-count: infinite;
+
+    -moz-animation-name: rotateThis;
+    -moz-animation-duration: .5s;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+
+    -o-animation-name: rotateThis;
+    -o-animation-duration: .5s;
+    -o-animation-iteration-count: infinite;
+    -o-animation-timing-function: linear;
+
+    animation-name: rotateThis;
+    animation-duration: .5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+@-webkit-keyframes rotateThis {
+    from { -webkit-transform: scale( 1 ) rotate( 0deg );   }
+    to   { -webkit-transform: scale( 1 ) rotate( 360deg ); }
+}
+@-moz-keyframes rotateThis {
+    from { -moz-transform: scale( 1 ) rotate( 0deg );   }
+    to   { -moz-transform: scale( 1 ) rotate( 360deg ); }
+}
+@-o-keyframes rotateThis {
+    from { -o-transform: scale( 1 ) rotate( 0deg );   }
+    to   { -o-transform: scale( 1 ) rotate( 360deg ); }
+}
+@keyframes rotateThis {
+    from { transform: scale( 1 ) rotate( 0deg );   }
+    to   { transform: scale( 1 ) rotate( 360deg ); }
+}
+
+/* ALIGN */
+.align-center {
+    text-align: center;
+}
+.align-left {
+    text-align: left;
+}
+.align-right {
+    text-align: right;
+}
+.align-justify {
+    text-align: justify;
+}
+/* NAVBAR */
+.navbar-toggle .icon-pointer {
+    display: block;
+    width: 3px;
+    height: 3px;
+}
+.navbar-toggle .icon-pointer + .icon-pointer {
+    margin-top: 4px;
+}
+.navbar-default .navbar-toggle .icon-pointer {
+    background-color: #cccccc;
+}
+.navbar-inverse .navbar-toggle .icon-pointer {
+    background-color: #ffffff;
+}
+/* MENU */
+#left-menu {
+    padding-top: 50px;
+}
+/* LOGIN */
+.login-container {
+    padding: 0;
+    margin: 60px auto 0 auto;
+    background: #f9f9f9;
+    border: 1px solid #d5d5d5;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+.login-container .content {
+    padding: 0 25px 20px;
+}
+.login-container h1 {
+    margin-bottom: .4em;
+    font-size: 32px;
+}
+.login-container .login-fields .field {
+    margin-bottom: 1.25em;
+}
+.login-container .login-fields label {
+    display: none;
+}
+.login-container .login-fields input {
+    font-size: 13px;
+    box-shadow: inset 2px 2px 4px #f1f1f1;
+    height: 40px;
+}
+.login-container .login-actions {
+    margin-bottom: 1.25em;
+    text-align: right;
+}
+.login-container .input-group-addon {
+    border-right: 0;
+    border-bottom-left-radius: 4px !important;
+    border-top-left-radius: 4px !important;
+}
+.login-extra {
+    margin: 1.5em auto;
+    text-align: center;
+    line-height: 19px;
+    text-shadow: 1px 1px 0 #fff;
+}
+
+.login-extra footer{
+    text-align: left;
+}
+
+/* ERROR */
+.error-container {
+    margin-top: 4em;
+    margin-bottom: 4em;
+    text-align: center;
+}
+.error-container h1 {
+    margin-bottom: .5em;
+    font-size: 120px;
+    line-height: 1em;
+}
+.error-container h2 {
+    margin-bottom: .75em;
+    font-size: 28px;
+}
+.error-container .error-details {
+    margin-bottom: 1.5em;
+    font-size: 16px;
+}
+.error-container .error-actions a {
+    margin: 0 .5em;
+}
+/* INDEX */
+div.banner div,
+div.info div.info-image {
+    text-align: center;
+}
+div.banner {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+div.banner a:hover {
+    text-decoration: none;
+}
+div.banner h2 {
+    font-weight: normal;
+    font-size: 25px;
+}
+div.banner div.row div p {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+div.info {
+    text-align: justify;
+}
+.info-divider {
+    margin: 40px 0; /* Space out the Bootstrap <hr> more */
+}
+.info-heading {
+    margin-top: 0;
+    font-weight: 300;
+    line-height: 1;
+    letter-spacing: -1px;
+}
+@media (min-width: 768px) {
+    .banner {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .info-heading {
+        font-size: 30px;
+    }
+}
+/* home */
+.link li {
+    margin-bottom: .75em;
+}
+
+/* modulistica*/
+div.modulistica a {
+    text-decoration: none;
+}
+/* contatti */
+.support-contact hr {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* LIST */
+.panel-heading {
+    min-height: 40px;
+}
+.results .table .action-col {
+    text-align: center;
+    width: 100px;
+}
+.results .table .email-col {
+    text-align: center;
+    width: 50px;
+}
+.mypaginator ul.pagination {
+    margin-bottom: 0;
+}
+.mypaginator .nresults {
+    font-size: 11px;
+}
+
+div.pagamenti-result{
+    min-width: 1000px;
+    overflow-x: scroll;
+}
+
+div.pagamenti-result table tr td{
+    white-space: nowrap;
+}
+
+.form-horizontal-tributo .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.green {
+    color: green;
+}
+
+@media print {
+    .print {
+        display: none;
+    }
+}
+
+.glyphicon-refresh-animate {
+    -animation: spin .7s infinite linear;
+    -webkit-animation: spin2 .7s infinite linear;
+}
+
+@-webkit-keyframes spin2 {
+    from { -webkit-transform: rotate(0deg);}
+    to { -webkit-transform: rotate(360deg);}
+}
+
+@keyframes spin {
+    from { transform: scale(1) rotate(0deg);}
+    to { transform: scale(1) rotate(360deg);}
+}

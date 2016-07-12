@@ -1,0 +1,48 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<div id="footer" class="hidden-print" tabindex="0" th:fragment="footerTag">
+    <footer>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-10 col-sm-10 col-md-12">
+                    <p class="footer__title h3">&copy; 2016 Regione Basilicata</p>
+                    <p> Il portale &egrave; ottimizzato per
+                        <a href="https://www.microsoft.com/it-it/windows/microsoft-edge">Microsoft Edge </a>,
+                        <a href="http://www.mozilla.org/it/firefox/new/">Mozilla Firefox</a> e
+                        <a href="https://www.google.com/chrome?hl=it">Google Chrome</a>.
+                        Si consiglia di utilizzare le versioni pi&ugrave; aggiornate di tali browser per una navigazione
+                        ottimale. </p>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="col-xs-12 footer__links clearfix">
+                    <li><a th:href="@{${T(app.App).HOME}}">Home</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).INFO}}" title="info">Info</a></li>
+                    <li><a href="#" title="privacy policy">Privacy</a></li>
+                    <li><a href="#" title="note legali">Note legali</a></li>
+                    <li><a href="#" title="credits">Credits</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).CONTATTI}}">Contatti</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#page_top" title="torna all'inizio del contenuto" class="scrollto_top sr-only"><span></span></a>
+    <script th:src="@{/resources/js/jquery.min.js}"></script>
+    <script th:src="@{/resources/js/bootstrap.min.js}"></script>
+    <script th:src="@{/resources/js/combined.js}"></script>
+    <script th:src="@{/resources/js/jquery.bxslider/jquery.bxslider.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.slider1').bxSlider({
+                slideWidth: 200,
+                minSlides: 5,
+                maxSlides: 10,
+                slideMargin: 10
+            });
+        });
+    </script>
+</div>
+</html>

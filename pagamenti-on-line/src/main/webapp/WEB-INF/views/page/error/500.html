@@ -1,0 +1,46 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-container">
+        <div class="col-md-12">
+            <div class="error-container">
+                <h1>Oops!</h1>
+                <h2>500 Internal Server Error</h2>
+                <div class="error-details">
+                    Spiacente, si &egrave; verificato un errore sul server!
+                </div> <!-- /error-details -->
+                <div class="error-actions">
+                    <a href="#" th:href="@{${T(app.App).HOME}}" class="btn btn-primary btn-lg">
+                        <i class="glyphicon glyphicon-chevron-left"></i>
+                        &nbsp;
+                        Torna alla home
+                    </a>
+                    <a href="#" th:href="@{${T(app.App).CONTATTI}}" class="btn btn-default btn-lg">
+                        <i class="glyphicon glyphicon-envelope"></i>
+                        &nbsp;
+                        Contatta il supporto
+                    </a>
+                </div> <!-- /error-actions -->
+            </div> <!-- /error-container -->
+        </div> <!-- /span12 -->
+    </div> <!-- /row -->
+</div> <!-- /row -->
+
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+
+
+</body>
+</html>

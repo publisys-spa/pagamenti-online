@@ -1,0 +1,154 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-container">
+        <div class="col-lg-12 col-md-12">
+            <br class="hidden-xs hidden-sm"/>
+            <p></p>
+        </div>
+        <div class="form-inline col-lg-12 col-md-12">
+            <label class="control-label " for="cerca">Ricerca:</label>
+            <input type="text" class="form-control" />
+            <a href="#" class="btn btn-info btn-sm" ><i class="fa fa-search" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <table th:unless="${#lists.isEmpty(pagamenti)}" class="table storico table-condensed table-striped table-bordered table-hover table-responsive">
+                <thead>
+                <tr class="info">
+                    <th>Data Pagamento</th>
+                    <th>Causale (<i>Ente - Tributo</i>)</th>
+                    <th>&numero; Operazione</th>
+                    <th>Importo</th>
+                    <th>Stato Pagamento</th>
+                    <th>Dettagli</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="pagamento : ${pagamenti}">
+                    <td th:text="${#dates.format(pagamento.dataPagamento, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                    <td th:text='${pagamento.causale + " - (" + pagamento.ente.name + " - "+ pagamento.tributo.nome+")"}'></td>
+                    <td th:text='${pagamento.refnumber}'></td>
+                    <td th:text='${#numbers.formatDecimal(pagamento.importo, 1,"POINT",2,"COMMA")}'></td>
+                    <td th:text='${pagamento.statoPagamento}'></td>
+                    <td class="text-center">
+                        <table>
+                            <tr>
+                            <td><a th:href='@{|${T(app.App).PAGAMENTO_SPONTANEO +"?pid=" + pagamento.pid}|}' class="btn btn-primary btn-sm" target="_blank">
+                            <i class="fa fa-info" aria-hidden="true"></i>
+                            </a></td>
+                                <td> <a th:href="@{|${T(app.App).PAGAMENTO_PRINT}/${pagamento.id}|}"
+                           class="btn btn-info btn-sm" target="_blank"
+                           th:if="${pagamento.statoPagamento == 'ESEGUITO'}">
+                            <i class="fa fa-print" aria-hidden="true"></i>
+                            </a></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <!--tr>
+                    <td>27/04/2016 10:59:22</td>
+                    <td>rata unica per TR1-RATA1<br/>(<i>Regione Basilicata - Tributo di esempio</i>)</td>
+                    <td>-</td>
+                    <td class="euro">&euro; 1,11</td>
+                    <td>IN ATTESA DI SCELTA DEL WISP</td>
+                    <td class="text-center">
+                        <a href="pagamento.html" class="btn btn-info btn-sm">
+                            <i class="fa fa-info" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>27/04/2016 10:54:15</td>
+                    <td>rata unica per TR1-RATA1<br/>(<i>Regione Basilicata - Tributo di esempio</i>)</td>
+                    <td>-</td>
+                    <td class="euro">&euro; 1.000,00</td>
+                    <td>IN ATTESA DI SCELTA DEL WISP</td>
+                    <td class="text-center">
+                        <a href="pagamento.html" class="btn btn-info btn-sm">
+                            <i class="fa fa-info" aria-hidden="true"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>27/04/2016 10:41:27</td>
+                    <td>Esempio Rata 1<br/>(<i>Regione Basilicata - Bollo</i>)</td>
+                    <td>-</td>
+                    <td class="euro">&euro; 10,00</td>
+                    <td>IN ATTESA DI SCELTA DEL WISP</td>
+                    <td class="text-center">
+                        <a href="pagamento.html" class="btn btn-info btn-sm">
+                            <i class="fa fa-info" aria-hidden="true"></i>
+                    </td>
+                </tr-->
+                </tbody>
+            </table>
+            <div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div>
+            <div class="panel-body" th:if="${#lists.isEmpty(pagamenti)}">
+                Nessuna pagamento presente.
+            </div>
+        </div>
+
+    </div>
+</div>
+<!--div class="panel panel-default">
+    <div class="panel-heading">
+        <i class="glyphicon glyphicon-eur"></i>&nbsp;&nbsp;STORICO PAGAMENTI
+    </div>
+
+    <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+           th:unless="${#lists.isEmpty(pagamenti)}">
+        <tr class="info">
+            <th>Data Pagamento</th>
+            <th>Causale - (Ente - Tributo)</th>
+            <th>N&deg; Operazione</th>
+            <th>Importo</th>
+            <th>Stato Pagamento</th>
+            <th></th>
+        </tr>
+        <tr th:each="pagamento : ${pagamenti}">
+            <td th:text="${#dates.format(pagamento.dataPagamento, 'dd/MM/yyyy HH:mm:ss')}"></td>
+            <td th:text='${pagamento.causale + " - (" + pagamento.ente.name + " - "+ pagamento.tributo.nome+")"}'></td>
+            <td th:text='${pagamento.refnumber}'></td>
+            <td th:text='${#numbers.formatDecimal(pagamento.importo, 1,"POINT",2,"COMMA")}'></td>
+            <td th:text='${pagamento.statoPagamento}'></td>
+            <td>
+                <a th:href='@{|${T(app.App).PAGAMENTO_SPONTANEO +"?pid=" + pagamento.pid}|}'
+                   class="btn btn-primary btn-sm">
+                    <i class="glyphicon glyphicon-info"></i> Dettaglio
+                </a>
+                <a th:href="@{|${T(app.App).PAGAMENTO_PRINT}/${pagamento.id}|}"
+                   class="btn btn-primary btn-sm" target="_blank"
+                   th:if="${pagamento.statoPagamento == 'PAGATO'}">
+                    <i class="glyphicon glyphicon-print"></i> Stampa Ricevuta
+                </a>
+            </td>
+        </tr>
+    </table>
+
+    <div class="panel-body" th:if="${#lists.isEmpty(pagamenti)}">
+        Nessuna pagamento presente.
+    </div>
+
+</div>
+
+
+<div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div-->
+
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+<a href="#page_top" title="torna all'inizio del contenuto" class="scrollto_top sr-only"><span></span></a>
+</body>
+</html>

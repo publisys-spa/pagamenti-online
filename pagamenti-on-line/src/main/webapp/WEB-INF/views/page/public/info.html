@@ -1,0 +1,94 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="container">
+
+        <div class="row row-container">
+            <div class="col-md-6 col-xs-12 col-sm-12">
+                <div class="box_text box_text_large clearfix">
+                    <h2 class="title_large">Cos'&egrave; pagoPA?</h2>
+                    <p>Il <b>Sistema di Gestione delle Identit&agrave; digitali IMS</b> &egrave; un sistema fondamentale
+                        per la messa in esercizio dei servizi della Regione Basilicata. Questo servizio di
+                        autenticazione garantisce la sicurezza e l'affidabilit&agrave; dell'intera piattaforma
+                        sfruttando la logica del <b>Single Sign-On</b>,
+                        cio&egrave; la propriet&agrave; di un sistema di controllo d'accesso che consente ad un utente
+                        di effettuare un'unica autenticazione valida per pi&ugrave; sistemi software o servizi alle
+                        quali
+                        &egrave; abilitato, semplificando la gestione delle password, la gestione degli accessi ai vari
+                        servizi e gestendo al meglio le politiche di sicurezza del sistema.<br/><br/>Attraverso il
+                        sistema IMS la tua identit&agrave; &egrave; completamente verificata per consentire un utilizzo
+                        dei servizi della Regione Basilicata in completa sicurezza e affidabilit&agrave;.</p>
+                </div>
+            </div><!-- /col-md-6 -->
+            <div class="col-md-6 hidden-sm hidden-xs">
+                <div class="thumb_container clearfix">
+                    <img alt="sample"  th:src="@{/resources/css/img/sample_1.png}" class="img-responsive"/>
+                </div>
+            </div><!-- /col-md-6 -->
+        </div>
+        <div class="row row-container">
+            <div class="col-md-6 hidden-sm hidden-xs">
+                <div class="thumb_container clearfix">
+                    <img alt="sample" th:src="@{/resources/css/img/sample_2.png}" class="img-responsive"/>
+                </div>
+            </div><!-- /col-md-6 -->
+            <div class="col-md-6 col-xs-12 col-sm-12">
+                <div class="box_text box_text_large clearfix">
+                    <h2 class="title_large">Piena compatibilit&agrave;</h2>
+                    <p>Con il Sistema di Gestione delle Identit&agrave; IMS non &egrave; pi&ugrave; un problema dover
+                        utilizzare sempre lo stesso Personal Computer per accedere ai servizi della Regione
+                        Basilicata.<br/><br/>L'accesso ai sistemi &egrave; infatti garantito anche se stai utilizzando
+                        dispositivi mobili quali <b>Smartphone</b> e <b>Tablet</b> con una totale compatibilit&agrave;
+                        in fase di registrazione, login e navigazione.</p>
+                </div>
+            </div><!-- /col-md-6 -->
+        </div>
+        <div class="row row-container">
+            <div class="col-md-6 col-xs-12 col-sm-12">
+                <div class="box_text box_text_large clearfix">
+                    <h2 class="title_large">Accesso multicanale</h2>
+                    <p>Le metodologie di accesso ai servizi della Regione Basilicata aumentano. &Egrave; possibile
+                        infatti autenticarsi attraverso la <b>Carta Nazionale dei Servizi CNS</b> utilizzando il
+                        certificato di identificazione personale presente sulla stessa. Per farlo, la stazione di lavoro
+                        deve essere corredata di un <b>lettore di smartcard</b> o da un <b>USBToken</b> correttamente
+                        installato e funzionante.<br/><br/>Oppure, per gli utenti pi&ugrave; social &egrave; possibile
+                        effettuare l'autenticazione utilizzando il <b>profilo del social network preferito</b> (es.
+                        Facebook, Twitter o LinkedIn).<br/><br/>Infine, &egrave; sempre valido il classico metodo di
+                        accesso con <b>username/password</b>, completato per&ograve; dall'invio di un codice <b>OTP
+                            (One-Time Password)</b> via SMS sul proprio dispositivo mobile. Tale codice, generato
+                        automaticamente ad ogni accesso sar&agrave; richiesto in fase di login per consentire un accesso
+                        in due passaggi e rendere pi&ugrave; sicura la sola password.</p>
+                </div>
+            </div><!-- /col-md-6 -->
+            <div class="col-md-6 hidden-sm hidden-xs">
+                <div class="thumb_container clearfix">
+                    <img alt="sample" th:src="@{/resources/css/img/sample_3.png}" class="img-responsive"/>
+                </div>
+            </div><!-- /col-md-6 -->
+        </div>
+        <div class="row row-container">
+            <div class="col-md-12 col-xs-12 col-sm-12">
+                <div class="box_text box_text_large clearfix">
+                    <p>Per maggiori informazioni o per ricevere assistenza puoi scrivere a XXXX@regione.basilicata.it o
+                        contattare il numero 0971XXXXXX.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+</body>
+</html>

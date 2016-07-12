@@ -1,0 +1,362 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Ricerca
+                    Pagamenti
+                </div>
+
+                <div class="panel-body" th:classappend="${(sresults != null and !sresults.empty) ? 'hidden' : ''}">
+                    <form th:action="@{${T(app.App).SEARCH}}" class="form-horizontal" th:object="${filter}"
+                          method="post" sec:authorize="${isAuthenticated()}">
+
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="tipologia" class="control-label">Tipologia</label>
+                            <div>
+                                <select th:field="*{tipo}" class="form-control">
+                                    <option value="TRIB">Tributo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="pid" class="control-label">ID Pagamento</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{pid}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="dataPagamento" class="control-label">Data Pagamento</label>
+                            <div>
+                                <input type="text" class="form-control datepicker" th:field="*{dataPagamento}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="codiceFiscale" class="control-label">Codice Fiscale</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{codiceFiscale}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="nome" class="control-label">Nome</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{nome}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="cognome" class="control-label">Cognome</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{cognome}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="tributo" class="control-label">Tributo</label>
+                            <div>
+                                <select th:field="*{tributo}" class="form-control">
+                                    <option value=""></option>
+                                    <option th:each="tributo : ${tributi}"
+                                            th:value="${tributo.id}" th:text="${tributo.nome}"></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="targa" class="control-label">Targa</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{targa}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="verbale" class="control-label">Verbale</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{verbale}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="causale" class="control-label">Causale</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{causale}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">
+                                Avvia la ricerca
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="glyphicon glyphicon-search"></i>&nbsp;&nbsp;RICERCA PAGAMENTI
+
+                <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).SEARCH}}">
+                    <i class="glyphicon glyphicon-search"></i> Nuova ricerca
+                </a>
+            </div>
+            <div class="panel-body" th:classappend="${(sresults != null and !sresults.empty) ? 'hidden' : ''}">
+
+                <form th:action="@{${T(app.App).SEARCH}}" class="form-horizontal" th:object="${filter}"
+                      method="post" sec:authorize="${isAuthenticated()}">
+
+                    <fieldset>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="tipo" class="col-md-3 control-label">Tipologia:</label>
+                            <div class="col-md-3">
+                                <select th:field="*{tipo}" class="form-control">
+                                    <option value="TRIB">Tributo</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="pid" class="col-md-3 control-label">ID Pagamento:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{pid}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="refnumber" class="col-md-3 control-label">IUV:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{refnumber}"/>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="dataPagamento" class="col-md-3 control-label">Data Pagamento:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control datepicker" th:field="*{dataPagamento}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="codiceFiscale" class="col-md-3 control-label">Codice Fiscale:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{codiceFiscale}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="nome" class="col-md-3 control-label">Nome:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{nome}"/>
+                            </div>
+                        </div>
+                        <div class="form-group" sec:authorize="hasRole('ROLE_ADMIN')">
+                            <label for="cognome" class="col-md-3 control-label">Cognome:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{cognome}"/>
+                            </div>
+                        </div>
+
+                        <div id="tributo-box" class="form-group">
+                            <label for="tributo" class="col-md-3 control-label">Tributo:</label>
+                            <div class="col-md-8">
+                                <select th:field="*{tributo}" class="form-control">
+                                    <option value=""></option>
+                                    <option th:each="tributo : ${tributi}"
+                                            th:value="${tributo.id}" th:text="${tributo.nome}"></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div id="targa-box" class="form-group">
+                            <label for="targa" class="col-md-3 control-label">Targa:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{targa}"/>
+                            </div>
+                        </div>
+                        <div id="verbale-box" class="form-group">
+                            <label for="verbale" class="col-md-3 control-label">Verbale:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{verbale}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="causale" class="col-md-3 control-label">Causale:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{causale}"/>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group text-center">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="glyphicon glyphicon-search"></i> Avvia la ricerca
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div-->
+
+        <div class="col-md-9" th:if="${sresults}">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Enti abilitati
+               </div>
+                <table class="table storico table-condensed table-striped table-bordered table-hover table-responsive"
+                       th:unless="${#lists.isEmpty(enti)}">
+                    <thead>
+                    <tr class="info">
+                        <th>ID</th>
+                        <th>IUV</th>
+                        <th>Importo</th>
+                        <th>Beneficiario</th>
+                        <th>Data</th>
+                        <th th:if="${filter.tipo == 'TRIB'}">Tributo</th>
+                        <th th:if="${filter.tipo == 'TRIB'}">Rata</th>
+                        <th th:if="${filter.tipo == 'CONTR'}">Targa</th>
+                        <th th:if="${filter.tipo == 'CONTR'}">Verbale</th>
+                        <th th:if="${filter.tipo == 'CONTR'}">Data Infrazione</th>
+                        <th>Stato</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="sr : ${sresults.records}">
+                        <td th:text="${sr.pid}"></td>
+                        <td th:text="${sr.refnumber}"></td>
+                        <td class="text-right"><span
+                                th:text="${#numbers.formatDecimal(sr.importo, 1,'POINT',2,'COMMA')}"></span> &euro;</td>
+                        <td th:text="|${sr.esecutore.firstname} ${sr.esecutore.lastname}|"></td>
+                        <td th:text="${#dates.format(sr.dataPagamento, 'dd/MM/yyyy')}"></td>
+                        <td th:if="${filter.tipo == 'TRIB'}" th:text="${sr.tributo.nome}"></td>
+                        <td th:if="${filter.tipo == 'TRIB'}" th:text="${sr.rata.nome}"></td>
+                        <td th:if="${filter.tipo == 'CONTR'}" th:text="${sr.targa}"></td>
+                        <td th:if="${filter.tipo == 'CONTR'}" th:text="${sr.verbale}"></td>
+                        <td th:if="${filter.tipo == 'CONTR'}"
+                            th:text="${#dates.format(sr.dataInfrazione, 'dd/MM/yyyy')}"></td>
+                        <td th:text="${sr.statoPagamento}"></td>
+                    </tr>
+
+                    </tbody>
+                    <div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div>
+                </table>
+
+                <div class="panel-body" th:if="${sresults.empty}">
+                    Nessun risultato presente per i criteri indicati.
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!--div class="panel panel-default pagamenti-result" th:if="${sresults}">
+            <div class="panel-heading">
+                <i class="glyphicon glyphicon-th-list"></i>&nbsp;&nbsp;<span th:text="${sresults.size}"></span>
+                PAGAMENTI TROVATI
+
+            </div>
+
+            <table class="table table-condensed table-striped table-bordered table-hover" th:unless="${sresults.empty}">
+                <tr class="info">
+                    <th>ID</th>
+                    <th>IUV</th>
+                    <th>Importo</th>
+                    <th>Beneficiario</th>
+                    <th>Data</th>
+                    <th th:if="${filter.tipo == 'TRIB'}">Tributo</th>
+                    <th th:if="${filter.tipo == 'TRIB'}">Rata</th>
+                    <th th:if="${filter.tipo == 'CONTR'}">Targa</th>
+                    <th th:if="${filter.tipo == 'CONTR'}">Verbale</th>
+                    <th th:if="${filter.tipo == 'CONTR'}">Data Infrazione</th>
+                    <th>Stato</th>
+                </tr>
+
+                <tr th:each="sr : ${sresults.records}">
+                    <td th:text="${sr.pid}"></td>
+                    <td th:text="${sr.refnumber}"></td>
+                    <td class="text-right"><span
+                            th:text="${#numbers.formatDecimal(sr.importo, 1,'POINT',2,'COMMA')}"></span> &euro;</td>
+                    <td th:text="|${sr.esecutore.firstname} ${sr.esecutore.lastname}|"></td>
+                    <td th:text="${#dates.format(sr.dataPagamento, 'dd/MM/yyyy')}"></td>
+                    <td th:if="${filter.tipo == 'TRIB'}" th:text="${sr.tributo.nome}"></td>
+                    <td th:if="${filter.tipo == 'TRIB'}" th:text="${sr.rata.nome}"></td>
+                    <td th:if="${filter.tipo == 'CONTR'}" th:text="${sr.targa}"></td>
+                    <td th:if="${filter.tipo == 'CONTR'}" th:text="${sr.verbale}"></td>
+                    <td th:if="${filter.tipo == 'CONTR'}"
+                        th:text="${#dates.format(sr.dataInfrazione, 'dd/MM/yyyy')}"></td>
+                    <td th:text="${sr.statoPagamento}"></td>
+
+                </tr>
+            </table>
+
+            <div class="panel-body" th:if="${sresults.empty}">
+                Nessun risultato presente per i criteri indicati.
+            </div>
+
+        </div>
+
+    </div>
+
+</div-->
+    </div>
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+<script type="text/javascript">
+    $("#tipo").change(function () {
+
+        var _tipo = $('#tipo').val();
+        if (_tipo === "CONTR") {
+            $('#tributo-box').hide();
+            $('#targa-box').show();
+            $('#verbale-box').show();
+        } else {
+            $('#tributo-box').show();
+            $('#targa-box').hide();
+            $('#verbale-box').hide();
+        }
+
+    }).trigger('change');
+</script>
+
+</body>
+</html>
+

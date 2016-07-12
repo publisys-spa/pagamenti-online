@@ -1,0 +1,494 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:with="title=#{page.home.title}">
+
+    <head th:substituteby="page/fragments/headTag :: headTag">
+        <link rel="stylesheet" href="../../../../../resources/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="../../../../../resources/css/main.css" type="text/css"/>
+
+        <title></title>
+    </head>
+
+    <body>
+
+        <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+        <div class="container">
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="glyphicon glyphicon-eur"></i>&nbsp;&nbsp;PAGAMENTO ONLINE
+                        </div>
+                        <div class="panel-body">
+
+                            <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                                <span th:text="${message}"></span>
+                            </div>
+                            <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                                <span th:text="${error}"></span>
+                            </div>
+
+                            <!-- STEP 1 - selezione tributo -->
+                            <form th:action="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/1|}" class="form-horizontal form-horizontal-tributo"
+                                  th:object="${pagamento}" method="post"
+                                  th:if="${step==1}">
+
+                                <fieldset>
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="tributo.id" class="control-label">Seleziona la tipologia di tributo:</label>
+                                        <select th:field="*{tributo.id}" class="form-control">
+                                            <option th:each ="tributo : ${tributi}"
+                                                    th:value="${tributo.id}" th:text="${tributo.nome}"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <div class="col-md-12">
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                Avanti <i class="glyphicon glyphicon-chevron-right"></i>
+                                            </button>
+
+                                            <a th:href="@{|${T(app.App).INDEX}|}" class="btn btn-danger btn-sm" onclick="return confirmAnnulla();">
+                                                <i class="glyphicon glyphicon-ban-circle"></i> Annulla
+                                            </a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <!-- STEP 2 - selezione rata del tributo -->
+                            <form th:action="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/2|}" class="form-horizontal form-horizontal-tributo"
+                                  th:object="${pagamento}" method="post"
+                                  th:if="${step==2}">
+
+                                <fieldset>
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label">Tributo selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.tributo.nome}"/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="rata.id" class="control-label">Seleziona la rata:</label>
+                                        <select th:field="*{rata.id}" class="form-control">
+                                            <option th:each ="rata : ${rate}"
+                                                    th:value="${rata.id}" th:text="${rata.nome}"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <div class="col-md-12">
+                                            <a th:href="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/0|}" class="btn btn-primary btn-sm">
+                                                <i class="glyphicon glyphicon-chevron-left"></i> Indietro
+                                            </a>
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                Avanti <i class="glyphicon glyphicon-chevron-right"></i>
+                                            </button>
+
+                                            <a th:href="@{|${T(app.App).INDEX}|}" class="btn btn-danger btn-sm" onclick="return confirmAnnulla();">
+                                                <i class="glyphicon glyphicon-ban-circle"></i> Annulla
+                                            </a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <!-- STEP 3 - caricamento dati beneficiario -->
+                            <form th:action="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/3|}" class="form-horizontal form-horizontal-tributo"
+                                  th:object="${pagamento}" method="post"
+                                  th:if="${step==3}">
+
+                                <fieldset>
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                                        </ul>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Tributo selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.tributo.nome}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Rata selezionata:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.rata.nome}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="bs-box bs-beneficiario col-sm-12">
+                                            <div class="form-group">
+                                                <label for="beneficiario.codiceFiscale" class="control-label">Codice Fiscale / Partita IVA (*):</label>
+                                                <div class="input-group">
+                                                    <input type="text" class="form-control" th:field="*{beneficiario.codiceFiscale}" />
+                                                    <!--div class="input-group-addon">
+                                                        <a href="#">Verifica presenza</a>
+                                                    </div-->
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="beneficiario.cognome" class="control-label">Cognome / Ragione Sociale (*):</label>
+                                                <input type="text" class="form-control" th:field="*{beneficiario.cognome}" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="beneficiario.nome" class="control-label">Nome:</label>
+                                                <input type="text" class="form-control" th:field="*{beneficiario.nome}" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="beneficiario.indirizzo" class="control-label">Indirizzo residenza:</label>
+                                                <input type="text" class="form-control" th:field="*{beneficiario.indirizzo}" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="beneficiario.comune" class="control-label">Comune residenza:</label>
+                                                <input type="text" class="form-control" th:field="*{beneficiario.comune}" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="beneficiario.provincia" class="control-label">Provincia residenza:</label>
+                                                <input type="text" class="form-control" th:field="*{beneficiario.provincia}" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="beneficiario.email" class="control-label">E-Mail (*):</label>
+                                                <input type="text" class="form-control" th:field="*{beneficiario.email}" />
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="beneficiario.cellulare" class="control-label">Cellulare:</label>
+                                                <input type="text" class="form-control" th:field="*{beneficiario.cellulare}" />
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <div class="col-md-12">
+                                            <a th:href="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/1|}" class="btn btn-primary btn-sm">
+                                                <i class="glyphicon glyphicon-chevron-left"></i> Indietro
+                                            </a>
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                Avanti <i class="glyphicon glyphicon-chevron-right"></i>
+                                            </button>
+
+                                            <a th:href="@{|${T(app.App).INDEX}|}" class="btn btn-danger btn-sm" onclick="return confirmAnnulla();">
+                                                <i class="glyphicon glyphicon-ban-circle"></i> Annulla
+                                            </a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <!-- STEP 4 - dati pagamento -->
+                            <form th:action="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/4|}" class="form-horizontal form-horizontal-tributo"
+                                  th:object="${pagamento}" method="post"
+                                  th:if="${step==4}">
+
+                                <fieldset>
+                                    <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                                        <ul>
+                                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label">Tributo selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.tributo.nome}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Rata selezionata:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.rata.nome}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Beneficiario selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:if="${pagamento.beneficiario.nome != null}" th:value="|${pagamento.beneficiario.nome} ${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"/>
+                                        <input type="text" class="form-control" disabled="disabled" th:if="${pagamento.beneficiario.nome == null}" th:value="|${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"/>
+                                        <!--p class="form-control-static" th:text="|${pagamento.beneficiario.nome} ${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"></p-->
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="bs-box bs-pagamento col-sm-12">
+                                            <div class="form-group">
+                                                <label for="tipologia" class="control-label">Tipologia pagamento:</label>
+                                                <select name="tipologia" class="form-control" th:field="*{tipologia}">
+                                                    <option th:value="Normale">Normale</option>
+                                                    <option th:value="Violazione">Violazione</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="importo" class="control-label">Importo (*):</label>
+                                                <div class="input-group">
+                                                    <div class="input-group-addon">&euro;</div>
+                                                    <input type="text" class="form-control" th:field="*{importo}" />
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="comune" class="control-label">Comune destinatario del pagamento (*):</label>
+                                                <input type="text" class="form-control" th:field="*{comune}" />
+                                            </div>
+
+                                            <div class="form-group attoacc">
+                                                <label for="attoAccertamento" class="control-label">Atto di accertamento (**):</label>
+                                                <input type="text" class="form-control" th:field="*{attoAccertamento}" />
+                                            </div>
+
+                                            <div class="form-group attoacc">
+                                                <p>(**) Atto di accertamento: &egrave; un atto impositivo dell'Amministrazione finanziaria che viene emanato nel caso in cui una determinata imposta non viene adempiuta da parte del soggetto passivo dell'obbligazione tributaria.</p>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="causale" class="control-label">Causale (*):</label>
+                                                <textarea rows="3" class="form-control" th:field="*{causale}"></textarea>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <p>(*) Campo obbligatorio.</p>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <div class="col-md-12">
+                                            <a th:href="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/2|}" class="btn btn-primary btn-sm">
+                                                <i class="glyphicon glyphicon-chevron-left"></i> Indietro
+                                            </a>
+                                            <button type="submit" class="btn btn-primary btn-sm">
+                                                Avanti <i class="glyphicon glyphicon-chevron-right"></i>
+                                            </button>
+
+                                            <a th:href="@{|${T(app.App).INDEX}|}" class="btn btn-danger btn-sm" onclick="return confirmAnnulla();">
+                                                <i class="glyphicon glyphicon-ban-circle"></i> Annulla
+                                            </a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <!-- STEP 5 - modalita' pagamento -->
+                            <form th:action="@{${ipgutil.serverURL}}" class="form-horizontal form-horizontal-tributo"
+                                  method="post"
+                                  th:if="${step==5}">
+
+                                <fieldset>
+
+                                    <div class="form-group">
+                                        <label class="control-label">Tributo selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.tributo.nome}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Rata selezionata:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.rata.nome}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Beneficiario selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:if="${pagamento.beneficiario.nome != null}" th:value="|${pagamento.beneficiario.nome} ${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"/>
+                                        <input type="text" class="form-control" disabled="disabled" th:if="${pagamento.beneficiario.nome == null}" th:value="|${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"/>
+                                        <!--p class="form-control-static" th:text="|${pagamento.beneficiario.nome} ${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"></p-->
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Importo pagamento</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">&euro;</div>
+                                            <input type="text" class="form-control" disabled="disabled" th:value="${#numbers.formatDecimal(pagamento.importo, 1,'POINT',2,'COMMA')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Importo commissione:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">&euro;</div>
+                                            <input type="text" class="form-control" disabled="disabled" th:value="${#numbers.formatDecimal(pagamento.importoCommissione, 1,'POINT',2,'COMMA')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Totale da pagare:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">&euro;</div>
+                                            <input type="text" class="form-control" disabled="disabled" th:value="${#numbers.formatDecimal(pagamento.importo+pagamento.importoCommissione, 1,'POINT',2,'COMMA')}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group" th:if="${#strings.toString(pagamento.status) == 'LIVE'}">
+                                        <label class="control-label">Esito del pagamento:</label>
+                                        <span class="label label-primary">PAGAMENTO GIA' EFFETTUATO</span>
+                                    </div>
+
+                                    <input type="hidden" name="email " th:value="${pagamento.beneficiario.email}"/>
+                                    <input type="hidden" name="oid" th:value="${pagamento.pid}"/>
+
+                                    <input type="hidden" name="txntype" value="PURCHASE"/>
+                                    <input type="hidden" name="timezone" value="CET"/>
+                                    <input type="hidden" name="txndatetime" th:value="${ipgutil.fmtDate}"/>
+                                    <input type="hidden" name="hash" th:value='${ipgutil.hash}'/>
+                                    <input type="hidden" name="storename" th:value="${ipgutil.storeId}"/>
+                                    <input type="hidden" name="mode" value="payonly"/>
+                                    <input type="hidden" name="currency" th:value="${ipgutil.currency}"/>
+                                    <input type="hidden" name="language" value="IT"/>
+                                    <input type="hidden" name="responseSuccessURL" th:value="${ipgutil.responseSuccessURL}"/>
+                                    <input type="hidden" name="responseFailURL" th:value="${ipgutil.responseFailURL}"/>
+                                    <input type="hidden" name="chargetotal" th:value="${ipgutil.charge}"/>
+
+
+                                    <div class="form-group text-center" th:if="${#strings.toString(pagamento.status) != 'LIVE'}">
+                                        <div class="col-md-12">
+                                            <b>Alla conclusione del pagamento la ricevuta apparir&agrave; a video e le sar&agrave; possibile stamparla e conservarla.</b>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <div class="col-md-12">
+                                            <a th:href="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/3|}" class="btn btn-primary btn-sm" th:if="${!isRemote}">
+                                                <i class="glyphicon glyphicon-chevron-left"></i> Indietro
+                                            </a>
+                                            <button type="submit" class="btn btn-success btn-sm" th:if="${#strings.toString(pagamento.status) != 'LIVE'}">
+                                                <i class="glyphicon glyphicon-euro"></i>&nbsp;&nbsp;Paga Adesso
+                                            </button>
+
+                                            <a th:href="@{|${T(app.App).INDEX}|}" class="btn btn-danger btn-sm" onclick="return confirmAnnulla();" th:if="${!isRemote}">
+                                                <i class="glyphicon glyphicon-ban-circle"></i> Annulla
+                                            </a>
+
+                                            <button type="button" class="btn btn-warning btn-sm" onclick="window.close();return false;" th:if="${isRemote}">
+                                                <i class="glyphicon glyphicon-log-out"></i> Torna al portale
+                                            </button>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                            <!-- STEP 6 - esito e riepilogo -->
+                            <form th:action="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/print|}" class="form-horizontal form-horizontal-tributo"
+                                  method="post" target="_blank"
+                                  th:if="${step==6}">
+
+                                <fieldset>
+                                    <div class="form-group">
+                                        <label class="control-label">Tributo selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.tributo.nome}"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Rata selezionata:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:value="${pagamento.rata.nome}"/>
+                                        <br/>
+                                        <textarea rows="3" class="form-control" disabled="disabled" th:text="${pagamento.rata.causale}"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Beneficiario selezionato:</label>
+                                        <input type="text" class="form-control" disabled="disabled" th:if="${pagamento.beneficiario.nome != null}" th:value="|${pagamento.beneficiario.nome} ${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"/>
+                                        <input type="text" class="form-control" disabled="disabled" th:if="${pagamento.beneficiario.nome == null}" th:value="|${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"/>
+                                        <!--p class="form-control-static" th:text="|${pagamento.beneficiario.nome} ${pagamento.beneficiario.cognome} (${pagamento.beneficiario.codiceFiscale})|"></p-->
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Importo pagamento</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">&euro;</div>
+                                            <input type="text" class="form-control" disabled="disabled" th:value="${#numbers.formatDecimal(pagamento.importo, 1,'POINT',2,'COMMA')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Importo commissione:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">&euro;</div>
+                                            <input type="text" class="form-control" disabled="disabled" th:value="${#numbers.formatDecimal(pagamento.importoCommissione, 1,'POINT',2,'COMMA')}"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label">Totale pagato:</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">&euro;</div>
+                                            <input type="text" class="form-control" disabled="disabled" th:value="${#numbers.formatDecimal(pagamento.importo+pagamento.importoCommissione, 1,'POINT',2,'COMMA')}"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label">Esito del pagamento:</label>
+                                        <span class="label label-primary" th:text="${esito}"></span>
+                                    </div>
+
+                                    <div class="form-group text-center">
+                                        <div class="col-md-12">
+                                            <a th:href="@{|${T(app.App).PAGAMENTO_TRIBUTO_STEP}/4|}" class="btn btn-primary btn-sm"
+                                               th:if="${esito != 'APPROVATO' and !isRemote}">
+                                                <i class="glyphicon glyphicon-chevron-left"></i> Indietro
+                                            </a>
+                                            <button type="submit" class="btn btn-primary btn-sm" th:if="${esito == 'APPROVATO'}">
+                                                <i class="glyphicon glyphicon-print"></i> Stampa Ricevuta
+                                            </button>
+
+                                            <a th:href="@{|${T(app.App).INDEX}|}" class="btn btn-danger btn-sm" th:if="${!isRemote}">
+                                                <i class="glyphicon glyphicon-home"></i> Torna alla home
+                                            </a>
+
+                                            <a type="submit" class="btn btn-warning btn-sm" onclick="window.close();" th:if="${isRemote}">
+                                                <i class="glyphicon glyphicon-log-out"></i> Torna al portale
+                                            </a>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </form>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Descrizione del tributo</div>
+                        <div class="panel-body">
+                            <p th:if="${pagamento.tributo == null or pagamento.tributo.id == null}">
+                                Seleziona un tributo per visionarne la descrizione.
+                            </p>
+                            <p th:if="${pagamento.tributo != null}" th:utext="${pagamento.tributo.descrizione}">
+
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <hr/>
+            <footer th:substituteby="page/fragments/footerTag :: footerTag" />
+        </div>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#tipologia").change(function () {
+                    if ($("#tipologia").val() === 'Normale') {
+                        $(".attoacc").hide();
+                    } else {
+                        $(".attoacc").show();
+                    }
+                }).trigger('change');
+
+            });
+        </script>
+
+        <script type="text/javascript" th:inline="javascript">
+
+            var _comune = /*[[#{app.comune}]]*/ 'Comune';
+
+            $(document).ready(function () {
+
+                if ($("#comune")) {
+                    if ($("#comune").val() === '') {
+                        $("#comune").val(_comune);
+                    }
+                }
+                if ($("#importo")) {
+                    $("#importo").maskMoney({thousands: '.', decimal: ',', allowZero: true});
+                }
+
+            });
+        </script>
+
+    </body>
+</html>

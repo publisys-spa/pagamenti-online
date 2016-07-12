@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+
+        <title></title>
+    </head>
+    <body>
+
+        <div id="left-menu" th:inline="text" th:fragment="menuleftTag">
+            <ul class="nav nav-pills nav-stacked">
+                <!--li class="dropdown-header">Menu</li-->
+                <li><a href="#" th:href="@{${T(app.App).HOME}}"><i class="glyphicon glyphicon-list-alt"></i> [[#{menu.servizi}]]</a></li>
+            </ul>
+        </div>
+
+    </body>
+</html>

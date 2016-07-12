@@ -1,0 +1,108 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+    <div class="row row-container">
+        <div class="col-lg-12 col-md-12">
+            <br class="hidden-xs hidden-sm"/>
+            <p></p>
+        </div>
+
+        <div class="col-lg-4 col-md-4 col-sm-4">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5 class="blu-italia-base-color no-margin-top">Anagrafica del Debitore</h5>
+                    <div class="media">
+                        <div class="media-left media-middle">
+                            <img class="media-object" th:src="@{/resources/css/img/user.png}" alt="User sample"/>
+                        </div>
+                        <div class="media-body">
+                            <p th:inline="text"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;
+                                <span th:text="${pagamento.esecutore.firstname}"></span> <span
+                                        th:text="${pagamento.esecutore.lastname}"></span></p>
+                            <p th:inline="text"><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;<span
+                                    th:text="${pagamento.esecutore.fiscalcode}"></span>
+                            </p>
+                            <p th:inline="text"><i class="fa fa-envelope-o" aria-hidden="true"></i>&nbsp;<span
+                                    th:text="${pagamento.esecutore.email}"></span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5 class="blu-italia-base-color no-margin-top">Stato del pagamento</h5>
+                    <form th:action="@{|${T(app.App).PAGAMENTO_STATO}|}"
+                          class="form-horizontal form-horizontal-tributo"
+                          th:object="${pagamento}" method="post">
+                        <div th:text="*{statoPagamento}"/>
+                        <hr/>
+                        <div th:text="*{statusResponse}"/>
+                        <hr/>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary">
+                                Chiedi Stato
+                            </button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-8 col-md-8 col-sm-8">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h5 class="blu-italia-base-color no-margin-top">Dati del Pagamento</h5>
+                    <form class="form" action="#" th:object="${pagamento}" method="post">
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="ente" class="control-label">Ente selezionato:</label>
+                            <div class="form-control" th:text="*{ente.name}"/>
+                        </div>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="tributo" class="control-label">Tributo selezionato:</label>
+                            <div class="form-control" th:text="*{tributo.nome}"/>
+                        </div>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+
+                            <label for="rata" class="control-label">Rata selezionata:</label>
+                            <div class="form-control" th:text="*{rata.nome}"/>
+                        </div>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label class="control-label" for="importo">Importo:</label>
+                            <div class="form-control" id="importo"
+                                 th:text="${#numbers.formatDecimal(pagamento.importo, 1,'POINT',2,'COMMA')}"/>
+                        </div>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label class="control-label" for="causale">Causale:</label>
+                                <textarea class="form-control" rows="3" th:field="*{causale}"
+                                          disabled="disabled"></textarea>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+
+</body>
+</html>

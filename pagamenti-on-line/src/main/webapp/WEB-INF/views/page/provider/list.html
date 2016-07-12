@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Provider<a
+                        href="adminaddelement.html" class="pull-right btn btn-primary btn-xs" th:href="@{${T(app.App).PROVIDER}}">
+                    Aggiungi nuovo
+                </a></div>
+                <table class="table storico table-condensed table-striped table-bordered table-hover table-responsive" th:unless="${#lists.isEmpty(providers)}">
+                    <thead>
+                    <tr class="info">
+                        <th>Ente</th>
+                        <th>Nome</th>
+                        <th>Properties</th>
+                        <th>Operazioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="provider : ${providers}">
+                        <td th:text="${provider.ente.name}"></td>
+                        <td th:text="${provider.name}"></td>
+                        <td>
+                            <pre ><code th:text="${provider.properties}"></code> </pre>
+
+                        </td>
+                        <td class="text-center">
+                            <a th:href="@{|${T(app.App).PROVIDER}/${provider.id}|}" class="btn btn-warning btn-sm">
+                                Modifica
+                            </a>
+                            <a class="btn btn-danger btn-sm" th:href="@{|${T(app.App).PROVIDER}/${provider.id}|(op=D)}">
+                                Elimina
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+                       th:if="${#lists.isEmpty(providers)}">
+                    <thead>
+                    <tr class="info">
+                        <th>Provider</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td>Nessun provider presente</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div>
+        </div>
+        <!--div>
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="glyphicon glyphicon-certificate"></i>&nbsp;&nbsp;PROVIDER
+                    <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).PROVIDER}}">
+                        <i class="glyphicon glyphicon-plus"></i> Nuova
+                    </a>
+                </div>
+
+                <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+                       th:unless="${#lists.isEmpty(providers)}">
+                    <tr class="info">
+                        <th>Ente</th>
+                        <th>Nome</th>
+                        <th>Properties</th>
+                        <th></th>
+                    </tr>
+                    <tr th:each="provider : ${providers}">
+                        <td th:text="${provider.ente.name}"></td>
+                        <td th:text="${provider.name}"></td>
+                        <td>
+                            <pre class="prettyprint"><code th:text="${provider.properties}"></code> </pre>
+                        </td>
+                        <td class="text-center">
+                            <a class="btn btn-primary btn-xs" th:href="@{|${T(app.App).PROVIDER}/${provider.id}|}">
+                                <i class="glyphicon glyphicon-edit"></i> Apri
+                            </a>
+                            &nbsp;&nbsp;&nbsp;
+                            <a class="btn btn-danger btn-xs" th:href="@{|${T(app.App).PROVIDER}/${provider.id}|(op=D)}">
+                                <i class="glyphicon glyphicon-remove"></i> Elimina
+                            </a>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="panel-body" th:if="${#lists.isEmpty(providers)}">
+                    Nessuna tipologia presente.
+                </div>
+
+            </div>
+        </div>
+
+        <div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div-->
+
+
+    </div>
+</div>
+<div id="footer" class="hidden-print" tabindex="0" th:fragment="footerTag">
+    <footer>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-10 col-sm-10 col-md-12">
+                    <p class="footer__title h3">&copy; 2016 Regione Basilicata</p>
+                    <p> Il portale &egrave; ottimizzato per
+                        <a href="https://www.microsoft.com/it-it/windows/microsoft-edge">Microsoft Edge </a>,
+                        <a href="http://www.mozilla.org/it/firefox/new/">Mozilla Firefox</a> e
+                        <a href="https://www.google.com/chrome?hl=it">Google Chrome</a>.
+                        Si consiglia di utilizzare le versioni pi&ugrave; aggiornate di tali browser per una navigazione
+                        ottimale. </p>
+                </div>
+            </div>
+            <div class="row">
+                <ul class="col-xs-12 footer__links clearfix">
+                    <li><a th:href="@{${T(app.App).INDEX}}">Home</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).INFO}}" title="info">Info</a></li>
+                    <li><a href="#" title="privacy policy">Privacy</a></li>
+                    <li><a href="#" title="note legali">Note legali</a></li>
+                    <li><a href="#" title="credits">Credits</a></li>
+                    <li><a href="#" th:href="@{${T(app.App).CONTATTI}}">Contatti</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <a href="#page_top" title="torna all'inizio del contenuto" class="scrollto_top sr-only"><span></span></a>
+    <script th:src="@{/resources/js/jquery.min.js}"></script>
+    <script th:src="@{/resources/js/bootstrap.min.js}"></script>
+    <!--script th:src="@{/resources/js/combined.js}"></script-->
+    <script th:src="@{/resources/js/jquery.bxslider/jquery.bxslider.min.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('.slider1').bxSlider({
+                slideWidth: 200,
+                minSlides: 5,
+                maxSlides: 10,
+                slideMargin: 10
+            });
+        });
+    </script>
+</div>
+
+</body>
+</html>

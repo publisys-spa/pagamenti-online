@@ -1,0 +1,60 @@
+!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body onload='document.f.j_username.focus();'>
+<div class="container" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="col-lg-4 col-md-3 col-sm-2 col-xs-1"></div>
+    <div class="login-container col-lg-4 col-md-6 col-sm-8 col-xs-10">
+
+        <div class="row row-container">
+            <form name='f' th:action="@{/j_spring_security_check}"
+                  method='POST'>
+                <h4 style="border-bottom: 1px solid rgb(204, 204, 204); text-align: center; text-transform: uppercase; line-height: 40px;">Accedi con le tue credenziali</h4>
+
+                <div class="login-fields">
+                    <div class="">
+                        <label for="username">Username:</label>
+                        <input type="text" name="j_username" value=""  placeholder="Username" class="form-control"/>
+                    </div>
+                    <div class="">
+                        <label for="password">Password:</label>
+                        <input type="password" name="j_password" value=""
+                               placeholder="Password"  class="form-control" />
+                    </div>
+                </div><br/> <!-- /login-fields -->
+                <div class="login-actions text-center">
+                    <button class="btn btn-primary">
+                        <span class="glyphicon glyphicon-log-in"></span>&nbsp;&nbsp;
+                        Accedi
+                    </button>
+                </div>
+            </form>
+
+        </div>
+        <div class="container login-extra">
+            Non hai un account? <a href="#">Registrati</a><br/>
+            Recupera <a href="#">Password</a>
+        </div>
+    </div>
+    <div class="col-lg-4 col-md-3 col-sm-2 col-xs-1"></div>
+</div>
+
+<script type="text/javascript" th:inline="javascript" th:if="${not #strings.isEmpty(error)}">
+    $(document).ready(function () {
+        notify([[${session['SPRING_SECURITY_LAST_EXCEPTION'].message}]], "danger");
+    });
+</script>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+</body>
+</html>

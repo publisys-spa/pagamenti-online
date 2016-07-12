@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+<head>
+        <title></title>
+</head>
+<body>
+
+<div sec:authorize="hasRole('ROLE_ADMIN')" class="col-md-3 sidebar-offcanvas" id="sidebar" th:fragment="breadcrumbMenu">
+    <ul class="list-group" >
+        <li class="list-group-item title">Amministrazione</li>
+        <li class="list-group-item"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;<a th:href="@{${T(app.App).ENTI}}">Enti abilitati</a></li>
+        <li class="list-group-item"><i class="fa fa-money" aria-hidden="true"></i>&nbsp;&nbsp;<a th:href="@{${T(app.App).TIPOLOGIE}}">Tipologie di tributo</a></li>
+        <li class="list-group-item"><i class="fa fa-tasks" aria-hidden="true"></i>&nbsp;&nbsp;<a th:href="@{${T(app.App).TRIBUTI}}">Lista tributi</a></li>
+        <li class="list-group-item"><i class="fa fa-credit-card" aria-hidden="true"></i>&nbsp;&nbsp;<a th:href="@{${T(app.App).PROVIDERS}}">Provider abilitati</a></li>
+        <li class="list-group-item title">Operazioni</li>
+        <li class="list-group-item"><i class="fa fa-search" aria-hidden="true"></i>&nbsp;&nbsp;<a th:href="@{${T(app.App).SEARCH}}">Pagamenti in archivio</a></li>
+
+    </ul>
+</div>
+</body>
+</html>

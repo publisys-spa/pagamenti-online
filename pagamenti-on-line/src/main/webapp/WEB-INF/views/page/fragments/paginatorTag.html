@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+    <head>
+        <link rel="stylesheet" href="../../../../resources/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="../../../../resources/css/main.css" type="text/css"/>
+
+        <title></title>
+    </head>
+    <body>
+
+        <div class="mypaginator text-center" th:fragment="paginatorTag (page)">
+            <ul class="pagination pagination-sm">
+                <li th:class="${page.firstPage}? 'disabled' : ''">
+                    <span th:if="${page.firstPage}">&laquo;</span>
+                    <a th:if="${not page.firstPage}"
+                       th:href="@{${page.url}(page=1,size=15)}">&laquo;</a>
+                </li>
+                <li th:class="${page.hasPreviousPage}? '' : 'disabled'">
+                    <span th:if="${not page.hasPreviousPage}">&lsaquo;</span>
+                    <a th:if="${page.hasPreviousPage}"
+                       th:href="@{${page.url}(page=${page.number-1},size=15)}"
+                       title="Go to previous page">&lsaquo;</a>
+                </li>
+                <li th:each="item : ${page.items}" th:class="${item.current}? 'active' : ''">
+                    <span th:if="${item.current}" th:text="${item.number}">1</span>
+                    <a th:if="${not item.current}"
+                       th:href="@{${page.url}(page=${item.number},size=15)}">
+                        <span th:text="${item.number}">1</span>
+                    </a>
+                </li>
+                <li th:class="${page.hasNextPage}? '' : 'disabled'">
+                    <span th:if="${not page.hasNextPage}">&rsaquo;</span>
+                    <a th:if="${page.hasNextPage}"
+                       th:href="@{${page.url}(page=${page.number+1},size=15)}"
+                       title="Go to next page">&rsaquo;</a>
+                </li>
+                <li th:class="${page.lastPage}? 'disabled' : ''">
+                    <span th:if="${page.lastPage}">&raquo;</span>
+                    <a th:if="${not page.lastPage}"
+                       th:href="@{${page.url}(page=${page.totalPages},size=15)}">&raquo;</a>
+                </li>
+            </ul>
+            <div class="nresults">
+                Trovati <span th:text="${page.totalElements}">n</span> elementi
+            </div>
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org" th:with="title='Errore'">
+    <head th:substituteby="page/fragments/headTag :: headTag">
+        <link rel="stylesheet" href="../../../../resources/css/bootstrap.min.css" type="text/css"/>
+        <link rel="stylesheet" href="../../../../resources/css/main.css" type="text/css"/>
+
+        <title th:text="#{app.title}">Errore</title>
+    </head>
+    <body>
+
+        <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="error-container">
+                        <h1>Oops!</h1>
+                        <h2>Errore generico</h2>
+                        <div class="error-details">
+                            Spiacente, si &egrave; verificato un errore generico!
+                            <!--p th:text="${exception}">dd</p-->
+                        </div> <!-- /error-details -->
+                        <div class="error-actions">
+                            <a href="#" th:href="@{${T(app.App).HOME}}" class="btn btn-primary btn-lg">
+                                <i class="glyphicon glyphicon-chevron-left"></i>
+                                &nbsp;
+                                Torna alla home
+                            </a>
+                            <a href="#" th:href="@{${T(app.App).CONTATTI}}" class="btn btn-default btn-lg">
+                                <i class="glyphicon glyphicon-envelope"></i>
+                                &nbsp;
+                                Contatta il supporto
+                            </a>
+                        </div> <!-- /error-actions -->
+                    </div> <!-- /error-container -->
+                </div> <!-- /span12 -->
+            </div> <!-- /row -->
+            <hr/>
+            <footer th:substituteby="page/fragments/footerTag :: footerTag" />
+        </div>
+
+    </body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+        <div class="col-md-9">
+            <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                <article class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Enti abilitati</h4>
+                        <p class="grigio-40-color"><i class="fa fa-4x fa-building-o pull-left"
+                                                      aria-hidden="true"></i>Ut enim ad minim veniam, quis nostrud
+                            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                        <div class="box_tools clearfix">
+                            <ul>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).ENTI}}" title="Visualizza tutti"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i
+                                            class="fa fa-angle-double-right"></i></a>
+                                </li>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).ENTE}}"
+                                       title="Aggiungi un nuovo elemento"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i class="fa fa-plus"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                <article class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Tipologie di tributo</h4>
+                        <p class="grigio-40-color"><i class="fa fa-4x fa-money pull-left" aria-hidden="true"></i>Ut
+                            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                            commodo consequat. </p>
+                        <div class="box_tools clearfix">
+                            <ul>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).TIPOLOGIE}}" title="Visualizza tutti"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i
+                                            class="fa fa-angle-double-right"></i></a>
+                                </li>
+                                <li class="pull-right">
+                                    <a href="#"
+                                       th:href="@{${T(app.App).TIPOLOGIA}}" title="Aggiungi un nuovo elemento"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i class="fa fa-plus"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                <article class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Lista tributi</h4>
+                        <p class="grigio-40-color"><i class="fa fa-4x fa-tasks pull-left" aria-hidden="true"></i>Ut
+                            enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+                            commodo consequat. </p>
+                        <div class="box_tools clearfix">
+                            <ul>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).TRIBUTI}}" title="Visualizza tutti"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i
+                                            class="fa fa-angle-double-right"></i></a>
+                                </li>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).TRIBUTO}}"
+                                       title="Aggiungi un nuovo elemento"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i class="fa fa-plus"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                <article class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Provider abilitati</h4>
+                        <p class="grigio-40-color"><i class="fa fa-4x fa-credit-card pull-left"
+                                                      aria-hidden="true"></i>Ut enim ad minim veniam, quis nostrud
+                            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                        <div class="box_tools clearfix">
+                            <ul>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).PROVIDERS}}" title="Visualizza tutti"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i
+                                            class="fa fa-angle-double-right"></i></a>
+                                </li>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).PROVIDER}}"
+                                       title="Aggiungi un nuovo elemento"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i class="fa fa-plus"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <!--div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                <article class="panel panel-default">
+                    <div class="panel-body">
+                        <h4>Ricerche</h4>
+                        <p class="grigio-40-color"><i class="fa fa-4x fa-credit-card pull-left"
+                                                      aria-hidden="true"></i>Ut enim ad minim veniam, quis nostrud
+                            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </p>
+                        <div class="box_tools clearfix">
+                            <ul>
+                                <li class="pull-right">
+                                    <a href="#" th:href="@{${T(app.App).SEARCH}}" title="Visualizza tutti"><i
+                                            class="fa fa-circle-thin fa-stack-2x"></i><i
+                                            class="fa fa-angle-double-right"></i></a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </div-->
+
+            <!--div class="row">
+                <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-md-12"><h4><i class="glyphicon glyphicon-th-list"></i>&nbsp;&nbsp;Enti</h4>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <a class="btn btn-primary btn-sm" href="#" th:href="@{${T(app.App).ENTE}}">Aggiungi</a>
+                                <a class="btn btn-primary btn-sm" href="#" th:href="@{${T(app.App).ENTI}}">Visualizza</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-md-12"><h4><i class="glyphicon glyphicon-th-list"></i>&nbsp;&nbsp;Tipologia</h4>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <a class="btn btn-primary btn-sm" href="#" th:href="@{${T(app.App).TIPOLOGIA}}">Aggiungi</a>
+                                <a class="btn btn-primary btn-sm" href="#"
+                                   th:href="@{${T(app.App).TIPOLOGIE}}">Visualizza</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-md-12"><h4><i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;Tributi</h4>
+                            </div>
+                            <div class="col-md-12 text-right">
+                                <a class="btn btn-primary btn-sm" href="#" th:href="@{${T(app.App).TRIBUTO}}">Aggiungi</a>
+                                <a class="btn btn-primary btn-sm" href="#" th:href="@{${T(app.App).TRIBUTI}}">Visualizza</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4" sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <div class="col-md-12"><h4><i class="glyphicon glyphicon-certificate"></i>&nbsp;&nbsp;Provider
+                            </h4></div>
+                            <div class="col-md-12 text-right">
+                                <a class="btn btn-primary btn-sm" href="#" th:href="@{${T(app.App).PROVIDER}}">Aggiungi</a>
+                                <a class="btn btn-primary btn-sm" href="#"
+                                   th:href="@{${T(app.App).PROVIDERS}}">Visualizza</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="panel panel-default" sec:authorize="hasRole('ROLE_ADMIN')">
+                        <div class="panel-body">
+                            <div class="col-md-12"><h4><i class="glyphicon glyphicon-search"></i>&nbsp;&nbsp;Ricerche in
+                                archivio pagamenti</h4></div>
+                            <div class="col-md-12 text-right">
+                                <a class="btn btn-primary btn-sm" href="#" th:href="@{${T(app.App).SEARCH}}">Effettua una
+                                    ricerca</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div-->
+
+        </div>
+    </div>
+</div>
+
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+</body>
+</html>

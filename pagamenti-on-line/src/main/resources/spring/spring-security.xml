@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+             xmlns:beans="http://www.springframework.org/schema/beans"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+           http://www.springframework.org/schema/security
+           http://www.springframework.org/schema/security/spring-security-3.2.xsd">
+
+    <beans:bean id="springApplicationContext" class="it.publisys.pagamentionline.ctx.SpringApplicationContext"/>
+
+    <global-method-security secured-annotations="enabled" />
+
+    <http pattern="/resources/**" security="none"/>
+    <http pattern="/files/**" security="none"/>
+    <http pattern="/favicon.ico" security="none" />
+
+    <http auto-config="true" use-expressions="true">
+
+        <intercept-url pattern="/" access="permitAll"/>
+        <intercept-url pattern="/netbeans-tomcat-status-test" access="permitAll"/>
+        <intercept-url pattern="/index" access="permitAll"/>
+        <intercept-url pattern="/public/**" access="permitAll"/>
+
+        <intercept-url pattern="/app/home" access="hasRole('ROLE_USER') or hasRole('ROLE_ADMIN')" />
+
+        <intercept-url pattern="/app/contatti" access="hasRole('ROLE_USER')"/>
+
+        <intercept-url pattern="/app/pag/informazioni/**" access="permitAll" />
+
+        <intercept-url pattern="/app/admin/**" access="hasRole('ROLE_ADMIN')" />
+        <intercept-url pattern="/app/user/**" access="hasRole('ROLE_USER')" />
+        <intercept-url pattern="/app/pag/**" access="hasRole('ROLE_USER')" />
+
+        <!-- login/logout -->
+        <intercept-url pattern="/login" access="permitAll"/>
+        <intercept-url pattern="/ims" access="permitAll"/>
+        <intercept-url pattern="/logout" access="permitAll"/>
+        <intercept-url pattern="/error/**" access="permitAll"/>
+        <!-- login action -->
+        <form-login login-page="/login"
+                    default-target-url="/app/home"
+                    authentication-failure-url="/login/failed"
+                    authentication-success-handler-ref="loginAuthenticationSuccessHandler" />
+        <!-- logout action -->
+        <logout logout-success-url="/logout"
+                delete-cookies="JSESSIONID"
+                invalidate-session="true" />
+        <!-- access denied -->
+        <access-denied-handler error-page="/error/denied" />
+    </http>
+
+    <authentication-manager>
+        <authentication-provider user-service-ref="loginUserDetailsService">
+            <password-encoder hash="md5"/>
+        </authentication-provider>
+    </authentication-manager>
+
+</beans:beans>

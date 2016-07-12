@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+    <head><title></title></head>
+
+    <body onload="document.forms[0].submit();">
+
+        <form name='f' th:action="@{/j_spring_security_check}"
+              method='POST' style="display: none;">
+            <input type="text" name="j_key" th:value="${ukey}" />
+            <input type="text" name="j_username" th:value="${uname}" />
+            <input type="password" name="j_password" th:value="${uname}" />
+        </form>
+
+    </body>
+</html>

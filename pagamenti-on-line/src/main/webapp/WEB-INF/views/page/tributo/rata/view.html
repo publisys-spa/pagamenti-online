@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+    <link rel="stylesheet" href="../../../../resources/css/bootstrap.min.css" type="text/css"/>
+    <link rel="stylesheet" href="../../../../resources/css/main.css" type="text/css"/>
+
+    <title></title>
+</head>
+
+<body>
+
+<div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+<div class="container">
+
+    <ol th:substituteby="page/fragments/breadcrumbTag :: breadcrumbRataDetail"></ol>
+
+    <div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <i class="glyphicon glyphicon-th"></i>&nbsp;&nbsp;AGGIUNGI UNA NUOVA RATA
+                <a th:href="@{|${T(app.App).RATA}/${rata.id}|}" th:if="${rata.id != null}">
+                    #<span th:text="${rata.id}"></span>
+                </a>
+
+                <a class="pull-right btn btn-info btn-xs" th:href="@{|${T(app.App).TRIBUTO}/${rata.tributo.id}|}">
+                    <i class="glyphicon glyphicon-arrow-up"></i> Tributo #<span th:text="${rata.tributo.id}"></span>
+                </a>
+            </div>
+            <div class="panel-body">
+
+                <form th:action="@{${T(app.App).RATA}}" class="form-horizontal" th:object="${rata}"
+                      method="post">
+
+                    <fieldset>
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <input type="hidden" th:field="*{id}"/>
+                        <input type="hidden" th:field="*{tributo.id}"/>
+
+                        <div class="form-group">
+                            <label for="customId" class="col-md-3 control-label">Custom ID:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{customId}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="nome" class="col-md-3 control-label">Nome:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{nome}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="descrizione" class="col-md-3 control-label">Descrizione:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{descrizione}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dataDa" class="col-md-3 control-label">Data Da:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control datepicker" th:field="*{dataDa}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="dataA" class="col-md-3 control-label">Data A:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control datepicker" th:field="*{dataA}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="causale" class="col-md-3 control-label">Causale:</label>
+                            <div class="col-md-8">
+                                <input type="text" class="form-control" th:field="*{causale}"/>
+                            </div>
+                        </div>
+
+                        <div class="form-group text-center">
+                            <div class="col-md-12">
+                                <button type="submit" class="btn btn-primary btn-sm">
+                                    <i class="glyphicon glyphicon-floppy-disk"></i> Salva
+                                </button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+
+            </div>
+        </div>
+
+        <!--
+             <table class="table table-condensed table-striped table-hover table-responsive" th:unless="${#lists.isEmpty(rate)}">
+
+
+                 <tr th:each="rata : ${rate}">
+                     <td th:text="${rata.nome}"></td>
+                     <td th:text="${rata.descrizione}"></td>
+                     <td th:text="${rata.dataDa}"></td>
+                     <td th:text="${rata.dataA}"></td>
+                     <td th:text="${rata.causale}"></td>
+                     <td class="text-center">
+                         <a th:href="@{|${T(app.App).RATA}/${rata.id}|}">
+                             <i class="glyphicon glyphicon-edit"></i> Apri
+                         </a>
+                         &nbsp;&nbsp;&nbsp;
+                         <a th:href="@{|${T(app.App).RATA}/${rata.id}|(op=D)}">
+                             <i class="glyphicon glyphicon-remove"></i> Elimina
+                         </a>
+                     </td>
+                 </tr>
+             </table>
+-->
+
+    </div>
+
+    <hr/>
+    <footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+</div>
+
+</body>
+</html>
