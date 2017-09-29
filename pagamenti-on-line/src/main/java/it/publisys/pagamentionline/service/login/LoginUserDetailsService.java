@@ -46,6 +46,7 @@ public class LoginUserDetailsService
     public int setKeyLogin(String key, String username) {
         User _user = loadUserByUsername(username);
         _user.setKeyRequest(key);
+        _user.setLogUpdate(username);
         userRepository.saveAndFlush(_user);
         return 1;
     }

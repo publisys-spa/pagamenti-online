@@ -30,7 +30,7 @@
         <dependency>
             <groupId>it.govpay</groupId>
             <artifactId>govpay-core</artifactId>
-            <version>2.1</version>
+            <version>2.4</version>
         </dependency>
 
         <dependency>

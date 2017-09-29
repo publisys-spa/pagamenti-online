@@ -14,4 +14,6 @@ public interface ProviderRepository extends JpaRepository<Provider, Long> {
 
     Page<Provider> findByLogdDateIsNull(Pageable pageable);
 
+    Provider findByName(String name);
+
 }

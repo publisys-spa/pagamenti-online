@@ -40,15 +40,17 @@ public class ProviderController
     @Autowired
     private EnteService enteService;
 
+
+
     @RequestMapping(value = RequestMappings.PROVIDERS,
             method = RequestMethod.GET)
     public String toList(Model model, Pageable pageable) {
-
-        PageWrapper<Provider> _page = new PageWrapper<>(providerService.findAll(pageable),
-                RequestMappings.PROVIDERS);
-        model.addAttribute(ModelMappings.PAGE, _page);
-        model.addAttribute(ModelMappings.PROVIDERS, _page.getContent());
-
+        if (AuthorityUtil.isAuthenticated() && AuthorityUtil.isAdminLogged()) {
+            PageWrapper<Provider> _page = new PageWrapper<>(providerService.findAll(pageable),
+                    RequestMappings.PROVIDERS);
+            model.addAttribute(ModelMappings.PAGE, _page);
+            model.addAttribute(ModelMappings.PROVIDERS, _page.getContent());
+        }
         return ViewMappings.PROVIDERS;
     }
 
@@ -63,24 +65,24 @@ public class ProviderController
     public String toView(@PathVariable(value = "id") Long id,
                          @RequestParam(value = "op", required = false) String op,
                          ModelMap model) {
-
-        if (op != null) {
-            if ("D".equalsIgnoreCase(op)) {
-                return toDelete(id);
+        if (AuthorityUtil.isAuthenticated() && AuthorityUtil.isAdminLogged()) {
+            if (op != null) {
+                if ("D".equalsIgnoreCase(op)) {
+                    return toDelete(id);
+                }
             }
+
+            Provider _provider;
+
+            if (id != null && providerService.exists(id)) {
+                _provider = providerService.getOne(id);
+            } else {
+                _provider = new Provider();
+            }
+
+            model.addAttribute(ModelMappings.ENTI, enteService.findAll());
+            model.addAttribute(ModelMappings.PROVIDER, _provider);
         }
-
-        Provider _provider;
-
-        if (id != null && providerService.exists(id)) {
-            _provider = providerService.getOne(id);
-        } else {
-            _provider = new Provider();
-        }
-
-        model.addAttribute(ModelMappings.ENTI, enteService.findAll());
-        model.addAttribute(ModelMappings.PROVIDER, _provider);
-
         return ViewMappings.PROVIDER;
     }
 

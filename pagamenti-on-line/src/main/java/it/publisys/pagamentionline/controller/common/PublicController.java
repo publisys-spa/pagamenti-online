@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 public class PublicController {
 
     private static final Logger _log = LoggerFactory.getLogger(PublicController.class);
-    //
+
     @Autowired
     private MailService mailService;
 

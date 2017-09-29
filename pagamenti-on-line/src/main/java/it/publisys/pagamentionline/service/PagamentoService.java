@@ -49,12 +49,24 @@ public class PagamentoService {
         return pagamentoRepository.findOne(id);
     }
 
-      public Optional<Pagamento> findByPid(String pid) {
+    public Optional<Pagamento> findByPid(String pid) {
         return pagamentoRepository.findByPid(pid);
     }
 
+    public Optional<Pagamento> findByCodVersamentoEnte(String codVersamentoEnte) {
+        return pagamentoRepository.findByCodVersamentoEnte(codVersamentoEnte);
+    }
+
     public Page<Pagamento> findAllByUser(Pageable pageable, User user) {
-        return pagamentoRepository.findByEsecutoreAndStatoPagamentoNotAndLogdDateIsNullOrderByDataPagamentoDesc(pageable, user, PagamentiOnlineKey.STATO_ELIMINATO );
+        return pagamentoRepository.findByEsecutoreAndStatoPagamentoNotAndLogdDateIsNullOrderByDataPagamentoDesc(pageable, user, PagamentiOnlineKey.STATO_ELIMINATO);
+    }
+
+    public List<Pagamento> findAllByUserPid(User user, String pid) {
+        return pagamentoRepository.findByEsecutoreAndStatoPagamentoNotAndLogdDateIsNullAndPidOrderByDataPagamentoDesc(user, PagamentiOnlineKey.STATO_ELIMINATO, pid);
+    }
+
+    public List<Pagamento> findAllByUserIuv(User user, String iuv) {
+        return pagamentoRepository.findByEsecutoreAndStatoPagamentoNotAndLogdDateIsNullAndIuvOrderByDataPagamentoDesc(user, PagamentiOnlineKey.STATO_ELIMINATO, iuv);
     }
 
     public List<Pagamento> findFisrt5ByUser(User user) {
@@ -84,15 +96,24 @@ public class PagamentoService {
             _pagMod.setImportoCommissione(pagamento.getImportoCommissione());
             _pagMod.setCausale(pagamento.getCausale());
             _pagMod.setAttoAccertamento(pagamento.getAttoAccertamento());
-
-            _pagMod.setRefnumber(pagamento.getRefnumber());
+            if (pagamento.getIuv() != null) {
+                _pagMod.setIuv(pagamento.getIuv());
+            }
+            if (pagamento.getIdSessione() != null) {
+                _pagMod.setIdSessione(pagamento.getIdSessione());
+            }
             _pagMod.setCcp(pagamento.getCcp());
             _pagMod.setDateProcessed(pagamento.getDateProcessed());
             _pagMod.setStatusResponse(pagamento.getStatusResponse());
             _pagMod.setKeyWisp(pagamento.getKeyWisp());
             _pagMod.setStatoPagamento(pagamento.getStatoPagamento());
-            _pagMod.setIur(pagamento.getIur());
-
+            if (pagamento.getIur() != null) {
+                _pagMod.setIur(pagamento.getIur());
+            }
+            _pagMod.setCodVersamentoEnte(pagamento.getCodVersamentoEnte());
+            if(pagamento.getCodPsp() != null) {
+                _pagMod.setCodPsp(pagamento.getCodPsp());
+            }
             _pagMod.setLoguUser(username);
             _pagMod.setLoguDate(new Date());
             return pagamentoRepository.saveAndFlush(_pagMod);
@@ -111,8 +132,12 @@ public class PagamentoService {
             }
 
             pagamento.setPid("P" + UUID.randomUUID().toString().replaceAll("-", ""));
-            pagamento.setDataPagamento(new Date());
-
+            if (null == pagamento.getDataPagamento() ) {
+                pagamento.setDataPagamento(new Date());
+            }
+            if (null == pagamento.getCodVersamentoEnte() || pagamento.getCodVersamentoEnte().isEmpty()) {
+                pagamento.setCodVersamentoEnte(pagamento.getPid());
+            }
             pagamento.setLogcUser(username);
             pagamento.setLogcDate(new Date());
             return pagamentoRepository.saveAndFlush(pagamento);
@@ -134,5 +159,6 @@ public class PagamentoService {
         }
         return prop;
     }
+
 
 }

@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Rata</div>
+
+              <!--  <i class="glyphicon glyphicon-th"></i>&nbsp;&nbsp;AGGIUNGI UNA NUOVA RATA
+                <a th:href="@{|${T(app.App).RATA}/${rata.id}|}" th:if="${rata.id != null}">
+                    #<span th:text="${rata.id}"></span>
+                </a>
+
+                <a class="pull-right btn btn-info btn-xs" th:href="@{|${T(app.App).TRIBUTO}/${rata.tributo.id}|}">
+                    <i class="glyphicon glyphicon-arrow-up"></i> Tributo #<span th:text="${rata.tributo.nome}"></span>
+                </a>-->
+
+
+                <div class="panel-body">
+
+                    <form th:action="@{${T(app.App).RUOLO}}" class="form-horizontal" th:object="${ruolo}"
+                          method="post">
+
+                        <fieldset>
+                            <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                                <ul>
+                                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                                </ul>
+                            </div>
+
+                            <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                                <span th:text="${message}"></span>
+                            </div>
+                            <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                                <span th:text="${error}"></span>
+                            </div>
+
+                            <input type="hidden" th:field="*{id}"/>
+                            <input type="hidden" th:field="*{user.id}"/>
+
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                                <label for="authority" class="control-label">Applicazione</label>
+                                <div>
+                                    <select th:field="*{authority}" class="form-control">
+                                        <option value="ROLE_USER">UTENTE SEMPLICE</option>
+                                        <option value="ROLE_ADMIN">AMMINISTRATORE</option>
+                                        <option value="ROLE_DIR">DIRIGENTE</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group text-center">
+                                <div class="col-md-12">
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        <i class="glyphicon glyphicon-floppy-disk"></i> Salva
+                                    </button>
+                                </div>
+                            </div>
+                        </fieldset>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr/>
+    <footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+</div>
+
+</body>
+</html>

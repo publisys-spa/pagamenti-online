@@ -12,8 +12,8 @@
     <name>pagamentionline-bundle</name>
 
     <modules>
-        <module>../pagamenti-on-line/trunk</module>
-        <module>../govpay-client/trunk</module>
+        <module>../../pagamenti-on-line/trunk</module>
+        <module>../../govpay-client/trunk</module>
     </modules>
 
 </project>

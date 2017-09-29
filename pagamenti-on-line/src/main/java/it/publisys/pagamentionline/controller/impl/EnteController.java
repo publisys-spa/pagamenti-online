@@ -90,6 +90,7 @@ public class EnteController extends BaseController {
         ente = enteService.save(ente, _user);
         model.addAttribute(ModelMappings.MESSAGE, "Salvataggio effettuato");
         model.addAttribute(ModelMappings.ENTE, ente);
+        _log.info("Salvataggio dell'ente: " + ente.getName() + " effettuato correttamente");
         return ViewMappings.ENTE;
     }
 

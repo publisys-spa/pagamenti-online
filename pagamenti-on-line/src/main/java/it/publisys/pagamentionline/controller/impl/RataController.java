@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -41,8 +42,8 @@ public class RataController
         method = RequestMethod.GET)
     public String toView(
         @RequestParam(value = "tribid", required = false) Long tribid,
-        ModelMap model) {
-        return toView(null, tribid, null, model);
+        ModelMap model, Authentication auth) {
+        return toView(null, tribid, null, model, auth);
     }
 
     @RequestMapping(value = RequestMappings.RATA + "/{id}",
@@ -50,25 +51,25 @@ public class RataController
     public String toView(@PathVariable(value = "id") Long id,
                          @RequestParam(value = "tribid", required = false) Long tribid,
                          @RequestParam(value = "op", required = false) String op,
-                         ModelMap model) {
-
-        if (op != null) {
-            if ("D".equalsIgnoreCase(op)) {
-                return toDelete(id, model);
+                         ModelMap model, Authentication auth) {
+        if (auth != null && auth.isAuthenticated()) {
+            if (op != null) {
+                if ("D".equalsIgnoreCase(op)) {
+                    return toDelete(id, model);
+                }
             }
+
+            Rata _rata;
+
+            if (id != null) {
+                _rata = rataService.getRata(id);
+            } else {
+                _rata = new Rata();
+                _rata.setTributo(new Tributo(tribid));
+            }
+
+            model.addAttribute(ModelMappings.RATA, _rata);
         }
-
-        Rata _rata;
-
-        if (id != null) {
-            _rata = rataService.getRata(id);
-        } else {
-            _rata = new Rata();
-            _rata.setTributo(new Tributo(tribid));
-        }
-
-        model.addAttribute(ModelMappings.RATA, _rata);
-
         return ViewMappings.RATA;
     }
 
@@ -76,17 +77,18 @@ public class RataController
         method = RequestMethod.POST)
     public String toSave(
         @ModelAttribute(value = ModelMappings.RATA) @Valid Rata rata,
-        BindingResult result, ModelMap model) {
+        BindingResult result, ModelMap model, Authentication auth) {
+        if (auth != null && auth.isAuthenticated()) {
+            if (result.hasErrors()) {
+                model.addAttribute(ModelMappings.RATA, rata);
+                return ViewMappings.RATA;
+            }
 
-        if (result.hasErrors()) {
+            String _user = SecurityUtil.getPrincipal().getUsername();
+            rata = rataService.save(rata, _user);
+            model.addAttribute(ModelMappings.MESSAGE, "Salvataggio effettuato");
             model.addAttribute(ModelMappings.RATA, rata);
-            return ViewMappings.RATA;
         }
-
-        String _user = SecurityUtil.getPrincipal().getUsername();
-        rata = rataService.save(rata, _user);
-        model.addAttribute(ModelMappings.MESSAGE, "Salvataggio effettuato");
-        model.addAttribute(ModelMappings.RATA, rata);
         return ViewMappings.RATA;
     }
 

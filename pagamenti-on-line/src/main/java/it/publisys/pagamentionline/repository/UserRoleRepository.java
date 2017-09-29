@@ -16,4 +16,5 @@ public interface UserRoleRepository
 
     List<UserRole> findByUser(User user);
 
+   UserRole findByUserAndAuthority(User user, String authority);
 }

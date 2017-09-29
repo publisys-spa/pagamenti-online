@@ -29,6 +29,7 @@
                     <tr class="info">
                         <th>Denominazione</th>
                         <th>C.F./P.IVA</th>
+                        <th>Codice Dominio</th>
                         <th>Operazioni</th>
                     </tr>
                     </thead>
@@ -36,6 +37,7 @@
                     <tr th:each="ente : ${enti}">
                         <td th:text="${ente.name}"></td>
                         <td th:text="${ente.fiscalCode}"></td>
+                        <td th:text="${ente.codDominio}"></td>
                         <td class="text-center">
                             <a th:href="@{|${T(app.App).ENTE}/${ente.id}|}" class="btn btn-warning btn-sm">
                                 Modifica
@@ -53,45 +55,9 @@
                     Nessun ente presente.
                 </div>
             </div>
-            <div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div>
-        </div>
+            <div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div>       </div>
 
 
-        <!--div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="glyphicon glyphicon-certificate"></i>&nbsp;&nbsp;ENTE
-                <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).ENTE}}">
-                    <i class="glyphicon glyphicon-plus"></i> Nuova
-                </a>
-            </div>
-
-            <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
-                   th:unless="${#lists.isEmpty(enti)}">
-                <tr class="info">
-                    <th>Nome</th>
-                    <th>Codice Fiscale</th>
-                    <th></th>
-                </tr>
-                <tr th:each="ente : ${enti}">
-                    <td th:text="${ente.name}"></td>
-                    <td th:text="${ente.fiscalCode}"></td>
-                    <td class="text-center">
-                        <a class="btn btn-primary btn-xs" th:href="@{|${T(app.App).ENTE}/${ente.id}|}">
-                            <i class="glyphicon glyphicon-edit"></i> Apri
-                        </a>
-                        &nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-danger btn-xs" th:href="@{|${T(app.App).ENTE}/${ente.id}|(op=D)}">
-                            <i class="glyphicon glyphicon-remove"></i> Elimina
-                        </a>
-                    </td>
-                </tr>
-            </table>
-
-            <div class="panel-body" th:if="${#lists.isEmpty(enti)}">
-                Nessun ente presente.
-            </div>
-
-        </div-->
     </div>
 
 </div>

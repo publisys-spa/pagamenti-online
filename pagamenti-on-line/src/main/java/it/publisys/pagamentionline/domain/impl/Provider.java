@@ -8,7 +8,31 @@ import javax.validation.constraints.NotNull;
 
 /**
  * @author Francesco A. Tabino
+ *
+ * Il file di properties deve essere strutturato in questo modo
+ * #configurazione generica GovPay associata al portale unico della Regione Basilicata
+    #url = http://serviziclienti.link.it/govpay/PagamentiTelematiciGPAppService
+    url=http://serviziclienti.link.it/govpay/PagamentiTelematiciGP/soap/2.3/Portali
+    username = pubportale
+    password = password
+
+    #urlApp = http://serviziclienti.link.it/govpay/PagamentiTelematiciGPAppService
+    urlApp = http://serviziclienti.link.it/govpay/PagamentiTelematiciGP/soap/2.3/Applicazioni
+    usernameApp = PSYS
+    passwordApp = e987%df
+
+    urlGPRnd= http://serviziclienti.link.it/govpay/PagamentiTelematiciGP/soap/2.3/Rendicontazioni
+    usernameGPRnd = PSYS
+    passwordGPRnd = e987%df
+
+    codPortale = PSYS
+    codApplicazione = PubApp1
+    urlBack= http://localhost:8080/pagamentionline/app/pag/pay/storico
+    urlReturn= http://localhost:8080/pagamentionline/app/pag/pay/wisp
+    pageWisp =http://serviziclienti.link.it/govpay-ndp-sym/wisp.jsp
+
  */
+
 @Entity(name = "provider")
 public class Provider extends AbstractEntity {
 

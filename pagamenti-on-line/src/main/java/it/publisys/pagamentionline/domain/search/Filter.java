@@ -12,7 +12,7 @@ public class Filter {
     private String tipo;
     //
     private String pid;
-    private String refnumber;
+    private String iuv;
     private Date dataPagamento;
     private String causale;
     //
@@ -24,6 +24,12 @@ public class Filter {
     //
     private String targa;
     private String verbale;
+
+    //  RICERCA APPLICAZIONI
+    private String codice;
+    private String descrizione;
+    private String responsabile;
+    private String codDominio;
 
     public String getTipo() {
         return tipo;
@@ -105,12 +111,12 @@ public class Filter {
         this.verbale = verbale;
     }
 
-    public String getRefnumber() {
-        return refnumber;
+    public String getIuv() {
+        return iuv;
     }
 
-    public void setRefnumber(String refnumber) {
-        this.refnumber = refnumber;
+    public void setIuv(String iuv) {
+        this.iuv = iuv;
     }
 
     @Override
@@ -118,4 +124,35 @@ public class Filter {
         return ToStringBuilder.reflectionToString(this);
     }
 
+    public String getCodice() {
+        return codice;
+    }
+
+    public void setCodice(String codice) {
+        this.codice = codice;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public String getResponsabile() {
+        return responsabile;
+    }
+
+    public void setResponsabile(String responsabile) {
+        this.responsabile = responsabile;
+    }
+
+    public String getCodDominio() {
+        return codDominio;
+    }
+
+    public void setCodDominio(String codDominio) {
+        this.codDominio = codDominio;
+    }
 }

@@ -1,0 +1,164 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Ricerca
+                    Pagamenti in Debito
+                </div>
+
+                <div class="panel-body" th:classappend="${(null != sresults  and !sresults.empty) ? 'hidden' : ''}">
+                    <form th:action="@{${T(app.App).PAGAMENTO_DEBITORIO_SEARCH}}" class="form-horizontal" th:object="${filter}"
+                          method="post" sec:authorize="${isAuthenticated()}">
+
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12" >
+                            <label for="codiceFiscale" class="control-label">Codice Fiscale</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{codiceFiscale}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">
+                                Avvia la ricerca
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-md-9" th:if="${!debiti.empty}">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Risultati
+                    Ricerca
+                    <div>
+                        <a  th:unless="${#lists.isEmpty(debiti)}" class="btn btn-danger btn-sm"
+                                th:href="@{|${T(app.App).PAGAMENTO_DEBITORIO_SEARCH_PRINT}|}">
+                            Stampa
+                        </a>
+                        <a th:unless="${#lists.isEmpty(debiti)}" class="btn btn-warning btn-sm"
+                           th:href="@{${T(app.App).SEARCH_DEBITORIO}}">
+                            Nuova ricerca
+                        </a>
+                    </div>
+                </div>
+                <table class="table storico table-condensed table-striped table-bordered table-hover table-responsive"
+                       th:unless="${#lists.isEmpty(debiti)}">
+
+                    <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
+                           th:unless="${#lists.isEmpty(debiti)}">
+                        <thead>
+                        <tr class="info">
+                            <th colspan="7">Versamenti in Scadenza</th>
+                        </tr>
+                        </thead>
+                        <thead>
+                        <tr class="info">
+                            <th>Scadenza</th>
+                            <th>Causale - (Ente - Pagamento)</th>
+                            <th>N&deg; Operazione</th>
+                            <th>IUV</th>
+                            <th>Importo Dovuto</th>
+                            <th>Stato Pagamento</th>
+                            <th>Operazioni</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="debito : ${debiti}">
+                            <td th:if="${debito.dataScadenza != null}"
+                                th:text="${#dates.format(debito.dataScadenza, 'dd/MM/yyyy')}"></td>
+                            <td th:if="${debito.dataScadenza == null}"></td>
+                            <td th:text='${debito.causale}'></td>
+                            <td th:text='${debito.codVersamentoEnte}'></td>
+                            <td th:text='${debito.iuv}'></td>
+                            <td th:text='${#numbers.formatDecimal(debito.importoDovuto, 1,"POINT",2,"COMMA")}'></td>
+                            <td th:text='${debito.stato}'></td>
+                            <td class="text-center">
+                                <table>
+                                    <tr>
+                                        <td>
+                                            <a th:title="#{pagamento.avviso}" class="btn btn-info btn-sm" target="_blank"
+                                               th:if="${debito.stato != 'ANNULLATO' and debito.iuv != null }"
+                                               th:href="@{|${T(app.App).PAGAMENTO_DEBITORIO_PRINT}/${debito.codApplicazione}/${debito.iuv}|}">
+                                                <i class="fa fa-print" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a th:title="#{pagamento.annulla}" class="btn btn-info btn-sm" target="_blank"
+                                               th:if="${debito.stato != 'ANNULLATO' and debito.iuv != null }"
+                                               th:href="@{|${T(app.App).PAGAMENTO_DEBITORIO_ANNULLA}/${debito.codApplicazione}/${debito.codVersamentoEnte}|}">
+                                                <i class="fa fa-times" aria-hidden="true"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <!--div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div-->
+                </table>
+
+                <div class="panel-body" th:if="${debiti.empty}">
+                    Nessun risultato presente per i criteri indicati.
+                </div>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+<script type="text/javascript">
+    $("#tipo").change(function () {
+
+        var _tipo = $('#tipo').val();
+        if (_tipo === "CONTR") {
+            $('#tributo-box').hide();
+            $('#targa-box').show();
+            $('#verbale-box').show();
+        } else {
+            $('#tributo-box').show();
+            $('#targa-box').hide();
+            $('#verbale-box').hide();
+        }
+
+    }).trigger('change');
+</script>
+
+</body>
+</html>
+

@@ -18,6 +18,9 @@ public class Ente extends AbstractEntity {
     @Column(name = "fiscal_code")
     @NotEmpty(message = "Codice Fiscale obbligatorio")
     private String fiscalCode;
+    @Column(name = "codDominio")
+    @NotEmpty(message = "Codice Dominio obbligatorio")
+    private String codDominio;
 
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "ente")
     private Provider provider;
@@ -56,4 +59,13 @@ public class Ente extends AbstractEntity {
     public void setProvider(Provider provider) {
         this.provider = provider;
     }
+
+    public String getCodDominio() {
+        return codDominio;
+    }
+
+    public void setCodDominio(String codDominio) {
+        this.codDominio = codDominio;
+    }
+
 }

@@ -1,9 +1,12 @@
 package it.publisys.govpay.client;
 
-import it.govpay.servizi.*;
 import it.govpay.servizi.commons.*;
-import it.govpay.servizi.gpprt.*;
-import it.govpay.servizi.pa.*;
+import it.govpay.servizi.v2_3.*;
+import it.govpay.servizi.v2_3.PagamentiTelematiciGPApp;
+import it.govpay.servizi.v2_3.PagamentiTelematiciGPAppService;
+import it.govpay.servizi.v2_3.PagamentiTelematiciGPPrt;
+import it.govpay.servizi.v2_3.PagamentiTelematiciGPPrtService;
+import it.govpay.servizi.v2_3.gpprt.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -34,7 +37,7 @@ public class GovPayRPTTest {
 
     private static PagamentiTelematiciGPPrt port;
     private static PagamentiTelematiciGPApp portApp;
-    private static PagamentiTelematiciPAService portPA;
+    //private static PagamentiTelematiciPAService portPA;
 
     private static Anagrafica anagraficaDebitore;
 
@@ -81,10 +84,10 @@ public class GovPayRPTTest {
 
         System.out.println(">>>>>>>>>> Invio richiesta di pagamento senza IUV");
         GpAvviaTransazionePagamento request = gpAvviaTransazionePagamento();
-        GpAvviaTransazionePagamentoResponse response = port.gpAvviaTransazionePagamento(request);
+        GpAvviaTransazionePagamentoResponse response = port.gpAvviaTransazionePagamento(request, null);
 
-        System.out.println(">>>>>>>>>> Ritornato esito con codice " + response.getCodEsitoOperazione());
-        Assert.assertEquals(response.getCodEsitoOperazione(), EsitoOperazione.OK);
+        System.out.println(">>>>>>>>>> Ritornato esito con codice " + response.getCodOperazione());
+        Assert.assertEquals(response.getCodOperazione(), EsitoOperazione.OK);
 
         if (null != response.getRifTransazione() && !response.getRifTransazione().isEmpty()) {
             System.out.println(">>>>>>>>>> IUV associato al pagamento: " + response.getRifTransazione().get(0).getIuv());

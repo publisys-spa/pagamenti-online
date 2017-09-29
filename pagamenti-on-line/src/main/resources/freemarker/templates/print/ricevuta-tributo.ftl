@@ -36,7 +36,7 @@
                     <h1 style="font-size: 14px; font-weight: normal; margin: 5px 0 0;">IN DATA: <span style="font-weight: bold;">${pagamento.dateProcessed}</span></h1>
                 </div>
                 <div>
-                    <h1 style="font-size: 14px; font-weight: normal; margin: 5px 0 0;">N. OPERAZIONE: <span style="font-weight: bold;">${pagamento.refnumber}</span></h1>
+                    <h1 style="font-size: 14px; font-weight: normal; margin: 5px 0 0;">N. OPERAZIONE: <span style="font-weight: bold;">${pagamento.iuv}</span></h1>
                 </div>
                 <div>
                     <h1 style="font-size: 14px; font-weight: normal; margin: 5px 0 0;">CAUSALE: <span style="font-weight: bold;">${pagamento.causale}</span></h1>

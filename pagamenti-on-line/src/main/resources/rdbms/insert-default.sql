@@ -9,4 +9,8 @@ INSERT INTO `pagamenti_online`.`tipologie_tributi` (`nome`,`descrizione`,`tipo`,
 INSERT INTO `pagamenti_online`.`tipologie_tributi` (`nome`,`descrizione`,`tipo`,`codiceRadice`,`version`) VALUES ('TASI','TASI','PATRIMONIALE','TAS-','0');
 INSERT INTO `pagamenti_online`.`tipologie_tributi` (`nome`,`descrizione`,`tipo`,`codiceRadice`,`version`) VALUES ('MENSA_SCOLASTICA','MENSA SCOLASTICA','TRIBUTO','MS-','0');
 
-INSERT INTO `pagamenti` (`id`, `logc_date`, `logc_user`, `logd_date`, `logd_user`, `logu_date`, `logu_user`, `version`, `atto_accertamento`, `causale`, `data_pagamento`, `date_processed`, `importo`, `importo_commissione`, `pid`, `refnumber`, `status_response`, `tipologia`, `beneficiario`, `esecutore`, `rata`, `tributo`, `ente`, `iur`, `stato_pagamento`, `key_wisp`, `ccp`) VALUES (66, '2016-02-01 12:17:26', 'demo', NULL, NULL, '2016-02-01 12:18:00', 'govpay', 2, NULL, 'Esempio Rata 1', '2016-02-01 12:17:26', NULL, 22.2, NULL, 'PAG-f5912b44-0a48-433d-b6ab-7ce6363cdb8c', 'RF14000000000000111', NULL, NULL, NULL, -2, 3, 3, 2, 'idRisc-RF14000000000000111-0', 'PAGATO', NULL, NULL);
+INSERT INTO `pagamenti` (`id`, `logc_date`, `logc_user`, `logd_date`, `logd_user`, `logu_date`, `logu_user`, `version`, `atto_accertamento`, `causale`, `data_pagamento`, `date_processed`, `importo`, `importo_commissione`, `pid`, `iuv`, `status_response`, `tipologia`, `beneficiario`, `esecutore`, `rata`, `tributo`, `ente`, `iur`, `stato_pagamento`, `key_wisp`, `ccp`) VALUES (66, '2016-02-01 12:17:26', 'demo', NULL, NULL, '2016-02-01 12:18:00', 'govpay', 2, NULL, 'Esempio Rata 1', '2016-02-01 12:17:26', NULL, 22.2, NULL, 'PAG-f5912b44-0a48-433d-b6ab-7ce6363cdb8c', 'RF14000000000000111', NULL, NULL, NULL, -2, 3, 3, 2, 'idRisc-RF14000000000000111-0', 'PAGATO', NULL, NULL);
+
+---versione 2.3
+update tributi set applicazione = 2 where codApplicazione = 'app1';
+UPDATE tributi set cod_integrazione = responsabile ;

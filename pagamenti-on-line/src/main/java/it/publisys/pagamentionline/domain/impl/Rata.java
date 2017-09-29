@@ -40,6 +40,10 @@ public class Rata
     private String causale;
     @Column(name = "custom_id")
     private String customId;
+    @Column(name = "contoCorrente")
+    private String contoCorrente;
+    @Column(name = "note")
+    private String note;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tributo", referencedColumnName = "id")
@@ -109,4 +113,19 @@ public class Rata
         return ToStringBuilder.reflectionToString(this);
     }
 
+    public String getContoCorrente() {
+        return contoCorrente;
+    }
+
+    public void setContoCorrente(String contoCorrente) {
+        this.contoCorrente = contoCorrente;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
 }

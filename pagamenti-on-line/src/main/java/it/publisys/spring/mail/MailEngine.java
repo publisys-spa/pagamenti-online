@@ -76,7 +76,7 @@ public class MailEngine {
             // setto le informazioni per l'header
             message.setSentDate(new Date());
 
-            this.sender.send(message);
+             this.sender.send(message);
 
             _log.info("E-Mail inviata all'indirizzo '" + to + "'.");
 

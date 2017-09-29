@@ -39,8 +39,8 @@
 
 .navbar h1 {
     color: #fff;
-    font-size: 2.8rem;
-    line-height: 120%;
+    font-size: 2.2rem;
+    line-height: 165%;
     margin-bottom: 0;
     margin-top: 0;
 }
@@ -331,7 +331,7 @@ li.spid-idp-support-link {
     background: #0066cc none repeat scroll 0 0;
     color: #FFF;
     border: 1px solid transparent;
-    border-radius: 15px;
+    /*border-radius: 15px;*/
     font-size: 14px;
     line-height: 1;
     margin-right: 2px;

@@ -7,6 +7,7 @@ public class RataDTO extends GenericDTO {
 
     private String causale;
     private String descrizione;
+    private String note;
 
     public String getCausale() {
         return causale;
@@ -22,5 +23,13 @@ public class RataDTO extends GenericDTO {
 
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 }

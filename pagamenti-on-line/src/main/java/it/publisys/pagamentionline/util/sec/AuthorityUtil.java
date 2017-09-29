@@ -16,6 +16,7 @@ public class AuthorityUtil extends SecurityUtil {
     public static final String ROLE_GUEST = "ROLE_GUEST";
     public static final String ROLE_ADMIN = "ROLE_ADMIN";
     public static final String ROLE_USER = "ROLE_USER";
+    public static final String ROLE_DIR= "ROLE_DIR";
 
     public static Collection<? extends GrantedAuthority> getAuthorities() {
         return getAuthentication().getAuthorities();
@@ -23,6 +24,10 @@ public class AuthorityUtil extends SecurityUtil {
 
     public static boolean isAdminLogged() {
         return hasRole(ROLE_ADMIN);
+    }
+
+    public static boolean isDirLogged() {
+        return hasRole(ROLE_DIR);
     }
 
     public static boolean isUserLogged() {

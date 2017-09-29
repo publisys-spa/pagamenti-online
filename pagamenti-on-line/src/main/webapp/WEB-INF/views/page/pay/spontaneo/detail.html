@@ -24,9 +24,9 @@
                 <div class="panel-body">
                     <h5 class="blu-italia-base-color no-margin-top">Anagrafica del Debitore</h5>
                     <div class="media">
-                        <div class="media-left media-middle">
+                        <!--div class="media-left media-middle">
                             <img class="media-object" th:src="@{/resources/css/img/user.png}" alt="User sample"/>
-                        </div>
+                        </div-->
                         <div class="media-body">
                             <p th:inline="text"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;
                                 <span th:text="${pagamento.esecutore.firstname}"></span> <span
@@ -51,8 +51,7 @@
                         <div th:text="*{statoPagamento}"/>
                         <hr/>
                         <div th:text="*{statusResponse}"/>
-                        <hr/>
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                        <div th:if="${pagamento.iuv != null }" class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
                             <button class="btn btn-primary">
                                 Chiedi Stato
                             </button>
@@ -73,7 +72,7 @@
                         </div>
 
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label for="tributo" class="control-label">Tributo selezionato:</label>
+                            <label for="tributo" class="control-label">Pagamento selezionato:</label>
                             <div class="form-control" th:text="*{tributo.nome}"/>
                         </div>
 

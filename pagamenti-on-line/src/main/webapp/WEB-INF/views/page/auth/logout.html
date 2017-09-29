@@ -5,7 +5,7 @@
 
     <head><title></title></head>
 
-    <body th:onload="'window.location='+@{#{url.ims.service}}+';'" >
+    <body th:onload="'window.location='+@{#{url.spid.logout}}+';'" >
 
        <div class="container" style="display:none;">
            <hr/>
@@ -15,7 +15,7 @@
        <script type="text/javascript" th:inline="javascript">
             $(document).ready(function() {
                 //window.location= [[@{#{url.ims.service}}]];
-                window.location=[[@{'/'}]];
+                window.location= [[@{#{url.spid.logout}}]];
             });
         </script>
        

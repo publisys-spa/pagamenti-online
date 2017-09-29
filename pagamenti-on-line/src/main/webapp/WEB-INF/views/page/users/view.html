@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Tipologia
+                    Tributo
+                </div>
+
+                <div class="panel-body">
+                    <form th:action="@{${T(app.App).USER}}" class="form-horizontal" th:object="${user}"
+                          method="post">
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <input type="hidden" class="form-control" th:field="*{id}"/>
+
+                        <div class="row">
+                            <div class="form-group  col-md-5 col-md-push-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <label for="nome" class="control-label">Nome</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{firstname}"
+                                           readonly="readonly"/>
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-5 col-md-push-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <label for="cognome" class="control-label">Cognome</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{lastname}" readonly="readonly"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group  col-md-5 col-md-push-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <label for="codiceFiscale" class="control-label">Codice Fiscale</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{fiscalcode}"
+                                           readonly="readonly"/>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group  col-md-5 col-md-push-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <label for="email" class="control-label">Codice Fiscale</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{email}" readonly="readonly"/>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">
+                                Salva
+                            </button>
+                        </div-->
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" >
+
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Ruoli
+                    associati
+                    <a class="pull-right btn btn-info btn-xs" th:href="@{|${T(app.App).RUOLO}/${user.id}|}">
+                        <i class="glyphicon glyphicon-plus"></i> Aggiungi Ruolo
+                    </a>
+                </div>
+                <table class="table storico table-condensed table-striped table-bordered table-hover table-responsive"
+                       th:unless="${#lists.isEmpty(ruoli)}">
+                    <thead>
+                    <tr class="info">
+                        <th>Descrizion</th>
+                        <th>Operazioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="ruolo : ${ruoli}">
+                        <td th:text="${ruolo.authority}"></td>
+                        <td class="text-center">
+                            <a class="btn btn-danger btn-sm" th:href="@{|${T(app.App).USER}/${user.id}/${ruolo.id}|(op=D)}">
+                                Elimina
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="panel-body" th:if="${ruoli.empty}">
+                    Nessun risultato presente per i criteri indicati.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+
+<script type="text/javascript">
+    CKEDITOR.replace('editor1');
+</script>
+
+</body>
+</html>

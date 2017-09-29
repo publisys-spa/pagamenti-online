@@ -1,8 +1,8 @@
 package it.publisys.pagamentionline.controller.common;
 
-import it.govpay.servizi.PagamentiTelematiciGPPrt;
 import it.govpay.servizi.commons.StatoVersamento;
-import it.govpay.servizi.gpprt.GpChiediListaVersamentiResponse;
+import it.govpay.servizi.v2_3.PagamentiTelematiciGPPrt;
+import it.govpay.servizi.v2_3.gpprt.GpChiediListaVersamentiResponse;
 import it.publisys.pagamentionline.ModelMappings;
 import it.publisys.pagamentionline.RequestMappings;
 import it.publisys.pagamentionline.ViewMappings;
@@ -39,6 +39,7 @@ public class HomeController {
     @Autowired
     private GovPayService govPayService;
 
+
     @Autowired
     private VersamentoTransformer versamentoTransformer;
 
@@ -49,37 +50,42 @@ public class HomeController {
 
     @RequestMapping(value = RequestMappings.INDEX, method = RequestMethod.GET)
     public String index(ModelMap model, Authentication auth) {
-
         if (auth != null && auth.isAuthenticated()) {
             User user = (User) auth.getPrincipal();
             List<DebitoDTO> debiti = new ArrayList<>();
-            //TODO: mettere nel db questo pagamento 66l
-            Pagamento pagamento = pagamentoService.getPagamento(66L);
-            PagamentiTelematiciGPPrt port = govPayService.getPagamentiTelematiciGPPrt(pagamento);
-            GpChiediListaVersamentiResponse gpCercaVersamentiResponse = port.gpChiediListaVersamenti(govPayService.gpCercaVersamentiRequest(user, pagamento.getEnte()));
+            PagamentiTelematiciGPPrt port = govPayService.getPagamentiTelematiciGPPrt();
+            GpChiediListaVersamentiResponse gpCercaVersamentiResponse = port.gpChiediListaVersamenti(govPayService.gpCercaVersamentiRequest(user, StatoVersamento.NON_ESEGUITO, StatoVersamento.ANNULLATO));
 
-            gpCercaVersamentiResponse.getVersamento().stream()
-                    .filter(v -> !v.getStato().value().equals(StatoVersamento.ESEGUITO.value())).limit(5).forEach(v ->
-                debiti.add(versamentoTransformer.transofrmToPagamento(v)));
-
-
-            model.addAttribute("debiti", debiti);
+            gpCercaVersamentiResponse.getVersamento().stream().limit(5).forEach(v ->
+                    debiti.add(versamentoTransformer.transofrmToPagamento(v, user.getFiscalcode())));
+            model.addAttribute(ModelMappings.DEBITI, debiti);
 
             List<Pagamento> fisrt5ByUser = pagamentoService.findFisrt5ByUser(user);
             model.addAttribute(ModelMappings.PAGAMENTI, fisrt5ByUser);
         }
-
         return ViewMappings.INDEX;
     }
 
 
     @RequestMapping(value = RequestMappings.HOME, method = RequestMethod.GET)
     public String home(ModelMap model, HttpServletRequest request, Authentication auth) {
-
-        if (request.isUserInRole("ROLE_ADMIN")) {
-            return ViewMappings.HOME;
-        }
         return index(model, auth);
     }
+
+    @RequestMapping(value = RequestMappings.ADMIN_HOME, method = RequestMethod.GET)
+    public String adminHome(ModelMap model, HttpServletRequest request, Authentication auth) {
+        return ViewMappings.HOME;
+    }
+
+    /* da decommentare  per accesso SPID*/
+   /*@RequestMapping(value = RequestMappings.HOME, method = RequestMethod.GET)
+    public String home(ModelMap model) {
+        if (SecurityUtil.isAuthenticated()) {
+            if (AuthorityUtil.isAdminLogged()) {
+                return ViewMappings.INDEX;
+
+        return ViewMappings.ACCESS_DENIED;
+    }*/
+
 
 }

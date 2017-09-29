@@ -26,10 +26,11 @@
             <br class="hidden-xs hidden-sm"/>
             <p></p>
         </div>
-        <form th:action="@{|${T(app.App).PAGAMENTO_DEBITORIO_SEARCH}|}" class="form-inline col-lg-12 col-md-12"  method="post">
-            <label class="control-label " for="cerca">Ricerca per N&deg; Operazione:</label>
-            <input type="text" class="form-control" id="operazione" name="operazione"/>
-            <button class="btn btn-info btn-sm">
+        <form th:action="@{|${T(app.App).PAGAMENTO_DEBITORIO_SEARCH}|}" class="form-inline col-lg-12 col-md-12"
+              method="post" th:object="${filter}">
+            <label class="control-label " for="cerca">Ricerca per IUV:</label>
+            <input type="text" class="form-control" th:field="*{iuv}"/>
+            <button th:title="#{pagamento.ricerca}" class="btn btn-info btn-sm">
                 <i class="fa fa-search" aria-hidden="true"></i>
             </button>
         </form>
@@ -38,43 +39,63 @@
                    th:unless="${#lists.isEmpty(debiti)}">
                 <thead>
                 <tr class="info">
-                    <th colspan="6">Versamenti in Scadenza</th>
+                    <th colspan="8">Versamenti in Scadenza</th>
                 </tr>
                 </thead>
                 <thead>
                 <tr class="info">
                     <th>Scadenza</th>
-                    <th>Causale - (Ente - Tributo)</th>
+                    <th>Causale - (Ente - Pagamento)</th>
                     <th>N&deg; Operazione</th>
+                    <th>IUV</th>
                     <th>Importo Dovuto</th>
                     <th>Stato Pagamento</th>
+                    <th>Tipo</th>
                     <th>Operazioni</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="debito : ${debiti}">
                     <td th:if="${debito.dataScadenza != null}"
-                        th:text="${#dates.format(debito.dataScadenza, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                        th:text="${#dates.format(debito.dataScadenza, 'dd/MM/yyyy')}"></td>
                     <td th:if="${debito.dataScadenza == null}"></td>
                     <td th:text='${debito.causale}'></td>
                     <td th:text='${debito.codVersamentoEnte}'></td>
-                    <td th:text='${#numbers.formatDecimal(debito.importoDovuto, 1,"POINT",2,"COMMA")}'></td>
+                    <td th:text='${debito.iuv}'></td>
+                    <td style="text-align: right;" th:text='${#numbers.formatDecimal(debito.importoDovuto, 1,"POINT",2,"COMMA")}'></td>
                     <td th:text='${debito.stato}'></td>
+                    <td style="text-align: center;"><span
+                            th:if="${debito.stato != 'ANNULLATO' and debito.iuv != null }" title="Posizione debitoria">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: red"></i>
+                    </span>
+                        <span
+                              th:if="${debito.stato != 'ANNULLATO' and debito.iuv == null }" title="Pagamento fallito">
+                        <i class="fa fa-exclamation-triangle" aria-hidden="true" style="color: orange"></i>
+                    </span>
+                    </td>
+
                     <td class="text-center">
                         <table>
                             <tr>
                                 <td>
-                                    <a th:href='@{|${T(app.App).PAGAMENTO_DEBITORIO +"?pid=" + debito.codVersamentoEnte}|}'
+                                    <a th:title="#{pagamento.paga}" th:if="${debito.stato != 'ANNULLATO'}"
+                                       th:href='@{|${T(app.App).PAGAMENTO_DEBITORIO_DETAIL}/${debito.codApplicazione}/${debito.iuv}/${debito.codVersamentoEnte}|}'
                                        class="btn btn-primary btn-sm" target="_blank">
-                                        <i class="fa fa-info" aria-hidden="true"></i>
+                                        <i class="fa fa-eur" aria-hidden="true"></i>
                                     </a></td>
                                 <td>
-                                    <a
-                                            class="btn btn-info btn-sm" target="_blank"
-                                            th:href="@{|${T(app.App).PAGAMENTO_DEBITORIO_PRINT}/${debito.codApplicazione}/${debito.codVersamentoEnte}|}">
+                                    <a th:title="#{pagamento.avviso}" class="btn btn-info btn-sm" target="_blank"
+                                       th:if="${debito.stato != 'ANNULLATO' and debito.iuv != null }"
+                                       th:href="@{|${T(app.App).PAGAMENTO_DEBITORIO_PRINT}/${debito.codApplicazione}/${debito.iuv}|}">
                                         <i class="fa fa-print" aria-hidden="true"></i>
                                     </a>
                                 </td>
+                                <!--td>
+                                    <a title="Elimina pagamento" class="btn btn-info btn-sm"
+                                          th:if="${debito.stato != 'ANNULLATO' and debito.iuv == null }"
+                                          th:href="@{|${T(app.App).PAGAMENTO_DEBITORIO_ELIMINA}/${debito.codVersamentoEnte}|}">
+                                     <i class="glyphicon glyphicon-remove" aria-hidden="true"></i></a>
+                                </td-->
                             </tr>
                         </table>
                     </td>

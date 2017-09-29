@@ -25,12 +25,16 @@ public class TipologiaTributoService {
         return tipologiaTributoRepository.findOne(id);
     }
 
+    public TipologiaTributo getTipologiaByCodiceRadice(String codiceRadice) {
+        return tipologiaTributoRepository.findByCodiceRadice(codiceRadice);
+    }
+
     public List<TipologiaTributo> getAllTipologie() {
-        return tipologiaTributoRepository.findByLogdDateIsNull();
+        return tipologiaTributoRepository.findByLogdDateIsNullOrderByDescrizione();
     }
 
     public Page<TipologiaTributo> getAllTipologie(Pageable pageable) {
-        return tipologiaTributoRepository.findByLogdDateIsNull(pageable);
+        return tipologiaTributoRepository.findByLogdDateIsNullOrderByDescrizione(pageable);
     }
 
     public TipologiaTributo delete(Long id, String username) {

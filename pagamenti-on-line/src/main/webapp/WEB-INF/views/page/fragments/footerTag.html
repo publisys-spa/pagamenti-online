@@ -1,6 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+
 <div id="footer" class="hidden-print" tabindex="0" th:fragment="footerTag">
     <footer>
 
@@ -17,21 +19,27 @@
                 </div>
             </div>
             <div class="row">
+
                 <ul class="col-xs-12 footer__links clearfix">
-                    <li><a th:href="@{${T(app.App).HOME}}">Home</a></li>
-                    <li><a href="#" th:href="@{${T(app.App).INFO}}" title="info">Info</a></li>
-                    <li><a href="#" title="privacy policy">Privacy</a></li>
-                    <li><a href="#" title="note legali">Note legali</a></li>
-                    <li><a href="#" title="credits">Credits</a></li>
-                    <li><a href="#" th:href="@{${T(app.App).CONTATTI}}">Contatti</a></li>
+                    <li><a th:href="@{${T(app.App).HOME}}"> Home </a></li>
+                    <li><a href="#" th:href="@{${T(app.App).INFO}}" title="info"> Info </a></li>
+                    <![CDATA[
+                    <li><a href="http://www.regione.basilicata.it/giunta/site/giunta/detail.jsp?otype=1020&id=1715619" title="privacy policy"> Privacy </a></li>
+                    <li><a href="http://www.regione.basilicata.it/giunta/site/giunta/detail.jsp?otype=1020&id=1715618" title="note legali"> Note legali </a></li>
+                    <li><a href="http://www.regione.basilicata.it/giunta/site/giunta/section.jsp?menu=credits" title="credits"> Credits </a></li>
+                    <!--  ]]> -->
+                    <li><a th:href="@{${T(app.App).CONTATTI}}">Contatti</a></li>
+                    <!--li sec:authorize="${!isAuthenticated()}"><a th:href="@{${T(app.App).HOME}}"> Area amministratori</a></li-->
                 </ul>
             </div>
         </div>
+
     </footer>
 
     <a href="#page_top" title="torna all'inizio del contenuto" class="scrollto_top sr-only"><span></span></a>
     <script th:src="@{/resources/js/jquery.min.js}"></script>
     <script th:src="@{/resources/js/bootstrap.min.js}"></script>
+    <script th:src="@{/resources/js/vendor/bootstrap.min.js}"></script>
     <script th:src="@{/resources/js/combined.js}"></script>
     <script th:src="@{/resources/js/jquery.bxslider/jquery.bxslider.min.js}"></script>
     <script>

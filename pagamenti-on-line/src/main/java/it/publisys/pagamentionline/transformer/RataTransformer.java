@@ -16,6 +16,7 @@ public class RataTransformer {
         dto.setName(entity.getNome());
         dto.setCausale(entity.getCausale());
         dto.setDescrizione(entity.getDescrizione());
+        dto.setNote(entity.getNote());
         return dto;
     }
 

@@ -41,7 +41,7 @@
                 <br/>
             </p>
         </div>
-        <div class="col-md-12 col-lg-12 hidden-xs hidden-sm">
+        <!--div class="col-md-12 col-lg-12 hidden-xs hidden-sm">
             <div class="slider1">
                 <div class="slide">
                     <div class="media thumbnail carousel-element">
@@ -140,17 +140,30 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div-->
         <div class="col-md-12 col-lg-12" sec:authorize="isAnonymous()">
             <p>Per ricercare pagamenti gi&agrave; effettuati accedi alla sezione Storico Pagamenti.<br/>
                 Stai accedendo al sistema in modalit&agrave; non autenticata.<br/>
-                Accedendo a pagoPA in modalit&agrave; autenticata potrai consultare la tua Posizione Debitoria in forma
-                protetta e riservata.<br/>
-                Per l'accesso autenticato, se sei in possesso la Carta Nazionale dei Servizi (CNS), inserisci la carta
-                nel lettore e utilizza il pulsante Accedi mediante CNS. </p>
-            <p class="text-center"><a th:href="@{${T(app.App).HOME}}">
-                <button class="btn btn-default btn-facebook"  type="button">Clicca qui per accedere</button>
-            </a></p>
+                Accedendo a pagoPA inserendo le credenziali SPID potrai consultare la tua Posizione Debitoria in forma
+                protetta e riservata .<br/>
+
+            <!--p class="text-center"><a href="#" th:href="@{${T(app.App).HOME}}"-->
+            <p class="text-center"><a href="#" th:href="@{${T(app.App).SPID}}">
+            <img alt="Spid" th:src="@{/resources/img/spid-button-link-link.png}"
+                    style="width: 35%;"/>
+            </a>
+
+            </p>
+            </p>
+            <p style="text-align: justify">
+                SPID &egrave; il sistema di accesso che consente di utilizzare, con un'identit&agrave; digitale unica, i
+                servizi online della Pubblica Amministrazione e dei privati accreditati.
+                Se sei gi&agrave; in possesso di un'identit&agrave; digitale, accedi con le credenziali del tuo gestore.
+                Se non hai ancora un'identit&agrave; digitale, richiedila ad uno dei gestori.
+            </p>
+            <a href="http://www.spid.gov.it/" target="_blank">Maggiorni informazioni su SPID</a> <br/>
+            <a href="http://www.spid.gov.it/richiedi-spid" target="_blank">Non hai le credenziali SPID?</a>
+
             <p>
                 <br/><b>pagoPA</b> &egrave; stato realizzato da AgID in attuazione dell'art. 5 del Codice
                 dell'Amministrazione Digitale e dal D.L. 179/2012.
@@ -163,14 +176,15 @@
                    th:unless="${#lists.isEmpty(debiti)}">
                 <thead>
                 <tr class="info">
-                    <th colspan="6">Versamenti in Scadenza</th>
+                    <th colspan="7">Versamenti in Scadenza</th>
                 </tr>
                 </thead>
                 <thead>
                 <tr class="info">
                     <th>Scadenza</th>
-                    <th>Causale - (Ente - Tributo)</th>
+                    <th>Causale - (Ente - Pagamento)</th>
                     <th>N&deg; Operazione</th>
+                    <th>IUV</th>
                     <th>Importo Dovuto</th>
                     <th>Stato Pagamento</th>
                     <th>Operazioni</th>
@@ -179,18 +193,31 @@
                 <tbody>
                 <tr th:each="debito : ${debiti}">
 
-                    <td th:if="${debito.dataScadenza != null}" th:text="${#dates.format(debito.dataScadenza, 'dd/MM/yyyy HH:mm:ss')}"></td>
-                    <td th:if="${debito.dataScadenza == null}" ></td>
+                    <td th:if="${debito.dataScadenza != null}"
+                        th:text="${#dates.format(debito.dataScadenza, 'dd/MM/yyyy HH:mm:ss')}"></td>
+                    <td th:if="${debito.dataScadenza == null}"></td>
                     <td th:text='${debito.causale}'></td>
                     <td th:text='${debito.codVersamentoEnte}'></td>
-                    <td th:text='${#numbers.formatDecimal(debito.importoDovuto, 1,"POINT",2,"COMMA")}'></td>
+                    <td th:text='${debito.iuv}'></td>
+                    <td style="text-align: right;" th:text='${#numbers.formatDecimal(debito.importoDovuto, 1,"POINT",2,"COMMA")}'></td>
                     <td th:text='${debito.stato}'></td>
                     <td class="text-center">
                         <table>
                             <tr>
-                                <td><a th:href='@{|${T(app.App).PAGAMENTO_SPONTANEO +"?pid=" + debito.codVersamentoEnte}|}'  class="btn btn-primary btn-sm" target="_blank">
-                                    <i class="fa fa-info" aria-hidden="true"></i>
-                                </a></td>
+                                <td>
+                                    <a th:title="#{pagamento.paga}" th:if="${debito.stato != 'ANNULLATO'}"
+                                       th:href='@{|${T(app.App).PAGAMENTO_DEBITORIO_DETAIL}/${debito.codApplicazione}/${debito.iuv}/${debito.codVersamentoEnte}|}'
+                                       class="btn btn-primary btn-sm" target="_blank">
+                                        <i class="fa fa-eur" aria-hidden="true"></i>
+                                    </a></td>
+                                <td>
+                                    <a class="btn btn-info btn-sm" target="_blank"
+                                       th:title="#{pagamento.avviso}"
+                                       th:if="${debito.stato != 'ANNULLATO' and debito.iuv != null }"
+                                       th:href="@{|${T(app.App).PAGAMENTO_DEBITORIO_PRINT}/${debito.codApplicazione}/${debito.iuv}|}">
+                                        <i class="fa fa-print" aria-hidden="true"></i>
+                                    </a>
+                                </td>
                             </tr>
                         </table>
                     </td>
@@ -218,14 +245,15 @@
                    th:unless="${#lists.isEmpty(pagamenti)}">
                 <thead>
                 <tr class="info">
-                    <th colspan="6">Ultimi 5 pagamenti Effettuati</th>
+                    <th colspan="7">Ultimi 5 pagamenti Effettuati</th>
                 </tr>
                 </thead>
                 <thead>
                 <tr class="info">
                     <th>Data Pagamento</th>
-                    <th>Causale - (Ente - Tributo)</th>
+                    <th>Causale - (Ente - Pagamento)</th>
                     <th>N&deg; Operazione</th>
+                    <th>IUV</th>
                     <th>Importo Pagato</th>
                     <th>Stato Pagamento</th>
                     <th>Operazioni</th>
@@ -235,18 +263,22 @@
                 <tr th:each="pagamento : ${pagamenti}">
                     <td th:text="${#dates.format(pagamento.dataPagamento, 'dd/MM/yyyy HH:mm:ss')}"></td>
                     <td th:text='${pagamento.causale + " - (" + pagamento.ente.name + " - "+ pagamento.tributo.nome+")"}'></td>
-                    <td th:text='${pagamento.refnumber}'></td>
+                    <td th:text='${pagamento.pid}'></td>
+                    <td th:text='${pagamento.iuv}'></td>
                     <td th:text='${#numbers.formatDecimal(pagamento.importo, 1,"POINT",2,"COMMA")}'></td>
                     <td th:text='${pagamento.statoPagamento}'></td>
                     <td class="text-center">
                         <table>
                             <tr>
-                                <td><a th:href='@{|${T(app.App).PAGAMENTO_SPONTANEO +"?pid=" + pagamento.pid}|}' class="btn btn-primary btn-sm" target="_blank">
+                                <td><a th:title="#{pagamento.dettaglio}"
+                                       th:href='@{|${T(app.App).PAGAMENTO_SPONTANEO +"?pid=" + pagamento.pid}|}'
+                                       class="btn btn-primary btn-sm" target="_blank">
                                     <i class="fa fa-info" aria-hidden="true"></i>
                                 </a></td>
-                                <td> <a th:href="@{|${T(app.App).PAGAMENTO_PRINT}/${pagamento.id}|}"
-                                        th:if="${pagamento.statoPagamento == 'ESEGUITO'}"
-                                        class="btn btn-info btn-sm" target="_blank">
+                                <td><a th:title="#{pagamento.ricevuta}"
+                                       th:href="@{|${T(app.App).PAGAMENTO_PRINT}/${pagamento.id}|}"
+                                       th:if="${pagamento.statoPagamento == 'ESEGUITO'}"
+                                       class="btn btn-info btn-sm" target="_blank">
                                     <i class="fa fa-print" aria-hidden="true"></i>
                                 </a></td>
                             </tr>

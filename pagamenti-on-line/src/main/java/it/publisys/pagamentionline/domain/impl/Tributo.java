@@ -23,13 +23,19 @@ public class Tributo
     @Column(name = "descrizione", columnDefinition = "TEXT")
     @NotEmpty(message = "Descrizione obbligatoria")
     private String descrizione;
-    @Column(name = "responsabile")
-    @NotEmpty(message = "Responsabile obbligatorio")
-    private String responsabile;
+    @Column(name = "cod_integrazione")
+    @NotEmpty(message = "Codice integrazione obbligatorio")
+    private String codIntegrazione;
+    @Column(name = "allegati")
+    private String allegati;
 
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "tipologia", referencedColumnName = "id")
     private TipologiaTributo tipologiaTributo;
+
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "applicazione", referencedColumnName = "id")
+    private Applicazione applicazione;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_ente")
@@ -45,14 +51,6 @@ public class Tributo
 
     public Tributo(Long id) {
         super(id);
-    }
-
-    public String getResponsabile() {
-        return responsabile;
-    }
-
-    public void setResponsabile(String responsabile) {
-        this.responsabile = responsabile;
     }
 
     public String getNome() {
@@ -108,4 +106,27 @@ public class Tributo
         return ToStringBuilder.reflectionToString(this);
     }
 
+    public String getAllegati() {
+        return allegati;
+    }
+
+    public void setAllegati(String allegati) {
+        this.allegati = allegati;
+    }
+
+    public Applicazione getApplicazione() {
+        return applicazione;
+    }
+
+    public void setApplicazione(Applicazione applicazione) {
+        this.applicazione = applicazione;
+    }
+
+    public String getCodIntegrazione() {
+        return codIntegrazione;
+    }
+
+    public void setCodIntegrazione(String codIntegrazione) {
+        this.codIntegrazione = codIntegrazione;
+    }
 }

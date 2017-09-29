@@ -1,9 +1,11 @@
 package it.publisys.pagamentionline.restcontroller;
 
 import it.govpay.servizi.pa.*;
+import it.publisys.pagamentionline.PagamentiOnlineKey;
 import it.publisys.pagamentionline.RequestMappings;
 import it.publisys.pagamentionline.controller.BaseController;
 import it.publisys.pagamentionline.domain.impl.Ente;
+import it.publisys.pagamentionline.domain.impl.TipologiaTributo;
 import it.publisys.pagamentionline.domain.impl.Tributo;
 import it.publisys.pagamentionline.domain.user.User;
 import it.publisys.pagamentionline.dto.DebitoDTO;
@@ -11,6 +13,7 @@ import it.publisys.pagamentionline.dto.GenericDTO;
 import it.publisys.pagamentionline.dto.RataDTO;
 import it.publisys.pagamentionline.dto.TributoResultDTO;
 import it.publisys.pagamentionline.service.*;
+import it.publisys.pagamentionline.transformer.EnteTransformer;
 import it.publisys.pagamentionline.transformer.RataTransformer;
 import it.publisys.pagamentionline.transformer.TributoTransformer;
 import it.publisys.pagamentionline.transformer.VersamentoTransformer;
@@ -36,38 +39,63 @@ import java.util.List;
 @RestController
 public class PosizioneDebitoriaRestController extends BaseController {
 
-    private static final Logger _log = LoggerFactory.getLogger(PagamentoSpontaneoRestController.class);
+    private static final Logger _log = LoggerFactory.getLogger(PosizioneDebitoriaRestController.class);
 
     @Autowired
     private EnteService enteService;
 
     @Autowired
-    private GovPayService govPayService;
-
-    @Autowired
-    private VersamentoTransformer versamentoTransformer;
-
-
-    @Autowired
     private TributoService tributoService;
 
+    @Autowired
+    private RataService rataService;
 
     @Autowired
     private TributoTransformer tributoTransformer;
 
+    @Autowired
+    private EnteTransformer enteTransformer;
 
     @Autowired
-    private PagamentoService pagamentoService;
+    private RataTransformer rataTransformer;
 
-    @RequestMapping(value = RequestMappings.PAGAMENTO_DEBITORIO + "/{ente}",
+    @Autowired
+    private TipologiaTributoService tipologiaTributoService;
+
+
+    @Autowired
+    private ProviderService providerService;
+
+    @RequestMapping(value = RequestMappings.PAGAMENTO_DEBITORIO + "/{tipologia}",
             method = RequestMethod.GET)
-    public ResponseEntity<List<GenericDTO>> listTributi(Model model, @PathVariable Long ente) {
+    public ResponseEntity<List<GenericDTO>> listTributi(Model model, @PathVariable Long tipologia) {
 
+        List<GenericDTO> _list = new ArrayList<>();
+
+
+        TipologiaTributo tipologiaTributo = tipologiaTributoService.getTipologia(tipologia);
+        if (null != tipologiaTributo) {
+            enteService.findAll()
+                    .stream()
+                    .forEach(t -> {
+                        GenericDTO dto = enteTransformer.transform(t);
+                        _list.add(dto);
+                    });
+
+        }
+        return new ResponseEntity<>(_list, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = RequestMappings.PAGAMENTO_DEBITORIO + "/{ente}/{tipologia}/{codApplicazione}",
+            method = RequestMethod.GET)
+    public ResponseEntity<List<GenericDTO>> listTributi(Model model, @PathVariable Long ente, @PathVariable Long tipologia,@PathVariable String codApplicazione ) {
         List<GenericDTO> _list = new ArrayList<>();
         if (enteService.exists(ente)) {
             Ente entity = enteService.getOne(ente);
-            tributoService.findAllByEnte(entity)
+            TipologiaTributo tipologiaTributo = tipologiaTributoService.getTipologia(tipologia);
+            tributoService.findAllByEnteTipologia(entity, tipologiaTributo)
                     .stream()
+                    .filter(tributo -> tributo.getApplicazione().getCodice().equals(codApplicazione) )
                     .forEach(t -> {
                         GenericDTO dto = tributoTransformer.transform(t);
                         _list.add(dto);
@@ -77,7 +105,9 @@ public class PosizioneDebitoriaRestController extends BaseController {
         return new ResponseEntity<>(_list, HttpStatus.OK);
     }
 
-    @RequestMapping(value = RequestMappings.PAGAMENTO_DEBITORIO + "/{ente}/{tributo}",
+
+
+    @RequestMapping(value = RequestMappings.PAGAMENTO_DEBITORIO + "{ente}/{tipologia}/{codApplicazione}/{tributo}",
             method = RequestMethod.GET)
     public ResponseEntity<TributoResultDTO> listRata(@PathVariable Long ente, @PathVariable Long tributo) {
 
@@ -91,6 +121,18 @@ public class PosizioneDebitoriaRestController extends BaseController {
         }
         return new ResponseEntity<>(_result, HttpStatus.OK);
     }
+
+    @RequestMapping(value = RequestMappings.PAGAMENTO_DEBITORIO + "{ente}/{tipologia}/{codApplicazione}/{tributo}/{rata}",
+            method = RequestMethod.GET)
+    public ResponseEntity<RataDTO> rataDetail(@PathVariable Long ente, @PathVariable Long tributo, @PathVariable Long rata) {
+        RataDTO dto = new RataDTO();
+        if (enteService.exists(ente)) {
+            dto = rataTransformer.transform(rataService.getRata(rata));
+        }
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+
 //    @RequestMapping(value = RequestMappings.PAGAMENTO_DEBITORIO + "/{ente}",
 //            method = RequestMethod.GET)
 //    public ResponseEntity<List<DebitoDTO>> listTributi(Model model, @PathVariable Long ente, Authentication auth) {

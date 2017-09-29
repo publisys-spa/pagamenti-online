@@ -11,25 +11,73 @@
                 <h1>
                     <img class="navbar_banner__logo fluid" th:src="@{/resources/css/img/loghi/regbas.png}"
                          alt="Regione Basilicata"/>
-                    <a class="hidden-xs hidden-sm hidden-md">
+                    <a class="hidden-xs hidden-sm hidden-md" href="http://www.regione.basilicata.it/">
                         <span>Regione Basilicata</span>
                     </a>
                 </h1>
                 <ul class="nav nav-tabs">
-                    <li><a href="#" th:href="@{${T(app.App).HOME}}">Home</a></li>
-                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_SPONTANEO}}">Pagamenti Spontanei</a></li>
-                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_DEBITORIO}}">Posizione Debitoria</a></li>
-                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_STORICO}}">Storico Pagamenti</a></li>
-                    <li><a href="#" th:href="@{${T(app.App).PAGAMENTO_STORICO}}"><i class="fa fa-shopping-cart"></i></a></li>
-                    <li sec:authorize="${!isAuthenticated()}"><a href="#" th:href="@{${T(app.App).HOME}}"><i
+                    <li sec:authorize="${hasRole('ROLE_ADMIN') || hasRole('ROLE_DIR')}"><a href="#" th:href="@{${T(app.App).ADMIN_HOME}}">Admin
+                        Home</a></li>
+                    <li>
+                        <a  th:href="@{${T(app.App).INDEX}}">Home</a>
+                    </li>
+                    <li>
+                        <a  sec:authorize="${isAuthenticated()}" th:href="@{${T(app.App).PAGAMENTO_SPONTANEO}}">Pagamenti Spontanei</a>
+                        <a  sec:authorize="${!isAuthenticated()}" th:href="@{${T(app.App).LOGIN}}">Pagamenti Spontanei</a>
+                    </li>
+                    <li>
+                        <a  sec:authorize="${isAuthenticated()}"
+                           th:href="@{${T(app.App).PAGAMENTO_DEBITORIO}}">Posizione
+                        Debitoria <i th:unless="${#lists.isEmpty(debiti)}" class="fa fa-exclamation-triangle" aria-hidden="true" style="color: orange"></i>
+                        </a>
+                        <a  sec:authorize="${!isAuthenticated()}" th:href="@{${T(app.App).LOGIN}}">Posizione Debitoria</a>
+                    </li>
+
+                    <li >
+                        <a sec:authorize="${isAuthenticated()}"
+                           th:href="@{${T(app.App).PAGAMENTO_STORICO}}">Storico
+                        Pagamenti</a>
+                        <a  sec:authorize="${!isAuthenticated()}" th:href="@{${T(app.App).LOGIN}}">Storico Pagamenti</a>
+                    </li>
+
+                    <li sec:authorize="${!isAuthenticated()}"><a th:href="@{${T(app.App).LOGIN}}"><i
                             class="fa fa-sign-in"></i>&nbsp;&nbsp;[[#{menu.accedi}]]</a></li>
-                    <li sec:authorize="${isAuthenticated()}"><a class="cursor-default" href="#" th:inline="text"><i
-                            class="fa fa-user"></i>&nbsp;&nbsp;[[${session.ulogged.firstname}]]
-                        [[${session.ulogged.lastname}]]</a></li>
-                    <li sec:authorize="${isAuthenticated()}"><a th:href="@{${T(app.App).LOGOUT}}"><span
-                            class="fa fa-sign-out"></span>&nbsp;&nbsp;[[#{menu.logout}]]</a></li>
+                    <!--li sec:authorize="${isAuthenticated()}" th:if="${LOGIN == 'login'}" class="dropdown open">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                           aria-expanded="true">
+                            AREA PERSONALE<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li sec:authorize="${isAuthenticated()}">
+                                <a th:href="@{${T(app.App).HOME}}" th:inline="text"><i
+                                        class="fa fa-user"></i>&nbsp;&nbsp;[[${session.ulogged.firstname}]]
+                                    [[${session.ulogged.lastname}]]</a></li>
+                            <li sec:authorize="${isAuthenticated()}"><a th:href="@{${T(app.App).LOGOUT}}"><span
+                                    class="fa fa-sign-out"></span>&nbsp;&nbsp;[[#{menu.logout}]]</a></li>
+                        </ul>
+                    </li-->
+                    <li sec:authorize="${isAuthenticated()}" class="dropdown">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true"
+                           aria-expanded="false">
+                            AREA PERSONALE<span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li sec:authorize="${isAuthenticated()}">
+                                <a th:href="@{${T(app.App).HOME}}" th:inline="text"><i
+                                        class="fa fa-user"></i>&nbsp;&nbsp;[[${session.ulogged.firstname}]]
+                                    [[${session.ulogged.lastname}]]</a></li>
+                            <li sec:authorize="${isAuthenticated()}"><a th:href="@{${T(app.App).LOGOUT}}"><span
+                                    class="fa fa-sign-out"></span>&nbsp;&nbsp;[[#{menu.logout}]]</a></li>
+                        </ul>
+                    </li>
                 </ul>
+
             </div><!--/.navbar-collapse -->
+
+        </div>
+        <div>
+            <span style="font-size: 15px; float: right; COLOR: white;" sec:authorize="${isAuthenticated()}" th:inline="text">BENVENUTO: &nbsp;&nbsp;[[${session.ulogged.firstname}]]
+                    [[${session.ulogged.lastname}]]</span>
         </div>
     </div>
 </header>

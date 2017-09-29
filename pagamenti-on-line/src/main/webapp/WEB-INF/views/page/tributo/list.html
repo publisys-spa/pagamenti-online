@@ -16,38 +16,94 @@
 
     <div class="row row-offcanvas row-offcanvas-left row-container">
         <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
         <div class="col-md-9">
             <div class="panel panel-default no-border-radius">
-                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Lista Tributi<a
-                        th:href="@{${T(app.App).TRIBUTO}}" class="pull-right btn btn-primary btn-xs">
-                    Aggiungi nuovo
-                </a></div>
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Ricerca
+                    Tributi
+                </div>
+
+                <div class="panel-body" th:classappend="${(null != sresults  and !sresults.empty) ? 'hidden' : ''}">
+                    <form th:action="@{${T(app.App).SEARCH}}" class="form-horizontal" th:object="${filter}"
+                          method="post" sec:authorize="${isAuthenticated()}">
+
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+                        <input type="hidden" class="form-control" th:field="*{tipo}"/>
+
+                        <div class="row">
+                            <div class="form-group  col-md-5 col-md-push-1" >
+                                <label for="applicazione" class="control-label">Applicazione</label>
+                                <div>
+                                    <select th:field="*{codice}" class="form-control">
+                                        <option th:each="applicazione : ${applicazioni}"
+                                                th:value="${applicazione.codice}"
+                                                th:text="${applicazione.codice}"></option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-5 col-md-push-2" >
+                                <label for="name" class="control-label">Nome</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{nome}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">
+                                Avvia la ricerca
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" th:if="${!sresults.empty}">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Risultati
+                    Ricerca
+                    <div>
+
+                        <a th:unless="${#lists.isEmpty(sresults)}" class="btn btn-warning btn-sm"
+                           th:href="@{${T(app.App).SEARCH_TRIBUTI}}">
+                            Nuova ricerca
+                        </a>
+                    </div>
+                </div>
+
                 <table class="table storico table-condensed table-striped table-bordered table-hover table-responsive"
-                       th:unless="${#lists.isEmpty(tributi)}">
+                       th:unless="${#lists.isEmpty(sresults)}">
                     <thead>
                     <tr class="info">
-                        <th >Ente</th>
-                        <th >Codice</th>
+                        <th>Ente</th>
+                        <th>Codice Applicazione</th>
+                        <th>Codice</th>
                         <th>Nome</th>
-                        <th >Resp. Procedimento:</th>
-                        <th >Tipologia Tributo:</th>
-                        <th >Anno di Riferimento:</th>
+                        <th>Codice integrazione:</th>
+                        <th>Tipologia Tributo:</th>
+                        <th>Anno di Riferimento:</th>
                         <th>Operazioni</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="tributo : ${tributi}">
+                    <tr th:each="tributo : ${sresults.records}">
                         <td th:text="${tributo.ente.name}"></td>
+                        <td th:text="${tributo.applicazione.codice}"></td>
                         <td th:text="${tributo.codice}"></td>
                         <td th:text="${tributo.nome}"></td>
-                        <td th:text="${tributo.responsabile}"></td>
+                        <td th:text="${tributo.codIntegrazione}"></td>
                         <td th:text="${tributo.tipologiaTributo.nome}"></td>
                         <td class="text-right" th:text="${tributo.anno}"></td>
                         <td class="text-center">
-                            <a th:href="@{|${T(app.App).TRIBUTO}/${tributo.id}|}" class="btn btn-warning btn-sm">
+                            <a th:href="@{|${T(app.App).TRIBUTO}/${tributo.id}|}" class="btn btn-warning btn-sm" >
                                 Modifica
                             </a>
-                            <a class="btn btn-danger btn-sm" th:href="@{|${T(app.App).TRIBUTO}/${tributo.id}|(op=D)}">
+                            <a class="btn btn-danger btn-sm" th:href="@{|${T(app.App).TRIBUTO}/${tributo.id}|(op=D)}" sec:authorize="hasRole('ROLE_ADMIN')">
                                 Elimina
                             </a>
                         </td>
@@ -56,58 +112,13 @@
                     </tbody>
                 </table>
 
-                <div class="panel-body" th:if="${#lists.isEmpty(tributi)}">
+                <div class="panel-body" th:if="${#lists.isEmpty(sresults)}">
                     Nessun ente presente.
                 </div>
             </div>
-            <div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div>
+            <!--div th:substituteby="page/fragments/paginatorTag :: paginatorTag(${page})"></div-->
         </div>
-        <!--div>
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <i class="glyphicon glyphicon-book"></i>&nbsp;&nbsp;TRIBUTI
-                <a class="pull-right btn btn-info btn-xs" th:href="@{${T(app.App).TRIBUTO}}">
-                    <i class="glyphicon glyphicon-plus"></i> Nuovo
-                </a>
-            </div>
 
-            <table class="table table-condensed table-striped table-bordered table-hover table-responsive"
-                   th:unless="${#lists.isEmpty(tributi)}">
-                <tr class="info">
-                    <th class="text-center">Ente</th>
-                    <th class="text-center">Codice</th>
-                    <th class="text-center">Nome</th>
-                    <th class="text-center">Resp. Procedimento:</th>
-                    <th class="text-center">Tipologia Tributo:</th>
-                    <th class="text-center">Anno di Riferimento:</th>
-                    <th></th>
-                </tr>
-
-                <tr th:each="tributo : ${tributi}">
-                    <td th:text="${tributo.ente.name}"></td>
-                    <td th:text="${tributo.codice}"></td>
-                    <td th:text="${tributo.nome}"></td>
-                    <td th:text="${tributo.responsabile}"></td>
-                    <td th:text="${tributo.tipologiaTributo.nome}"></td>
-                    <td class="text-right" th:text="${tributo.anno}"></td>
-                    <td class="text-center">
-                        <a class="btn btn-primary btn-xs" th:href="@{|${T(app.App).TRIBUTO}/${tributo.id}|}">
-                            <i class="glyphicon glyphicon-edit"></i> Apri
-                        </a>
-                        &nbsp;&nbsp;&nbsp;
-                        <a class="btn btn-danger btn-xs" th:href="@{|${T(app.App).TRIBUTO}/${tributo.id}|(op=D)}">
-                            <i class="glyphicon glyphicon-remove"></i> Elimina
-                        </a>
-                    </td>
-                </tr>
-            </table>
-
-            <div class="panel-body" th:if="${#lists.isEmpty(tributi)}">
-                Nessun tributo presente.
-            </div>
-
-        </div>
-    </div-->
     </div>
 </div>
 <footer th:substituteby="page/fragments/footerTag :: footerTag"/>

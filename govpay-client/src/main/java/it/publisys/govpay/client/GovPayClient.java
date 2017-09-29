@@ -1,15 +1,11 @@
 package it.publisys.govpay.client;
 
-import it.govpay.servizi.PagamentiTelematiciGPApp;
-import it.govpay.servizi.PagamentiTelematiciGPAppService;
-import it.govpay.servizi.PagamentiTelematiciGPPrt;
-import it.govpay.servizi.PagamentiTelematiciGPPrtService;
 import it.govpay.servizi.commons.*;
-import it.govpay.servizi.gpapp.*;
-import it.govpay.servizi.gpapp.GpChiediStatoVersamento;
-import it.govpay.servizi.gpapp.GpChiediStatoVersamentoResponse;
-import it.govpay.servizi.gpprt.*;
-import it.govpay.servizi.pa.*;
+import it.govpay.servizi.v2_3.*;
+import it.govpay.servizi.v2_3.commons.GpResponse;
+import it.govpay.servizi.v2_3.gpapp.*;
+import it.govpay.servizi.v2_3.gpprt.*;
+import it.govpay.servizi.v2_3.gpprt.GpChiediStatoVersamentoResponse;
 import org.springframework.util.Assert;
 
 import javax.xml.ws.BindingProvider;
@@ -27,17 +23,17 @@ import java.util.stream.Collectors;
  */
 public class GovPayClient {
 
-    private final String url; //"http://demo.publisys.it/govpay/PagamentiTelematiciGPPrtservice";
-    private final String urlApp; //"http://demo.publisys.it/govpay/PagamentiTelematiciGPAppservice";
-    private final String username; //"pubportale";
-    private final String usernameApp; //"pubapp1";
-    private final String password; //"password";
-    private final String passwordApp; //"password";
+    private final String url;
+    private final String urlApp;
+    private final String username;
+    private final String usernameApp;
+    private final String password;
+    private final String passwordApp;
 
-    private final String codPortale; //= "PubPortale";
-    private final String codApplicazione; // = "PubApp1";
-    private final String codEnte; // = "PubUff1";
-    private final String codDominioEnte; // = "PubUff1";
+    private final String codPortale;
+    private final String codApplicazione;
+    private final String codEnte;
+    private final String codDominioEnte;
 
     private final PagamentiTelematiciGPPrt port;
     private final PagamentiTelematiciGPApp portApp;
@@ -125,41 +121,8 @@ public class GovPayClient {
  - gpChiediListaFlussiRendicondazione [DA IMPLEMENTARE SE SERVE]
  - gpChiediFlussoRendicontazione [DA IMPLEMENTARE SE SERVE]
  **********************************************************************************************************************/
-    /**
-     * Consente  l'acquisizione di IUV da associare ai debiti da pagare
-     *
-     * @param iuvRichiesto dati necessari alla generazione
-     * @return {@link GpGeneraIuv}
-     */
-    public GpGeneraIuvResponse gpGeneraIuv(GpGeneraIuv.IuvRichiesto... iuvRichiesto) {
 
-        GpGeneraIuv gpGeneraIUV = new GpGeneraIuv();
-        gpGeneraIUV.setCodDominio(codDominioEnte);
-        gpGeneraIUV.setCodApplicazione(codApplicazione);
 
-        List<GpGeneraIuv.IuvRichiesto> iuvRichiestos = Arrays.stream(iuvRichiesto).collect(Collectors.toList());
-        gpGeneraIUV.getIuvRichiesto().addAll(iuvRichiestos);
-
-        return portApp.gpGeneraIuv(gpGeneraIUV);
-    }
-
-    /**
-     * Consente  l'acquisizione di IUV da associare ai debiti da pagare
-     *
-     * @param iuvGenerato dati necessari alla generazione
-     * @return {@link GpChiediStatoVersamentoResponse}
-     */
-    public GpCaricaIuvResponse gpCaricaIuv(GpCaricaIuv.IuvGenerato... iuvGenerato) {
-
-        GpCaricaIuv gpCaricaIuv = new GpCaricaIuv();
-        gpCaricaIuv.setCodDominio(codDominioEnte);
-        gpCaricaIuv.setCodApplicazione(codApplicazione);
-
-        List<GpCaricaIuv.IuvGenerato> iuvGeneratos = Arrays.stream(iuvGenerato).collect(Collectors.toList());
-        gpCaricaIuv.getIuvGenerato().addAll(iuvGeneratos);
-
-        return portApp.gpCaricaIuv(gpCaricaIuv);
-    }
 
     /**
      * Consente al sistema gestionale dell'ente di caricare versamenti su GovPay, tali pagamenti saranno posti in uno stato di ATTESA
@@ -199,7 +162,7 @@ public class GovPayClient {
         p.getSingoloVersamento().addAll(singoloVersamentos);
         gpCaricaVersamento.setVersamento(p);
         gpCaricaVersamento.setGeneraIuv(true);
-        return portApp.gpCaricaVersamento(gpCaricaVersamento);
+        return portApp.gpCaricaVersamento(gpCaricaVersamento, null);
     }
 
     /**
@@ -240,15 +203,15 @@ public class GovPayClient {
      * @param codVersamentoEnte identificativo del debito nel dominio dell'applicazione che lo gestisce
      * @return {@link GpChiediStatoVersamentoResponse}
      */
-    public GpChiediStatoVersamentoResponse gpChiediStatoVersamento(String codVersamentoEnte) {
+    public it.govpay.servizi.v2_3.gpprt.GpChiediStatoVersamentoResponse gpChiediStatoVersamento(String codVersamentoEnte) {
 
         Assert.notNull(codVersamentoEnte, String.format(message, "codPagamentoEnte"));
 
-        GpChiediStatoVersamento gpChiediStatoVersamento = new GpChiediStatoVersamento();
+        it.govpay.servizi.v2_3.gpprt.GpChiediStatoVersamento gpChiediStatoVersamento = new it.govpay.servizi.v2_3.gpprt.GpChiediStatoVersamento();
         gpChiediStatoVersamento.setCodApplicazione(codApplicazione);
         gpChiediStatoVersamento.setCodVersamentoEnte(codVersamentoEnte);
 
-        return portApp.gpChiediStatoVersamento(gpChiediStatoVersamento);
+        return port.gpChiediStatoVersamento(gpChiediStatoVersamento);
     }
 
 /************************************PagamentiTelematiciGPPrt**********************************************************
@@ -303,8 +266,8 @@ public class GovPayClient {
      * @throws IOException
      */
 
-    public GpAvviaTransazionePagamentoResponse gpAvviaTransazionePagamento(boolean aggiornaSeEsiste,List<VersamentoKey> versamentiRef, List<Versamento> versamenti, GpAvviaTransazionePagamento.SceltaWisp sceltaWisp,
-                                                                           Canale canale, TipoAutenticazione autenticazione,  Anagrafica versante, String ibanAddebito, String callbackUrl ) throws IOException {
+    public GpAvviaTransazionePagamentoResponse gpAvviaTransazionePagamento(boolean aggiornaSeEsiste, List<VersamentoKey> versamentiRef, List<Versamento> versamenti, GpAvviaTransazionePagamento.SceltaWisp sceltaWisp,
+                                                                           Canale canale, TipoAutenticazione autenticazione, Anagrafica versante, String ibanAddebito, String callbackUrl ) throws IOException {
 
         Assert.notNull(autenticazione, String.format(message, "autenticazione"));
         Assert.notNull(versante, String.format(message, "versante"));
@@ -323,7 +286,7 @@ public class GovPayClient {
         req.setIbanAddebito(ibanAddebito);
         req.setUrlRitorno(callbackUrl);
 
-        GpAvviaTransazionePagamentoResponse response = port.gpAvviaTransazionePagamento(req);
+        GpAvviaTransazionePagamentoResponse response = port.gpAvviaTransazionePagamento(req, null);
         return response;
     }
 

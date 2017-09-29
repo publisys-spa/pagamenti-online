@@ -1,9 +1,8 @@
 package it.publisys.govpay.client;
 
-import it.govpay.servizi.*;
 import it.govpay.servizi.commons.*;
-import it.govpay.servizi.gpprt.*;
-import it.govpay.servizi.pa.*;
+import it.govpay.servizi.v2_3.*;
+import it.govpay.servizi.v2_3.gpprt.*;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -22,14 +21,14 @@ import java.util.UUID;
  */
 public class GovPayTestSuite {
 
-    private static final String urlApp = "http://demo.publisys.it/govpay/PagamentiTelematiciGPAppService";
-    private static final String url = "http://demo.publisys.it/govpay/PagamentiTelematiciGPPrtService";
-    private static final String username = "pubportale";
-    private static final String password = "password";
-    private static final String codApplicazione = "PubbApp1";
-    private static final String codPortale = "PubPortale";
-    private static final String codDominio = "00975860768";
-    private static final String codTributo = "BOLLO";
+    private static final String urlApp = "";
+    private static final String url = "";
+    private static final String username = "";
+    private static final String password = "";
+    private static final String codApplicazione = "";
+    private static final String codPortale = "";
+    private static final String codDominio = "";
+    private static final String codTributo = "";
     private static final String backurl = "";
     private static final String codPsp = "GovPAYPsp1";
     private static final String codCanale = "GovPAYPsp1_CP";
@@ -37,7 +36,6 @@ public class GovPayTestSuite {
 
     private static PagamentiTelematiciGPPrt port;
     private static PagamentiTelematiciGPApp portApp;
-    private static PagamentiTelematiciPAService portPA;
 
     private static Anagrafica anagraficaDebitore;
 
@@ -84,10 +82,10 @@ public class GovPayTestSuite {
 
         System.out.println(">>>>>>>>>> Invio richiesta di pagamento senza IUV");
         GpAvviaTransazionePagamento request = gpAvviaTransazionePagamento();
-        GpAvviaTransazionePagamentoResponse response = port.gpAvviaTransazionePagamento(request);
+        GpAvviaTransazionePagamentoResponse response = port.gpAvviaTransazionePagamento(request, null);
 
-        System.out.println(">>>>>>>>>> Ritornato esito con codice " + response.getCodEsitoOperazione());
-        Assert.assertEquals(response.getCodEsitoOperazione(), EsitoOperazione.OK);
+        System.out.println(">>>>>>>>>> Ritornato esito con codice " + response.getCodOperazione());
+        Assert.assertEquals(response.getCodOperazione(), EsitoOperazione.OK);
 
         if (null != response.getRifTransazione() && !response.getRifTransazione().isEmpty()) {
             System.out.println(">>>>>>>>>> IUV associato al pagamento: " + response.getRifTransazione().get(0).getIuv());
@@ -99,6 +97,22 @@ public class GovPayTestSuite {
             }
             System.out.println(">>>>>>>>>> Sistema in attesa della notifica da GovPay....");
         }
+    }
+
+    @Test
+    public void gpChiediListaVersamenti() {
+
+        GpChiediListaVersamenti gpChiediListaVersamenti = new GpChiediListaVersamenti();
+        gpChiediListaVersamenti.setCodUnivocoDebitore("RGNMRZ81S11M109P");
+        gpChiediListaVersamenti.setCodPortale(codPortale);
+       /* List<StatoVersamento> versamentos = new ArrayList<StatoVersamento>();
+        versamentos.add(StatoVersamento.NON_ESEGUITO);
+        versamentos.add(StatoVersamento.ANNULLATO);
+        gpChiediListaVersamenti.getStato().addAll(versamentos);
+        gpChiediListaVersamenti.setOrdinamento("DATA_SCADENZA_DES");*/
+        GpChiediListaVersamentiResponse response = port.gpChiediListaVersamenti(gpChiediListaVersamenti);
+        //   System.out.println(response.getCodEsitoOperazione());
+        System.out.println(response.getCodEsito());
     }
 
 

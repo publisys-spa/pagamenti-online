@@ -1,6 +1,7 @@
 package it.publisys.pagamentionline.aop;
 
 import java.util.Arrays;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -9,7 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author mcolucci
  */
 /*@Aspect
@@ -64,12 +64,10 @@ public class LoggingAspect {
 
 
 /**
- *
  * @author mcolucci
  */
 @Aspect
 public class LoggingAspect {
-
     private static final Logger _log = LoggerFactory.getLogger(LoggingAspect.class);
     //
     private static final String AOP_EXEC = "execution(public * it.publisys.pagamentionline.controller..*.*(..))"

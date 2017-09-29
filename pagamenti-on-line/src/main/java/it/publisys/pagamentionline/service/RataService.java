@@ -36,7 +36,7 @@ public class RataService {
         return rataRepository.findByCustomId(customId);
     }
 
-    public List<Rata> getAllRata(Tributo tributo) {
+    public List<Rata>  getAllRata(Tributo tributo) {
         return rataRepository.findAllRataByTributoAndLogdDateIsNull(tributo);
     }
 
@@ -63,6 +63,7 @@ public class RataService {
             }
 
             rataMod.setLoguUser(username);
+            rataMod.setNote(rata.getNote());
             rataMod.setLoguDate(new Date());
 
             return rataRepository.saveAndFlush(rataMod);

@@ -31,18 +31,17 @@ public class EnteService {
         return enteRepository.findOne(id);
     }
 
+    public Ente findByCodDominio(String codDominio) {   return enteRepository.findBycodDominio(codDominio);   }
+
     public boolean exists(Long id) {
         return enteRepository.exists(id);
     }
 
     public Ente delete(Long id, String username) {
-
         Ente ente = this.getOne(id);
         ente.setLogdDate(new Date());
         ente.setLogdUser(username);
-
         return enteRepository.saveAndFlush(ente);
-
     }
 
     public Ente save(Ente ente, String username) {
@@ -50,6 +49,7 @@ public class EnteService {
             Ente one = this.getOne(ente.getId());
             one.setName(ente.getName());
             one.setFiscalCode(ente.getFiscalCode());
+            one.setCodDominio(ente.getCodDominio());
             one.setTributi(ente.getTributi());
             one.setLoguUser(username);
             one.setLoguDate(new Date());

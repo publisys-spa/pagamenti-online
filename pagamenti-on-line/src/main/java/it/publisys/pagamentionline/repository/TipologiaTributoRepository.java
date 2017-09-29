@@ -16,8 +16,9 @@ import org.springframework.transaction.annotation.Transactional;
 public interface TipologiaTributoRepository
     extends JpaRepository<TipologiaTributo, Long> {
 
-    List<TipologiaTributo> findByLogdDateIsNull();
+    List<TipologiaTributo> findByLogdDateIsNullOrderByDescrizione();
 
-    Page<TipologiaTributo> findByLogdDateIsNull(Pageable pageable);
+    Page<TipologiaTributo> findByLogdDateIsNullOrderByDescrizione(Pageable pageable);
 
+    TipologiaTributo findByCodiceRadice(String codiceRadice);
 }

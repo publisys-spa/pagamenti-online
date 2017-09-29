@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -32,44 +33,42 @@ public class TipologiaController
 
     @RequestMapping(value = RequestMappings.TIPOLOGIE,
             method = RequestMethod.GET)
-    public String toList(Model model, Pageable pageable) {
-
-        PageWrapper<TipologiaTributo> _page = new PageWrapper<>(tipologiaTributoService.getAllTipologie(pageable),
-                RequestMappings.TIPOLOGIE);
-        model.addAttribute(ModelMappings.PAGE, _page);
-        model.addAttribute(ModelMappings.TIPOLOGIE, _page.getContent());
-
+    public String toList(Model model, Pageable pageable,Authentication auth) {
+        if (auth != null && auth.isAuthenticated()) {
+            PageWrapper<TipologiaTributo> _page = new PageWrapper<>(tipologiaTributoService.getAllTipologie(pageable),
+                    RequestMappings.TIPOLOGIE);
+            model.addAttribute(ModelMappings.PAGE, _page);
+            model.addAttribute(ModelMappings.TIPOLOGIE, _page.getContent());
+        }
         return ViewMappings.TIPOLOGIE;
     }
 
     @RequestMapping(value = RequestMappings.TIPOLOGIA,
             method = RequestMethod.GET)
-    public String toView(ModelMap model) {
-        return toView(null, null, model);
+    public String toView(ModelMap model,Authentication auth) {
+        return toView(null, null, model, auth);
     }
 
     @RequestMapping(value = RequestMappings.TIPOLOGIA + "/{id}",
             method = RequestMethod.GET)
     public String toView(@PathVariable(value = "id") Long id,
                          @RequestParam(value = "op", required = false) String op,
-                         ModelMap model) {
-
-        if (op != null) {
-            if ("D".equalsIgnoreCase(op)) {
-                return toDelete(id, model);
+                         ModelMap model, Authentication auth) {
+        if (auth != null && auth.isAuthenticated()) {
+            if (op != null) {
+                if ("D".equalsIgnoreCase(op)) {
+                    return toDelete(id, model);
+                }
             }
+            TipologiaTributo _tipologia;
+            if (id != null) {
+                _tipologia = tipologiaTributoService.getTipologia(id);
+            } else {
+                _tipologia = new TipologiaTributo();
+            }
+
+            model.addAttribute(ModelMappings.TIPOLOGIA, _tipologia);
         }
-
-        TipologiaTributo _tipologia;
-
-        if (id != null) {
-            _tipologia = tipologiaTributoService.getTipologia(id);
-        } else {
-            _tipologia = new TipologiaTributo();
-        }
-
-        model.addAttribute(ModelMappings.TIPOLOGIA, _tipologia);
-
         return ViewMappings.TIPOLOGIA;
     }
 
@@ -77,22 +76,22 @@ public class TipologiaController
             method = RequestMethod.POST)
     public String toSave(
             @ModelAttribute(value = ModelMappings.TIPOLOGIA) @Valid TipologiaTributo tipologia,
-            BindingResult result, ModelMap model) {
+            BindingResult result, ModelMap model, Authentication auth) {
+        if (auth != null && auth.isAuthenticated()) {
+            if (result.hasErrors()) {
+                model.addAttribute(ModelMappings.TIPOLOGIA, tipologia);
+                return ViewMappings.TIPOLOGIA;
+            }
 
-        if (result.hasErrors()) {
+            String _user = SecurityUtil.getPrincipal().getUsername();
+            tipologia = tipologiaTributoService.save(tipologia, _user);
+            model.addAttribute(ModelMappings.MESSAGE, "Salvataggio effettuato");
             model.addAttribute(ModelMappings.TIPOLOGIA, tipologia);
-            return ViewMappings.TIPOLOGIA;
         }
-
-        String _user = SecurityUtil.getPrincipal().getUsername();
-        tipologia = tipologiaTributoService.save(tipologia, _user);
-        model.addAttribute(ModelMappings.MESSAGE, "Salvataggio effettuato");
-        model.addAttribute(ModelMappings.TIPOLOGIA, tipologia);
         return ViewMappings.TIPOLOGIA;
     }
 
     private String toDelete(Long id, ModelMap model) {
-
         if (AuthorityUtil.isAuthenticated() && AuthorityUtil.isAdminLogged()) {
             String _user = SecurityUtil.getPrincipal().getUsername();
             tipologiaTributoService.delete(id, _user);

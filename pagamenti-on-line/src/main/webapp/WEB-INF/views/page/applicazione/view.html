@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Applicazione</div>
+
+                <div class="panel-body">
+                    <form th:action="@{${T(app.App).APPLICAZIONE}}" class="form-horizontal" th:object="${applicazione}"
+                          method="post">
+
+                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+                            <ul>
+                                <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+                            </ul>
+                        </div>
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+
+                        <input type="hidden" class="form-control" th:field="*{id}"/>
+
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="codice" class="control-label">Codice</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{codice}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="descrizione" class="control-label">Descrizione</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{descrizione}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="responsabile" class="control-label">Responsabile</label>
+                            <div>
+                                <input type="text" class="form-control" th:field="*{responsabile}"/>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">
+                                Salva
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <hr/>
+    <footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+</div>
+
+</body>
+</html>

@@ -22,7 +22,10 @@ public interface ViewMappings {
 
     String HOME = PAGE + "/home";
 
-    String USERS = PAGE + "/user/list";
+    String USERS = PAGE + "/users/list";
+    String USER = PAGE + "/users/view";
+
+    String RUOLO = PAGE + "/users/ruolo/view";
 
     String PAGAMENTI = PAGE + "/pay/trib/list";
     String PAGAMENTO = PAGE + "/pay/trib/view";
@@ -33,16 +36,18 @@ public interface ViewMappings {
     String PAGAMENTO_SPONTANEO_WISP = PAGE + "/pay/spontaneo/wisp";
     String PAGAMENTO_SPONTANEO_LIST = PAGE + "/pay/spontaneo/list";
 
+
     String PAGAMENTO_DEBITORIO = PAGE + "/pay/debito/view";
     String PAGAMENTO_DEBITORIO_DETAIL = PAGE + "/pay/debito/detail";
-    String PAGAMENTO_DEBITORIO_LIST = PAGE + "/pay/debito/list";
-    String PAGAMENTO_DEBITORIO_PRINT = PAGE + "/pay/debito/print";
 
     String TIPOLOGIE = PAGE + "/tipologia/list";
     String TIPOLOGIA = PAGE + "/tipologia/view";
 
     String TRIBUTI = PAGE + "/tributo/list";
     String TRIBUTO = PAGE + "/tributo/view";
+
+    String APPLICAZIONI = PAGE + "/applicazione/list";
+    String APPLICAZIONE = PAGE + "/applicazione/view";
 
     String RATE = PAGE + "/tributo/rata/list";
     String RATA = PAGE + "/tributo/rata/view";
@@ -55,5 +60,7 @@ public interface ViewMappings {
 
 
     String SEARCH = PAGE + "/search";
+    String SEARCH_DEBITORIO = PAGE + "/searchDebitorio";
 
+     String SEARCH_FLUSSI = PAGE + "/flusso/list";
 }

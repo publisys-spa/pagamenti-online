@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html lang="it" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3"
+      th:with="title=#{page.home.title}">
+
+<head th:substituteby="page/fragments/headTag :: headTag">
+
+    <title></title>
+</head>
+
+<body>
+<div class="container-fluid" id="page_top">
+
+    <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
+
+    <div class="row row-offcanvas row-offcanvas-left row-container">
+        <div th:substituteby="page/fragments/breadcrumbTag :: breadcrumbMenu"></div>
+
+        <div class="col-md-9">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Ricerca
+                    Utenti
+                </div>
+
+                <div class="panel-body" th:classappend="${(null != sresults  and !sresults.empty) ? 'hidden' : ''}">
+                    <form th:action="@{${T(app.App).SEARCH}}" class="form-horizontal" th:object="${filter}"
+                          method="post" sec:authorize="${isAuthenticated()}">
+
+
+                        <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
+                            <span th:text="${message}"></span>
+                        </div>
+                        <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
+                            <span th:text="${error}"></span>
+                        </div>
+                        <input type="hidden" class="form-control" th:field="*{tipo}"/>
+                        <div class="row">
+                            <div class="form-group  col-md-5 col-md-push-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <label for="nome" class="control-label">Nome</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{nome}"/>
+                                </div>
+                            </div>
+                            <div class="form-group  col-md-5 col-md-push-2" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <label for="cognome" class="control-label">Cognome</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{cognome}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group  col-md-5 col-md-push-1" sec:authorize="hasRole('ROLE_ADMIN')">
+                                <label for="codiceFiscale" class="control-label">Codice Fiscale</label>
+                                <div>
+                                    <input type="text" class="form-control" th:field="*{codiceFiscale}"/>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                            <button class="btn btn-primary" type="submit">
+                                Avvia la ricerca
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-9" th:if="${!sresults.empty}">
+            <div class="panel panel-default no-border-radius">
+                <div class="panel-heading"><i class="fa fa-building-o" aria-hidden="true"></i>&nbsp;&nbsp;Risultati
+                    Ricerca
+                    <div>
+
+                        <a th:unless="${#lists.isEmpty(sresults)}" class="btn btn-warning btn-sm"
+                           th:href="@{${T(app.App).SEARCH_USERS}}">
+                            Nuova ricerca
+                        </a>
+                    </div>
+                </div>
+                <table class="table storico table-condensed table-striped table-bordered table-hover table-responsive"
+                       th:unless="${#lists.isEmpty(sresults)}">
+                    <thead>
+                    <tr class="info">
+                        <th>Cognome</th>
+                        <th>Nome</th>
+                        <th>Codice Fiscale</th>
+                        <th>Email</th>
+                        <th>Ultimo Accesso</th>
+                        <th>Operazioni</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="user : ${sresults.records}">
+                        <td th:text="${user.lastname}"></td>
+                        <td th:text="${user.firstname}"></td>
+                        <td th:text="${user.fiscalcode}"></td>
+                        <td th:text="${user.email}"></td>
+
+                        <td th:if="${user.loguDate != null}"
+                            th:text="${#dates.format(user.loguDate, 'dd/MM/yyyy')}"></td>
+                        <td th:if="${user.loguDate == null}">-</td>
+                       <td class="text-center">
+                            <a th:href="@{|${T(app.App).USER}/${user.id}|}" class="btn btn-warning btn-sm">
+                                Modifica
+                            </a>
+
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="panel-body" th:if="${sresults.empty}">
+                    Nessun risultato presente per i criteri indicati.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<footer th:substituteby="page/fragments/footerTag :: footerTag"/>
+
+</body>
+</html>

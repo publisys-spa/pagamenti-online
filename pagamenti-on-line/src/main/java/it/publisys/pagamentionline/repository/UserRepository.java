@@ -5,15 +5,16 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- *
  * @author mcolucci
  */
 @Transactional
 public interface UserRepository
-    extends JpaRepository<User, Long> {
+        extends JpaRepository<User, Long> {
+
+    User findByFiscalcode(String codiceFiscale);
 
     User findByUsername(String username);
-    
+
     User findByUsernameAndKeyRequest(String username, String keyRequest);
 
     User findByEmail(String email);

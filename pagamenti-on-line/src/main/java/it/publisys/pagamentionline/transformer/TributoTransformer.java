@@ -15,6 +15,7 @@ public class TributoTransformer {
         dto.setId(entity.getId());
         dto.setName(entity.getNome());
         dto.setDescrizione(entity.getDescrizione());
+        dto.setAllegati(entity.getAllegati());
         return dto;
     }
 

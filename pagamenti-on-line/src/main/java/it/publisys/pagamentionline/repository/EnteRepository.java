@@ -18,4 +18,6 @@ public interface EnteRepository extends JpaRepository<Ente, Long> {
 
     List<Ente> findByLogdDateIsNullOrderByName();
 
+    Ente findBycodDominio(String codDominio);
+
 }

@@ -61,18 +61,25 @@ public class Pagamento
     private String statoPagamento;
     @Column(name = "iur")
     private String iur;
+    @Column(name = "codPsp")
+    private String codPsp;
 
     @Column(name = "key_wisp")
     private String keyWisp;
 
-    @Column(name = "refnumber")
-    private String refnumber;
+    @Column(name = "iuv")
+    private String iuv;
     @Column(name = "ccp")
     private String ccp;
     @Column(name = "date_processed")
     private String dateProcessed;
     @Column(name = "status_response")
     private String statusResponse;
+    @Column(name = "codVersamentoEnte")
+    private String codVersamentoEnte;
+    @Column(name = "id_sessione")
+    private String idSessione;
+
 
     public Pagamento() {
     }
@@ -89,12 +96,12 @@ public class Pagamento
         this.importoCommissione = importoCommissione;
     }
 
-    public String getRefnumber() {
-        return refnumber;
+    public String getIuv() {
+        return iuv;
     }
 
-    public void setRefnumber(String refnumber) {
-        this.refnumber = refnumber;
+    public void setIuv(String iuv) {
+        this.iuv = iuv;
     }
 
     public String getDateProcessed() {
@@ -228,5 +235,29 @@ public class Pagamento
 
     public void setCcp(String ccp) {
         this.ccp = ccp;
+    }
+
+    public String getCodVersamentoEnte() {
+        return codVersamentoEnte;
+    }
+
+    public void setCodVersamentoEnte(String codVersamentoEnte) {
+        this.codVersamentoEnte = codVersamentoEnte;
+    }
+
+    public String getCodPsp() {
+        return codPsp;
+    }
+
+    public void setCodPsp(String codPsp) {
+        this.codPsp = codPsp;
+    }
+
+    public String getIdSessione() {
+        return idSessione;
+    }
+
+    public void setIdSessione(String idSessione) {
+        this.idSessione = idSessione;
     }
 }

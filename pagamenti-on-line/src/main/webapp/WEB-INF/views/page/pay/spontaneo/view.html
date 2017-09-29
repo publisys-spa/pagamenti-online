@@ -26,9 +26,9 @@
                 <div class="panel-body">
                     <h5 class="blu-italia-base-color no-margin-top">Anagrafica del Debitore</h5>
                     <div class="media">
-                        <div class="media-left media-middle">
+                        <!--div class="media-left media-middle">
                             <img class="media-object" th:src="@{/resources/css/img/user.png}" alt="User sample"/>
-                        </div>
+                        </div-->
                         <div class="media-body">
                             <p th:inline="text"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;
                                 [[${session.ulogged.firstname}]] [[${session.ulogged.lastname}]]</p>
@@ -58,12 +58,17 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h5 class="blu-italia-base-color no-margin-top">Flusso del pagamento</h5>
+                    <div class="alert alert-warning" >
+                        <ul>
+                            <li >(*) Campi obbligatori </li>
+                        </ul>
+                    </div>
                     <p><i id="ente-icon" class="glyphicon glyphicon-minus" aria-hidden="true"></i> Seleziona un Ente
                     </p>
                     <div id="ente-desc"></div>
                     <hr/>
                     <p><i id="tributo-icon" class="glyphicon glyphicon-minus" aria-hidden="true"></i> Seleziona un
-                        Tributo</p>
+                        pagamento</p>
                     <div id="tributo-desc"></div>
                     <hr/>
                     <p><i id="rata-icon" class="glyphicon glyphicon-minus" aria-hidden="true"></i> Seleziona una
@@ -73,54 +78,56 @@
                     <hr/>
                 </div>
             </div>
-
         </div>
 
         <div class="col-lg-8 col-md-8 col-sm-8">
             <div class="panel panel-default">
                 <div class="panel-body">
                     <h5 class="blu-italia-base-color no-margin-top">Dati del Pagamento</h5>
-
-                    <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
-                        <span th:text="${message}"></span>
-                    </div>
-                    <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
-                        <span th:text="${error}"></span>
-                    </div>
                     <div class="alert alert-warning hidden" id="no-trib">
-                        <span> Nessun Tributo presente per l'ente selezionato.</span>
+                        <span> Nessun pagamento presente per l'ente selezionato.</span>
                     </div>
-
-
                     <form class="form" th:action="@{|${T(app.App).PAGAMENTO_SPONTANEO}|}" th:object="${pagamento}"
                           method="post">
 
-                        <div class="alert alert-warning" th:if="${#fields.hasErrors('*')}">
+
+                        <div class="alert alert-danger" th:if="${#fields.hasErrors('*')}">
                             <ul>
                                 <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect
                                 </li>
                             </ul>
                         </div>
-
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label for="ente" class="control-label">Seleziona un Ente:</label>
-                            <select class="form-control" id="ente" th:field="*{ente.id}"
+
+                            <input type="text" th:field="*{ente.name}" id="enteName" class="form-control" disabled="disabled"/>
+                            <input type="hidden" th:field="*{ente.id}" name="ente" id="ente" />
+
+                            <!--select class="form-control" id="ente" th:field="*{ente.id}"
                                     onchange="retrieveTributi()">
-                                <option value="">-- Seleziona un ente --</option>
-                                <option th:each="ente : ${enti}"
-                                        th:value="${ente.id}" th:text="${ente.name}"></option>
+
+                            </select-->
+                        </div>
+
+                        <div class="form-group col-lg-12 col-md-12 col-sm-12">
+                            <label for="tipologia" class="control-label">Seleziona un pagamento (*):</label>
+                            <select class="form-control" id="tipologia" onchange="retrieveEnte()">
+                                <option value="">-- Seleziona un pagamento --</option>
+                                <option th:each="tipologia : ${tipologie}"
+                                        th:value="${tipologia.id}" th:text="${tipologia.nome}"></option>
                             </select>
                         </div>
 
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label for="tributo" class="control-label">Seleziona un Tributo:</label>
+                            <label for="tributo" class="control-label">Seleziona una tipologia di pagamento(*):</label>
                             <select class="form-control" id="tributo" th:field="*{tributo.id}"
                                     onchange="retrieveRate()">
                             </select>
                         </div>
 
+
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label for="rata" class="control-label">Seleziona una Rata:</label>
+                            <label for="rata" class="control-label">Seleziona una Rata (*):</label>
                             <select class="form-control" id="rata" th:field="*{rata.id}"
                                     onchange="rateDetail()">
                             </select>
@@ -130,46 +137,97 @@
                             <label class="control-label" for="importo">Importo (*):</label>
                             <div class="input-group">
                                 <div class="input-group-addon">&euro;</div>
-                                <input type="text" th:field="*{importo}" name="importo" id="importo" class="form-control"/>
+                                <input type="text" th:field="*{importo}" name="importo" id="importo"
+                                       class="form-control"/>
                             </div>
                         </div>
 
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
                             <label class="control-label" for="causale">Causale (*):</label>
-                            <textarea name="causale" rows="3" id="causale" class="form-control"  th:field="*{causale}"></textarea>
+                            <textarea name="causale" rows="3" id="causale" class="form-control"
+                                      th:field="*{causale}"></textarea>
                         </div>
 
-                        <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
+                        <div th:title="#{pagamento.paga}" class="form-group col-lg-12 col-md-12 col-sm-12 text-center">
                             <button class="btn btn-primary">
                                 Paga adesso
                             </button>
                         </div>
+
                     </form>
+
                 </div>
+
             </div>
         </div>
 
     </div>
 </div>
 <footer th:substituteby="page/fragments/footerTag :: footerTag"/>
-<script>
+
+<script type="text/javascript">
+    //<![CDATA[
+    function retrieveEnte() {
+        var url = '/pagamentionline/app/pag/pay/spontaneo';
+        var tipologia = $('#tipologia').val();
+        if (tipologia != "") {
+            url = url + '/' + $('#tipologia').val();
+            $.get(url, function (data) {
+                $('#tributo').empty();
+                $('#tributo-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
+                $('#rata').empty();
+                $('#ente').empty();
+                $('#ente-desc').empty();
+                $('#rata-desc').empty();
+                $('#tributo-desc').empty();
+                $('#causale').val('');
+                retrieveTributi();
+                /*if (data.length > 0) {
+                    $('#ente').append('<option value="">-- Seleziona un Ente --</option>');
+                } else {
+                    $('#no-trib').removeClass('hidden');
+                }
+                $.each(data, function (i, dto) {
+                    $('#ente').append(
+                            "<option value=" + dto.id + ">" + dto.name + "</option>");
+                });*/
+            });
+        } else {
+            $('#ente-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
+            $('#tributo-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
+            $('#rata-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
+            $('#tributo').empty();
+            $('#ente').empty();
+            $('#rata').empty();
+            $('#ente-desc').empty();
+            $('#rata-desc').empty();
+            $('#tributo-desc').empty();
+            $('#no-trib').addClass('hidden');
+            $('#causale').val('');
+        }
+    }
+
     function retrieveTributi() {
         var url = '/pagamentionline/app/pag/pay/spontaneo';
-        if ($('#ente').val() != '') {
-            url = url + '/' + $('#ente').val();
-            $('#ente-icon').removeClass('glyphicon-minus').addClass('glyphicon-ok green');
+        var ente = '2';//$('#ente').val();
+        var tipologia = $('#tipologia').val();
+        if (ente != "" && tipologia != "") {
+            url = url + '/2/' + $('#tipologia').val();//$('#ente').val() + '/' + $('#tipologia').val();
+             $('#ente-icon').removeClass('glyphicon-minus').addClass('glyphicon-ok green');
 
             $.get(url, function (data) {
                 $('#tributo').empty();
                 $('#tributo-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
                 $('#rata').empty();
+                $('#causale').val('');
                 $('#rata-desc').empty();
                 $('#tributo-desc').empty();
 
                 if (data.length > 0) {
-                    $('#ente-desc').html("<blockquote>" + $("#ente option[value='" +$('#ente').val()+"']").text() +"</blockquote>");
+                    //$('#ente-desc').html("<blockquote>" + $("#ente option[value='" + $('#ente').val() + "']").text() + "</blockquote>");
+                    $('#ente-desc').html("<blockquote>" + 'Regione Basilicata' + "</blockquote>");
                     $('#no-trib').addClass('hidden');
-                    $('#tributo').append('<option value="">-- Seleziona un Tributo --</option>');
+                    $('#tributo').append('<option value="">-- Seleziona un pagamento --</option>');
                 } else {
                     $('#no-trib').removeClass('hidden');
                 }
@@ -183,20 +241,25 @@
             $('#tributo-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
             $('#rata-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
             $('#tributo').empty();
+            $('#ente').empty();
             $('#rata').empty();
             $('#ente-desc').empty();
             $('#rata-desc').empty();
             $('#tributo-desc').empty();
             $('#no-trib').addClass('hidden');
+            $('#causale').val('');
         }
     }
 
     function retrieveRate() {
         var url = '/pagamentionline/app/pag/pay/spontaneo';
-        if ($('#ente').val() != '') {
-            url = url + '/' + $('#ente').val();
+        var ente = "2";//$('#ente').val();
+        var tipologia = $('#tipologia').val();
+        $('#causale').val('');
+        if (ente != "" && tipologia != "") {
+            //url = url + '/' + $('#ente').val() + '/' + $('#tipologia').val();
+            url = url + '/2/' + $('#tipologia').val();//$('#ente').val() + '/' + $('#tipologia').val();
         }
-
         if ($('#tributo').val() != '') {
             url = url + '/' + $('#tributo').val();
             $('#tributo-icon').removeClass('glyphicon-minus').addClass('glyphicon-ok green');
@@ -206,14 +269,21 @@
                 $('#rata').empty();
                 $('#rata-desc').html();
                 if (data.rataDTOList.length !== 0) {
-                    $('#tributo-desc').html("<blockquote>" + data.dto.descrizione + "</blockquote>");
+                    if (data.dto.allegati.trim().length != 0) {
+                        $('#tributo-desc').html("<blockquote>" + data.dto.descrizione + ".<br/> Per maggiori dettagli consulta il seguente <a href=" + data.dto.allegati + " target='_blank'> allegato </a></blockquote>");
+                    } else {
+                        $('#tributo-desc').html("<blockquote>" + data.dto.descrizione + "</blockquote>");
+                    }
                     $('#rata').append('<option value="">-- Seleziona una Rata --</option>');
+                    $.each(data.rataDTOList, function (i, dto) {
+                        $('#rata').append(
+                                "<option value=" + dto.id + ">" + dto.name + "</option>");
+                    });
+                    if(data.rataDTOList.length == 1){
+                        $('#rata').prop("selectedIndex",1);
+                        rateDetail();
+                    }
                 }
-                $.each(data.rataDTOList, function (i, dto) {
-                    $('#rata').append(
-                            "<option value=" + dto.id + ">" + dto.name + "</option>");
-                });
-
             });
         } else {
             $('#rata').empty();
@@ -221,15 +291,19 @@
             $('#ente-desc').empty();
             $('#tributo-desc').empty();
             $('#tributo-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
-            $('#rata-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus')
+            $('#rata-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
+            $('#causale').val('');
         }
 
     }
 
     function rateDetail() {
         var url = '/pagamentionline/app/pag/pay/spontaneo';
-        if ($('#ente').val() != '') {
-            url = url + '/' + $('#ente').val();
+        var ente = "2";//$('#ente').val();
+        var tipologia = $('#tipologia').val();
+        if (ente != "" && tipologia != "") {
+           // url = url + '/' + $('#ente').val() + '/' + $('#tipologia').val();
+            url = url + '/2/' + $('#tipologia').val();//$('#ente').val() + '/' + $('#tipologia').val();
         }
 
         if ($('#tributo').val() != '') {
@@ -242,18 +316,21 @@
             $('#rata-icon').removeClass('glyphicon-minus').addClass('glyphicon-ok green');
             $.get(url, function (data) {
                 if (data) {
-                    if ($('#causale').val() == '') {
-                        $('#causale').val(data.causale);
+                    $('#causale').val('');
+                    $('#causale').val(data.causale);
+                    if (data.note.length != 0) {
+                        $('#rata-desc').html("<blockquote>" + data.descrizione + ".<br/> Note: " + data.note + "</blockquote>");
+                    } else {
+                        $('#rata-desc').html("<blockquote><p>" + data.descrizione + "</p></blockquote>");
                     }
-                    $('#rata-desc').html("<blockquote><p>" + data.descrizione + "</p></blockquote>");
                 }
             });
         } else {
             console.log("aaa");
             $('#rata-desc').empty();
-            $('#rata-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus')
+            $('#rata-icon').removeClass('glyphicon-ok green').addClass('glyphicon-minus');
+            $('#causale').val('');
         }
-
     }
 
     $(document).ready(function () {
@@ -263,9 +340,8 @@
         }
 
     });
+    //]]>
 
 </script>
-
-
 </body>
 </html>

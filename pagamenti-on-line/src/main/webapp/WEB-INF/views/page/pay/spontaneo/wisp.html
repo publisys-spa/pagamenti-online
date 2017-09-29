@@ -13,7 +13,24 @@
 <div class="container" id="page_top">
 
     <div th:substituteby="page/fragments/navbarTag :: navbarTag"></div>
-
+    <div class="modal fade" id="pleaseWaitDialog" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1>Processing...</h1>
+                </div>
+                <div class="modal-body">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar"
+                             aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%">
+                            <span class="sr-only">40% Complete (success)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row row-container">
         <div class="col-lg-12 col-md-12">
@@ -26,9 +43,9 @@
                 <div class="panel-body">
                     <h5 class="blu-italia-base-color no-margin-top">Anagrafica del Debitore</h5>
                     <div class="media">
-                        <div class="media-left media-middle">
+                        <!--div class="media-left media-middle">
                             <img class="media-object" th:src="@{/resources/css/img/user.png}" alt="User sample"/>
-                        </div>
+                        </div-->
                         <div class="media-body">
                             <p th:inline="text"><i class="fa fa-user" aria-hidden="true"></i>&nbsp;
                                 [[${session.ulogged.firstname}]] [[${session.ulogged.lastname}]]</p>
@@ -48,55 +65,10 @@
                         <blockquote><p>In attesa di scelta del WISP</p></blockquote>
                     </div>
                     <hr/>
-                    <div class="form-group col-lg-12 col-md-12 col-sm-12 text-center" style="display: none">
-                        <form action="http://serviziclienti.link.it/govpay-ndp-sym/wisp.jsp"
-                              class="form-horizontal form-horizontal-tributo"
-                              th:object="${pagamento}" method="post" id="formWisp">
 
-
-                            <input type="hidden" id="idDominio" name="idDominio" th:value="${codDominio}"/>
-                            <input type="hidden" id="keyPA" name="keyPA" th:value="*{pid}"/>
-
-                            <input type="hidden" id="urlBack" name="urlBack" th:value="${urlBack}"/>
-                            <input type="hidden" id="urlReturn" name="urlReturn" th:value="${urlReturn}"/>
-
-                            <input type="hidden" id="enteCreditore" name="enteCreditore" th:value="*{ente.name}"/>
-                            <input type="hidden" id="primitiva" name="primitiva" value="nodoInviaRPT"/>
-                            <input type="hidden" id="numPagamentiRPT" name="numPagamentiRPT" value="1"/>
-                            <input type="hidden" id="stornoPagamento" name="stornoPagamento" value="SI"/>
-                            <input type="hidden" id="bolloDigitale" name="bolloDigitale" value="NO"/>
-                            <input type="hidden" id="terzoModelloPagamento" name="terzoModelloPagamento" value="NO"/>
-
-
-                            <div class="form-group">
-                                <button class="btn btn-warning">
-                                    <i class="glyphicon glyphicon-eur" aria-hidden="true"></i> Scegli il WISP
-                                </button>
-                            </div>
-
-                        </form>
-                    </div>
                 </div>
             </div>
-            <!--div class="panel panel-default">
-                <div class="panel-body">
-                    <h5 class="blu-italia-base-color no-margin-top">Flusso del pagamento</h5>
-                    <p><i id="ente-icon" class="glyphicon glyphicon-minus" aria-hidden="true"></i> Seleziona un Ente
-                    </p>
-                    <div id="ente-desc"></div>
-                    <hr/>
-                    <p><i id="tributo-icon" class="glyphicon glyphicon-minus" aria-hidden="true"></i> Seleziona un
-                        Tributo</p>
-                    <div id="tributo-desc"></div>
-                    <hr/>
-                    <p><i id="rata-icon" class="glyphicon glyphicon-minus" aria-hidden="true"></i> Seleziona una
-                        Rata
-                    </p>
-                    <div id="rata-desc"></div>
-                    <hr/>
-                </div>
 
-            </div-->
 
         </div>
 
@@ -116,7 +88,7 @@
                         </div>
 
                         <div class="form-group col-lg-12 col-md-12 col-sm-12">
-                            <label class="control-label">Tributo selezionato:</label>
+                            <label class="control-label">Pagamento selezionato:</label>
                             <div class="form-control" th:text="*{tributo.nome}"/>
                         </div>
 
@@ -142,12 +114,12 @@
 
 
                     </form>
-                    <form action="http://serviziclienti.link.it/govpay-ndp-sym/wisp.jsp"
+                    <form th:action="${pageWisp}"
                           class="form-horizontal form-horizontal-tributo"
                           th:object="${pagamento}" method="post" id="formWisp">
 
 
-                        <input type="hidden" id="idDominio" name="idDominio" th:value="${codDominio}"/>
+                        <input type="hidden" id="idDominio" name="idDominio" th:value="*{ente.codDominio}"/>
                         <input type="hidden" id="keyPA" name="keyPA" th:value="*{pid}"/>
 
                         <input type="hidden" id="urlBack" name="urlBack" th:value="${urlBack}"/>
@@ -159,21 +131,29 @@
                         <input type="hidden" id="stornoPagamento" name="stornoPagamento" value="SI"/>
                         <input type="hidden" id="bolloDigitale" name="bolloDigitale" value="NO"/>
                         <input type="hidden" id="terzoModelloPagamento" name="terzoModelloPagamento" value="NO"/>
+                        <input type="hidden" id="contoPoste" name="contoPoste" value="NO"/>
+                        <input type="hidden" id="pagamentiModello2" name="pagamentiModello2" value="NO"/>
+                        <input type="hidden" id="versioneInterfacciaWISP" name="versioneInterfacciaWISP" value="1.3"/>
+                        <!--nuovi parametri!-->
+                        <input type="hidden" id="ibanAccredito" name="ibanAccredito" th:value="${pagamento.rata.contoCorrente}"/>
+                        <input type="hidden" id="importoTransazione" name="importoTransazione" th:value="${pagamento.importo}"/>
 
+                        <input type="hidden" id="codiceLingua" name="codiceLingua" value="IT"/>
 
                         <div class="form-group col-lg-8 text-center">
                             <button class="btn btn-warning">
-                                <i class="glyphicon glyphicon-eur" aria-hidden="true"></i> Scegli il WISP
+                                <i class="glyphicon glyphicon-eur" aria-hidden="true"
+                                   onclick="$('#pleaseWaitDialog').modal('show');"></i> Procedi
                             </button>
                         </div>
 
                     </form>
                     <form th:action="@{|${T(app.App).PAGAMENTO_SPONTANEO_ELIMINA}|}" th:object="${pagamento}"
-                          method="post" class="form-horizontal form-horizontal-tributo" >
+                          method="post" class="form-horizontal form-horizontal-tributo">
 
-                       <div class="form-group col-lg-2 col-md-6 col-sm-6 text-center">
+                        <div class="form-group col-lg-2 col-md-6 col-sm-6 text-center">
                             <button class="btn btn-warning">
-                                <i class="glyphicon glyphicon-eur" aria-hidden="true"></i> Annulla
+                                <i class="glyphicon glyphicon-remove" aria-hidden="true"></i> Annulla
                             </button>
                         </div>
 
@@ -181,129 +161,6 @@
                 </div>
             </div>
         </div>
-
-
-        <!--
-        <div class="container">
-
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">
-                            <i class="glyphicon glyphicon-eur" aria-hidden="true"></i>&nbsp;&nbsp;PAGAMENTO ONLINE
-                        </div>
-                        <div class="panel-body">
-
-                            <div class="alert alert-success" th:unless="${#strings.isEmpty(message)}">
-                                <span th:text="${message}"></span>
-                            </div>
-                            <div class="alert alert-danger" th:unless="${#strings.isEmpty(error)}">
-                                <span th:text="${error}"></span>
-                            </div>-->
-
-        <!-- th:action="@{|${T(app.App).PAGAMENTO_INVIA_RPT}|} -->
-        <!-- <form action="#"
-               class="form-horizontal form-horizontal-tributo"
-               th:object="${pagamento}" method="post">
-
-             <fieldset>
-                 <div class="form-group">
-                     <label class="control-label">Ente selezionato:</label>
-                     <div class="form-control" th:text="*{ente.name}"/>
-                 </div>
-
-                 <div class="form-group">
-                     <label class="control-label">Tributo selezionato:</label>
-                     <div class="form-control" th:text="*{tributo.nome}"/>
-                 </div>
-
-                 <div class="form-group">
-                     <label class="control-label">Rata selezionata:</label>
-                     <div class="form-control" th:text="*{rata.nome}"/>
-                 </div>
-
-                 <div class="form-group">
-                     <label class="control-label">Importo:</label>
-                     <div class="input-group">
-                         <div class="input-group-addon">&euro;</div>
-                         <div class="form-control" id="importo"
-                              th:text="${#numbers.formatDecimal(pagamento.importo, 1,'POINT',2,'COMMA')}"/>
-                     </div>
-                 </div>
-
-                 <div class="form-group">
-                     <label class="control-label">Causale:</label>
-                 <textarea class="form-control" rows="3" th:field="*{causale}"
-                           disabled="disabled"></textarea>
-                 </div>-->
-
-        <!--div class="form-group" th:if="${pagamento.statoPagamento == 'DA_PAGARE'}">
-            <button class="btn btn-warning">
-                <i class="glyphicon glyphicon-eur" aria-hidden="true"></i> Paga adesso
-            </button>
-        </div-->
-        <!--     </fieldset>
-         </form>
-     </div>
-    </div>
-    </div>
-    <div class="col-md-6">
-    <div class="panel panel-default">
-     <div class="panel-heading">Stato del pagamento</div>
-     <div class="panel-body">
-
-         <form action="http://serviziclienti.link.it/govpay-ndp-sym/wisp.jsp"
-               class="form-horizontal form-horizontal-tributo"
-               th:object="${pagamento}" method="post">
-
-
-             <input type="hidden" id="idDominio" name="idDominio" value="00975860768"/>
-             <input type="hidden" id="keyPA" name="keyPA" th:value="*{pid}"/>
-             <input type="hidden" id="urlBack" name="urlBack" th:value="${urlBack}"/>
-             <input type="hidden" id="urlReturn" name="urlReturn" th:value="${urlReturn}"/>
-
-             <input type="hidden" id="enteCreditore" name="enteCreditore" th:value="*{ente.name}"/>
-             <input type="hidden" id="primitiva" name="primitiva" value="nodoInviaRPT"/>
-             <input type="hidden" id="numPagamentiRPT" name="numPagamentiRPT" value="1"/>
-             <input type="hidden" id="stornoPagamento" name="stornoPagamento" value="SI"/>
-             <input type="hidden" id="bolloDigitale" name="bolloDigitale" value="NO"/>
-             <input type="hidden" id="terzoModelloPagamento" name="terzoModelloPagamento" value="NO"/>
-
-
-             <div th:text="*{statoPagamento}"/>
-
-             <div class="form-group">
-                 <button class="btn btn-warning">
-                     <i class="glyphicon glyphicon-eur" aria-hidden="true"></i> Scegli il WISP
-                 </button>
-             </div>
-
-         </form>
-     </div>
-
-    </div>
-
-    <div class="panel panel-default">
-     <div class="panel-heading">Anagrafica del debitore</div>
-     <div class="panel-body">
-         <div class="col-md-2">
-             <i class="glyphicon glyphicon-user" aria-hidden="true"></i>
-         </div>
-         <div class="col-md-10">
-             <p><span th:text="${pagamento.esecutore.firstname}"></span> <span
-                     th:text="${pagamento.esecutore.lastname}"></span></p>
-             <p><span th:text="${pagamento.esecutore.fiscalcode}"></span></p>
-             <p><span th:text="${pagamento.esecutore.email}"></span></p>
-         </div>
-     </div>
-
-    </div>
-
-    </div>
-    </div>
-
-    </div>
-    </div>-->
     </div>
 </div>
 <footer th:substituteby="page/fragments/footerTag :: footerTag"/>

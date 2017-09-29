@@ -1,24 +1,25 @@
 package it.publisys.pagamentionline.domain.user;
 
 import it.publisys.pagamentionline.domain.AbstractEntity;
+
 import java.util.Collection;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Transient;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- *
  * @author mcolucci
  */
 @Entity(name = "users")
 public class User
-    extends AbstractEntity
-    implements UserDetails {
+        extends AbstractEntity
+        implements UserDetails {
 
     @Column(unique = true, length = 50)
     @NotEmpty(message = "Campo obbligatorio")
@@ -31,6 +32,15 @@ public class User
     private String fiscalcode;
     private String firstname;
     private String lastname;
+    private String cellulare;
+    private String telefono;
+    private String fax;
+    private String indirizzo;
+    private String civico;
+    private String cap;
+    private String localita;
+    private String provincia;
+    private String nazione;
     private boolean enabled;
     //
     private String keyRequest;
@@ -141,4 +151,75 @@ public class User
         return ToStringBuilder.reflectionToString(this);
     }
 
+    public String getCellulare() {
+        return cellulare;
+    }
+
+    public void setCellulare(String cellulare) {
+        this.cellulare = cellulare;
+    }
+
+    public String getTelefono() {
+        return telefono;
+    }
+
+    public void setTelefono(String telefono) {
+        this.telefono = telefono;
+    }
+
+    public String getFax() {
+        return fax;
+    }
+
+    public void setFax(String fax) {
+        this.fax = fax;
+    }
+
+    public String getIndirizzo() {
+        return indirizzo;
+    }
+
+    public void setIndirizzo(String indirizzo) {
+        this.indirizzo = indirizzo;
+    }
+
+    public String getCivico() {
+        return civico;
+    }
+
+    public void setCivico(String civico) {
+        this.civico = civico;
+    }
+
+    public String getCap() {
+        return cap;
+    }
+
+    public void setCap(String cap) {
+        this.cap = cap;
+    }
+
+    public String getLocalita() {
+        return localita;
+    }
+
+    public void setLocalita(String localita) {
+        this.localita = localita;
+    }
+
+    public String getProvincia() {
+        return provincia;
+    }
+
+    public void setProvincia(String provincia) {
+        this.provincia = provincia;
+    }
+
+    public String getNazione() {
+        return nazione;
+    }
+
+    public void setNazione(String nazione) {
+        this.nazione = nazione;
+    }
 }

@@ -1,107 +1,123 @@
 package it.publisys.pagamentionline.service;
 
-import it.govpay.servizi.PagamentiTelematiciGPApp;
-import it.govpay.servizi.PagamentiTelematiciGPAppService;
-import it.govpay.servizi.PagamentiTelematiciGPPrt;
-import it.govpay.servizi.PagamentiTelematiciGPPrtService;
 import it.govpay.servizi.commons.*;
-import it.govpay.servizi.gpapp.*;
-import it.govpay.servizi.gpprt.*;
-import it.govpay.servizi.gpprt.GpChiediStatoVersamento;
-import it.govpay.servizi.pa.*;
+import it.govpay.servizi.v2_3.*;
+import it.govpay.servizi.v2_3.gpapp.GpAnnullaVersamento;
+import it.govpay.servizi.gpapp.GpChiediFlussoRendicontazione;
+import it.govpay.servizi.v2_3.gpapp.GpChiediListaFlussiRendicontazione;
+import it.govpay.servizi.v2_3.gpapp.GpChiediStatoVersamento;
+import it.govpay.servizi.v2_3.gpprt.GpAvviaTransazionePagamento;
+import it.govpay.servizi.v2_3.gpprt.GpChiediListaVersamenti;
+import it.govpay.servizi.v2_3.gpprt.GpChiediSceltaWisp;
+import it.govpay.servizi.v2_3.gpprt.GpChiediStatoTransazione;
+import it.govpay.servizi.v2_3.gprnd.*;
 import it.publisys.pagamentionline.ModelMappings;
 import it.publisys.pagamentionline.PagamentiOnlineKey;
-import it.publisys.pagamentionline.domain.impl.Ente;
 import it.publisys.pagamentionline.domain.impl.Pagamento;
 import it.publisys.pagamentionline.domain.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
 
 import javax.xml.ws.BindingProvider;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
-import java.util.Date;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 /**
- * @author Francesco A. Tabino
+ * @author Francesco A. Tabino, acoviello
  */
 @Service
 public class GovPayService {
 
 
-
     @Autowired
     private PagamentoService pagamentoService;
 
-    public PagamentiTelematiciGPPrt getPagamentiTelematiciGPPrt(Pagamento pagamento) {
-        return getPagamentiTelematiciGPPrt(pagamento.getEnte());
-    }
+    @Autowired
+    private ProviderService providerService;
 
-    public PagamentiTelematiciGPPrt getPagamentiTelematiciGPPrt(Ente ente) {
-        Properties prop = pagamentoService.loadProperties(ente);
+    public PagamentiTelematiciGPPrt getPagamentiTelematiciGPPrt() {
+        Properties prop = providerService.loadPropertiesGovPay();
 
         Authenticator.setDefault(new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(
-                        prop.getProperty("username"),
-                        prop.getProperty("password").toCharArray());
+                        prop.getProperty(PagamentiOnlineKey.USERNAME),
+                        prop.getProperty(PagamentiOnlineKey.PASSWORD).toCharArray());
             }
         });
 
         PagamentiTelematiciGPPrt port = new PagamentiTelematiciGPPrtService().getGPPrtPort();
-        ((BindingProvider) port).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, prop.getProperty("username"));
-        ((BindingProvider) port).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, prop.getProperty("password"));
-        ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, prop.getProperty("url"));
+        ((BindingProvider) port).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, prop.getProperty(PagamentiOnlineKey.USERNAME));
+        ((BindingProvider) port).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, prop.getProperty(PagamentiOnlineKey.PASSWORD));
+        ((BindingProvider) port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, prop.getProperty(PagamentiOnlineKey.URL));
         return port;
     }
 
 
-    public PagamentiTelematiciGPApp getPagamentiTelematiciGPApp(Ente ente) {
-        Properties prop = pagamentoService.loadProperties(ente);
+    public PagamentiTelematiciGPApp getPagamentiTelematiciGPApp() {
+        Properties prop = providerService.loadPropertiesGovPay();
 
         Authenticator.setDefault(new Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
                 return new PasswordAuthentication(
-                        prop.getProperty("usernameApp"),
-                        prop.getProperty("passwordApp").toCharArray());
+                        prop.getProperty(PagamentiOnlineKey.USERNAME_APP),
+                        prop.getProperty(PagamentiOnlineKey.PASSWORD_APP).toCharArray());
             }
         });
         PagamentiTelematiciGPApp portApp = new PagamentiTelematiciGPAppService().getGPAppPort();
-        ((BindingProvider) portApp).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, prop.getProperty("usernameApp"));
-        ((BindingProvider) portApp).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, prop.getProperty("passwordApp"));
-        ((BindingProvider) portApp).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, prop.getProperty("urlApp"));
+        ((BindingProvider) portApp).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, prop.getProperty(PagamentiOnlineKey.USERNAME_APP));
+        ((BindingProvider) portApp).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, prop.getProperty(PagamentiOnlineKey.PASSWORD_APP));
+        ((BindingProvider) portApp).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, prop.getProperty(PagamentiOnlineKey.URL_APP));
         return portApp;
+    }
+
+    public PagamentiTelematiciGPRnd getPagamentiTelematiciGPRnd() {
+        Properties prop = providerService.loadPropertiesGovPay();
+
+        Authenticator.setDefault(new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(
+                        prop.getProperty(PagamentiOnlineKey.USERNAME_GPRND),
+                        prop.getProperty(PagamentiOnlineKey.PASSWORD_GPRND).toCharArray());
+            }
+        });
+        PagamentiTelematiciGPRnd portGPRnd = new PagamentiTelematiciGPRndService().getGPRndPort();
+        ((BindingProvider) portGPRnd).getRequestContext().put(BindingProvider.USERNAME_PROPERTY, prop.getProperty(PagamentiOnlineKey.USERNAME_GPRND));
+        ((BindingProvider) portGPRnd).getRequestContext().put(BindingProvider.PASSWORD_PROPERTY, prop.getProperty(PagamentiOnlineKey.PASSWORD_GPRND));
+        ((BindingProvider) portGPRnd).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, prop.getProperty(PagamentiOnlineKey.URL_GPRND));
+        return portGPRnd;
     }
 
     private Anagrafica getAnagrafica(User user) {
         Anagrafica debitore = new Anagrafica();
-        debitore.setCellulare("333333333333");
-        debitore.setCap("85050");
-        debitore.setCivico("69");
+        debitore.setRagioneSociale(user.getFirstname() + " " +  user.getLastname());
         debitore.setCodUnivoco(user.getFiscalcode());
         debitore.setEmail(user.getEmail());
-        debitore.setFax("800800800");
-        debitore.setIndirizzo("Contrada Santa Loja");
-        debitore.setLocalita("Tito Scalo");
-        debitore.setNazione("IT");
-        debitore.setProvincia("PZ");
-        debitore.setRagioneSociale(user.getFirstname() + user.getLastname());
-        debitore.setTelefono("900900900");
+        debitore.setCellulare(user.getCellulare());
+        debitore.setTelefono(user.getTelefono());
+        debitore.setFax(user.getFax());
+        debitore.setIndirizzo(user.getIndirizzo());
+        debitore.setCivico(user.getCivico());
+        debitore.setLocalita(user.getLocalita());
+        debitore.setCap(user.getCap());
+        debitore.setProvincia(user.getProvincia());
+        debitore.setNazione(user.getNazione());
         return debitore;
-
     }
 
     public GpChiediSceltaWisp gpSceltaWISP(Pagamento pagamento) {
-        Properties prop = pagamentoService.loadProperties(pagamento);
         GpChiediSceltaWisp gpChiediSceltaWisp = new GpChiediSceltaWisp();
-        gpChiediSceltaWisp.setCodDominio(prop.getProperty(PagamentiOnlineKey.COD_DOMINIO));
-        gpChiediSceltaWisp.setCodPortale(prop.getProperty(PagamentiOnlineKey.COD_PORTALE));
+        gpChiediSceltaWisp.setCodDominio(pagamento.getEnte().getCodDominio());
+        gpChiediSceltaWisp.setCodPortale(providerService.loadPropertiesGovPay().getProperty(PagamentiOnlineKey.COD_PORTALE));
         gpChiediSceltaWisp.setCodKeyPA(pagamento.getPid());
         gpChiediSceltaWisp.setCodKeyWISP(pagamento.getKeyWisp());
 
@@ -109,20 +125,20 @@ public class GovPayService {
     }
 
 
-    public GpAvviaTransazionePagamento gpGeneraRpt(Pagamento pagamento, User user, Canale canale) {
+    public GpAvviaTransazionePagamento gpGeneraRpt(Pagamento pagamento, User user) {
         Properties prop = pagamentoService.loadProperties(pagamento);
         GpAvviaTransazionePagamento gpAvviaTransazionePagamento = new GpAvviaTransazionePagamento();
         gpAvviaTransazionePagamento.setAutenticazione(TipoAutenticazione.N_A);
 
-        //canale.setTipoVersamento(TipoVersamento.CP);
-        //gpAvviaTransazionePagamento.setCanale(canale);
-        gpAvviaTransazionePagamento.setCodPortale(prop.getProperty(PagamentiOnlineKey.COD_PORTALE));
+        //todo:codPortale da provider govPay
+        gpAvviaTransazionePagamento.setCodPortale(providerService.loadPropertiesGovPay().getProperty(PagamentiOnlineKey.COD_PORTALE));
+        gpAvviaTransazionePagamento.setAggiornaSeEsiste(true);
         gpAvviaTransazionePagamento.setIbanAddebito(null);
-        gpAvviaTransazionePagamento.setUrlRitorno(prop.getProperty(ModelMappings.URLBACK) + "?pid=" + pagamento.getPid());
+        gpAvviaTransazionePagamento.setUrlRitorno(prop.getProperty(ModelMappings.URL_BACK)); //+ "?pid=" + pagamento.getPid());
         gpAvviaTransazionePagamento.setVersante(null);
 
         GpAvviaTransazionePagamento.SceltaWisp sw = new GpAvviaTransazionePagamento.SceltaWisp();
-        sw.setCodDominio(prop.getProperty(PagamentiOnlineKey.COD_DOMINIO));
+        sw.setCodDominio(pagamento.getEnte().getCodDominio());
         sw.setCodKeyWISP(pagamento.getKeyWisp());
         sw.setCodKeyPA(pagamento.getPid());
         gpAvviaTransazionePagamento.setSceltaWisp(sw);
@@ -131,16 +147,16 @@ public class GovPayService {
         Versamento versamento = new Versamento();
         versamento.setAggiornabile(false);
         versamento.setCausale(pagamento.getCausale());
-        versamento.setCodApplicazione(prop.getProperty(PagamentiOnlineKey.COD_APPLICAZIONE));
-        versamento.setCodDominio(prop.getProperty(PagamentiOnlineKey.COD_DOMINIO));
+        versamento.setCodApplicazione(pagamento.getTributo().getApplicazione().getCodice());
+        versamento.setCodDominio(pagamento.getEnte().getCodDominio());
         BigDecimal importo = new BigDecimal(pagamento.getImporto(), MathContext.DECIMAL64);
         versamento.setImportoTotale(importo);
         versamento.setDataScadenza(pagamento.getRata().getDataA());
-        versamento.setCodVersamentoEnte(pagamento.getPid());
+        versamento.setCodVersamentoEnte(pagamento.getCodVersamentoEnte());
         versamento.setDebitore(getAnagrafica(user));
 
         Versamento.SingoloVersamento singoloVersamento = new Versamento.SingoloVersamento();
-        singoloVersamento.setCodSingoloVersamentoEnte(pagamento.getPid() + "_1");
+        singoloVersamento.setCodSingoloVersamentoEnte(pagamento.getCodVersamentoEnte() + "_1");
         singoloVersamento.setCodTributo(pagamento.getTributo().getCodice());
         singoloVersamento.setImporto(importo);
         versamento.getSingoloVersamento().add(singoloVersamento);
@@ -152,44 +168,53 @@ public class GovPayService {
 
 
     public GpChiediStatoTransazione chiediStato(Pagamento pagamento) {
-
-        Properties prop = pagamentoService.loadProperties(pagamento);
-        System.out.println( "get ccp" +  pagamento.getCcp());
         GpChiediStatoTransazione gpChiediStatoTransazione = new GpChiediStatoTransazione();
         gpChiediStatoTransazione.setCcp(pagamento.getCcp());
-        gpChiediStatoTransazione.setCodDominio(prop.getProperty(PagamentiOnlineKey.COD_DOMINIO));
-        gpChiediStatoTransazione.setCodPortale(prop.getProperty(PagamentiOnlineKey.COD_PORTALE));
-        gpChiediStatoTransazione.setIuv(pagamento.getRefnumber());
-
-
+        gpChiediStatoTransazione.setCodDominio(pagamento.getEnte().getCodDominio());
+        gpChiediStatoTransazione.setCodPortale(pagamento.getTributo().getApplicazione().getCodice());
+        gpChiediStatoTransazione.setIuv(pagamento.getIuv());
         return gpChiediStatoTransazione;
     }
 
+    public GpAnnullaVersamento gpAnnullaVersamento(String codApplicazione, String codVersamentoEnte) {
 
-    public GpChiediListaVersamenti gpCercaVersamentiRequest(User user, Ente ente) {
-
-        Properties prop = pagamentoService.loadProperties(ente);
-
-        GpChiediListaVersamenti gpChiediListaVersamenti = new GpChiediListaVersamenti();
-        gpChiediListaVersamenti.setCodUnivocoDebitore(user.getFiscalcode());
-        gpChiediListaVersamenti.setCodPortale(prop.getProperty(PagamentiOnlineKey.COD_PORTALE));
-        gpChiediListaVersamenti.getStato().add(StatoVersamento.NON_ESEGUITO);
-        gpChiediListaVersamenti.setOrdinamento("DATA_SCADENZA_DES");
-
-        return gpChiediListaVersamenti;
-
+        GpAnnullaVersamento gpAnnullaVersamento = new GpAnnullaVersamento();
+        gpAnnullaVersamento.setCodApplicazione(codApplicazione);
+        gpAnnullaVersamento.setCodVersamentoEnte(codVersamentoEnte);
+        return gpAnnullaVersamento;
     }
 
-    public it.govpay.servizi.gpapp.GpChiediStatoVersamento gpChiediStatoVersamento(String codVersamentoEnte, String codApplicazione) {
 
-        it.govpay.servizi.gpapp.GpChiediStatoVersamento gpChiediStatoVersamento = new it.govpay.servizi.gpapp.GpChiediStatoVersamento();
-         gpChiediStatoVersamento.setCodApplicazione(codApplicazione);
+    public GpChiediListaVersamenti gpCercaVersamentiRequest(User user, StatoVersamento... statoVersamento) {
+        GpChiediListaVersamenti gpChiediListaVersamenti = new GpChiediListaVersamenti();
+        gpChiediListaVersamenti.setCodUnivocoDebitore(user.getFiscalcode());
+        gpChiediListaVersamenti.setCodPortale(providerService.loadPropertiesGovPay().getProperty(PagamentiOnlineKey.COD_PORTALE));
+        List<StatoVersamento> statiVersamenti = Arrays.stream(statoVersamento).collect(Collectors.toList());
+        gpChiediListaVersamenti.getStato().addAll(statiVersamenti);
+        gpChiediListaVersamenti.setOrdinamento("DATA_SCADENZA_DES");
+        return gpChiediListaVersamenti;
+    }
+
+    public GpChiediStatoVersamento gpChiediStatoVersamento(String codApplicazione, String codVersamentoEnte) {
+        GpChiediStatoVersamento gpChiediStatoVersamento = new GpChiediStatoVersamento();
+        gpChiediStatoVersamento.setCodApplicazione(codApplicazione);
         gpChiediStatoVersamento.setCodVersamentoEnte(codVersamentoEnte);
-
         return gpChiediStatoVersamento;
     }
 
+    public it.govpay.servizi.v2_3.gprnd.GpChiediListaFlussiRendicontazione gpChiediListaFlussiRendicontazione(String codApplicazione, String codDominio) {
+        it.govpay.servizi.v2_3.gprnd.GpChiediListaFlussiRendicontazione gpChiediListaFlussiRendicontazione = new it.govpay.servizi.v2_3.gprnd.GpChiediListaFlussiRendicontazione();
+        gpChiediListaFlussiRendicontazione.setCodApplicazione(codApplicazione);
+        gpChiediListaFlussiRendicontazione.setCodDominio(codDominio);
+        return gpChiediListaFlussiRendicontazione;
+    }
 
+    public it.govpay.servizi.v2_3.gprnd.GpChiediFlussoRendicontazione gpChiediFlussoRendicontazione(String codApplicazione, String codFlusso) {
+        it.govpay.servizi.v2_3.gprnd.GpChiediFlussoRendicontazione gpChiediFlussoRendicontazione = new it.govpay.servizi.v2_3.gprnd.GpChiediFlussoRendicontazione();
+        gpChiediFlussoRendicontazione.setCodApplicazione(codApplicazione);
+        gpChiediFlussoRendicontazione.setCodFlusso(codFlusso);
+        return gpChiediFlussoRendicontazione;
+    }
 
 
 }

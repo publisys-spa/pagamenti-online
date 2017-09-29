@@ -95,7 +95,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label for="tributo.id" class="control-label">Seleziona la tipologia di tributo:</label>
+                                <label for="tributo.id" class="control-label">Seleziona la tipologia di pagamento:</label>
                                 <select th:field="*{tributo.id}" class="form-control">
                                     <option th:each="tributo : ${tributi}"
                                             th:value="${tributo.id}" th:text="${tributo.nome}"></option>
@@ -137,7 +137,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label">Tributo selezionato:</label>
+                                <label class="control-label">Pagamento selezionato:</label>
                                 <input type="text" class="form-control" disabled="disabled"
                                        th:value="${pagamento.tributo.nome}"/>
                             </div>
@@ -189,7 +189,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label">Tributo selezionato:</label>
+                                <label class="control-label">Pagamento selezionato:</label>
                                 <input type="text" class="form-control" disabled="disabled"
                                        th:value="${pagamento.tributo.nome}"/>
                             </div>
@@ -285,7 +285,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label">Tributo selezionato:</label>
+                                <label class="control-label">Pagamento selezionato:</label>
                                 <input type="text" class="form-control" disabled="disabled"
                                        th:value="${pagamento.tributo.nome}"/>
                             </div>
@@ -386,7 +386,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label">Tributo selezionato:</label>
+                                <label class="control-label">Pagamento selezionato:</label>
                                 <input type="text" class="form-control" disabled="disabled"
                                        th:value="${pagamento.tributo.nome}"/>
                             </div>
@@ -484,7 +484,7 @@
                             </div>
 
                             <div class="form-group">
-                                <label class="control-label">Tributo selezionato:</label>
+                                <label class="control-label">Pagamento selezionato:</label>
                                 <input type="text" class="form-control" disabled="disabled"
                                        th:value="${pagamento.tributo.nome}"/>
                             </div>
@@ -567,10 +567,10 @@
         </div>
         <div class="col-md-6">
             <div class="panel panel-default">
-                <div class="panel-heading">Descrizione del tributo</div>
+                <div class="panel-heading">Descrizione del pagamento</div>
                 <div class="panel-body">
                     <p th:if="${pagamento.tributo == null or pagamento.tributo.id == null}">
-                        Seleziona un tributo per visionarne la descrizione.
+                        Seleziona un pagamento per visionarne la descrizione.
                     </p>
                     <p th:if="${pagamento.tributo != null}" th:utext="${pagamento.tributo.descrizione}">
 

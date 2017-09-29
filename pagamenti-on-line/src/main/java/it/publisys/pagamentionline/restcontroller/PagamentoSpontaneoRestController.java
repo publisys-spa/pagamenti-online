@@ -1,16 +1,17 @@
 package it.publisys.pagamentionline.restcontroller;
 
+import it.publisys.pagamentionline.ModelMappings;
+import it.publisys.pagamentionline.PagamentiOnlineKey;
 import it.publisys.pagamentionline.RequestMappings;
 import it.publisys.pagamentionline.controller.BaseController;
 import it.publisys.pagamentionline.domain.impl.Ente;
+import it.publisys.pagamentionline.domain.impl.TipologiaTributo;
 import it.publisys.pagamentionline.domain.impl.Tributo;
 import it.publisys.pagamentionline.dto.GenericDTO;
 import it.publisys.pagamentionline.dto.RataDTO;
 import it.publisys.pagamentionline.dto.TributoResultDTO;
-import it.publisys.pagamentionline.service.EnteService;
-import it.publisys.pagamentionline.service.PagamentoService;
-import it.publisys.pagamentionline.service.RataService;
-import it.publisys.pagamentionline.service.TributoService;
+import it.publisys.pagamentionline.service.*;
+import it.publisys.pagamentionline.transformer.EnteTransformer;
 import it.publisys.pagamentionline.transformer.RataTransformer;
 import it.publisys.pagamentionline.transformer.TributoTransformer;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,20 +50,54 @@ public class PagamentoSpontaneoRestController extends BaseController {
     private TributoTransformer tributoTransformer;
 
     @Autowired
+    private EnteTransformer enteTransformer;
+
+    @Autowired
     private RataTransformer rataTransformer;
 
     @Autowired
-    private PagamentoService pagamentoService;
+    private TipologiaTributoService tipologiaTributoService;
 
-    @RequestMapping(value = RequestMappings.PAGAMENTO_SPONTANEO + "/{ente}",
+
+    @Autowired
+    private ProviderService providerService;
+
+    @RequestMapping(value = RequestMappings.PAGAMENTO_SPONTANEO + "/{tipologia}",
             method = RequestMethod.GET)
-    public ResponseEntity<List<GenericDTO>> listTributi(Model model, @PathVariable Long ente) {
+    public ResponseEntity<List<GenericDTO>> listTributi(Model model, @PathVariable Long tipologia) {
 
+        List<GenericDTO> _list = new ArrayList<>();
+
+
+        TipologiaTributo tipologiaTributo = tipologiaTributoService.getTipologia(tipologia);
+        if (null != tipologiaTributo) {
+            enteService.findAll()
+                    .stream()
+                    .forEach(t -> {
+                        GenericDTO dto = enteTransformer.transform(t);
+                        _list.add(dto);
+                    });
+
+        }
+        return new ResponseEntity<>(_list, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = RequestMappings.PAGAMENTO_SPONTANEO + "/{ente}/{tipologia}",
+            method = RequestMethod.GET)
+    public ResponseEntity<List<GenericDTO>> listTributi(Model model, @PathVariable Long ente, @PathVariable Long tipologia,HttpServletRequest request) {
+
+        String codApplicazione = (String) request.getAttribute(ModelMappings.COD_APPLICAZIONE);
+        if(null == codApplicazione || codApplicazione.isEmpty()){
+            codApplicazione=  providerService.loadPropertiesGovPay().getProperty(PagamentiOnlineKey.COD_APPLICAZIONE);
+        }
         List<GenericDTO> _list = new ArrayList<>();
         if (enteService.exists(ente)) {
             Ente entity = enteService.getOne(ente);
-            tributoService.findAllByEnte(entity)
+            TipologiaTributo tipologiaTributo = tipologiaTributoService.getTipologia(tipologia);
+            String finalCodApplicazione = codApplicazione;
+            tributoService.findAllByEnteTipologia(entity, tipologiaTributo)
                     .stream()
+                    .filter(tributo -> tributo.getApplicazione().getCodice().equals(finalCodApplicazione) )
                     .forEach(t -> {
                         GenericDTO dto = tributoTransformer.transform(t);
                         _list.add(dto);
@@ -71,7 +107,9 @@ public class PagamentoSpontaneoRestController extends BaseController {
         return new ResponseEntity<>(_list, HttpStatus.OK);
     }
 
-    @RequestMapping(value = RequestMappings.PAGAMENTO_SPONTANEO + "/{ente}/{tributo}",
+
+
+    @RequestMapping(value = RequestMappings.PAGAMENTO_SPONTANEO + "/{ente}/{tipologia}/{tributo}",
             method = RequestMethod.GET)
     public ResponseEntity<TributoResultDTO> listRata(@PathVariable Long ente, @PathVariable Long tributo) {
 
@@ -86,7 +124,7 @@ public class PagamentoSpontaneoRestController extends BaseController {
         return new ResponseEntity<>(_result, HttpStatus.OK);
     }
 
-    @RequestMapping(value = RequestMappings.PAGAMENTO_SPONTANEO + "/{ente}/{tributo}/{rata}",
+    @RequestMapping(value = RequestMappings.PAGAMENTO_SPONTANEO + "/{ente}/{tipologia}/{tributo}/{rata}",
             method = RequestMethod.GET)
     public ResponseEntity<RataDTO> rataDetail(@PathVariable Long ente, @PathVariable Long tributo, @PathVariable Long rata) {
         RataDTO dto = new RataDTO();
@@ -112,7 +150,7 @@ public class PagamentoSpontaneoRestController extends BaseController {
         pagamento.setStatoPagamento("IN ATTESA DI VERIFICA");
         pagamento = pagamentoService.save(pagamento, _user.getUsername());
 
-        Properties prop = pagamentoService.loadProperties(pagamento.getEnte());
+        Properties prop = pagamentoService.loadPropertiesGovPay(pagamento.getEnte());
 
         dto.setIdDominio(prop.getProperty("dominio"));
         dto.setEnteCreditore(pagamento.getEnte().getName());

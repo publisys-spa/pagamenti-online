@@ -32,29 +32,36 @@
 
                 <div class="row" style="margin: 5px 0 0;">
                     <div>
-                        <h5>PAGAMENTO EFFETTUATO PER: <b th:text="${pagamento.tributo.nome}">TRIBUTO</b></h5>
-                        <h5>RATA: <b th:text="${pagamento.rata.nome}">RATA</b></h5>
+                        <h5>PAGAMENTO EFFETTUATO PER: <b th:text="${pagamento.tributo.nome}"></b></h5>
+                        <h5>RATA: <b th:text="${pagamento.rata.nome}"></b></h5>
                     </div>
                 </div>
 
                 <div class="row" style="margin: 5px 0 0;">
                     <div style="border-top: 1px solid #ccc;">
-                        <h5>EFFETTUATO SUL C/C n. <b th:text="${pagamento.tributo.ente.provider.name}">NCC</b></h5>
-                        <h5>DI &euro; <b th:text="${#numbers.formatDecimal(pagamento.importo, 1,'POINT',2,'COMMA')}">IMPORTO</b>
+                        <h5>EFFETTUATO SUL C/C n. <b th:text="${pagamento.rata.contoCorrente}"></b></h5>
+                        <h5>DI &euro; <b th:text="${#numbers.formatDecimal(pagamento.importo, 1,'POINT',2,'COMMA')}"></b>
                         </h5>
-                        <h5>INTESTATO A: <b th:text="${pagamento.tributo.ente.name}">INTESTATO</b></h5>
+                        <h5>INTESTATO A: <b th:text="${pagamento.tributo.ente.name}"></b></h5>
+                        <h5>CODICE FISCALE : <b th:text="${pagamento.tributo.ente.fiscalCode}"></b></h5>
                     </div>
                 </div>
 
                 <div class="row" style="margin: 5px 0 0;">
                     <div style="border-top: 1px solid #ccc;">
                         <h5>ESEGUITO DA: <b><span th:if="${pagamento.esecutore.firstname != null}"
-                                                  th:text="${pagamento.esecutore.firstname}">NOME</span> <span
-                                th:text="${pagamento.esecutore.lastname}">COGNOME</span> (<span
-                                th:text="${pagamento.esecutore.lastname}">CF</span>)</b></h5>
-                        <h5>IN DATA: <b th:text="${#dates.format(pagamento.dataPagamento, 'dd/MM/yyyy HH:mm:ss')}">DATA</b></h5>
-                        <h5>N. OPERAZIONE: <b th:text="${pagamento.refnumber}"> NOPER</b></h5>
-                        <h5>CAUSALE: <b th:text="${pagamento.causale}">CAUSALE</b></h5>
+                                                  th:text="${pagamento.esecutore.firstname}"></span> <span
+                                th:text="${pagamento.esecutore.lastname}"></span> (<span
+                                th:text="${pagamento.esecutore.lastname}"></span>)</b></h5>
+                        <h5>IN DATA: <b th:text="${#dates.format(pagamento.dataPagamento, 'dd/MM/yyyy HH:mm:ss')}"></b></h5>
+                        <h5>IUV: <b th:text="${pagamento.iuv}"> </b></h5>
+                        <h5>CAUSALE: <b th:text="${pagamento.causale}"></b></h5>
+                    </div>
+                </div>
+                <div class="row" style="margin: 5px 0 0;">
+                    <div style="border-top: 1px solid #ccc;">
+                        <h5>IDENTIFICATIVO PSP <b th:text="${pagamento.codPsp}"></b></h5>
+                        <h5>IDENTIFICATIVO PSP DEL PAGAMENTO <b th:text="${pagamento.iur}"></b></h5>
                     </div>
                 </div>
             </div>

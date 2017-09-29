@@ -1,5 +1,6 @@
 package it.publisys.pagamentionline.service;
 
+import it.publisys.pagamentionline.domain.impl.Applicazione;
 import it.publisys.pagamentionline.domain.impl.Ente;
 import it.publisys.pagamentionline.domain.impl.TipologiaTributo;
 import it.publisys.pagamentionline.domain.impl.Tributo;
@@ -24,6 +25,8 @@ public class TributoService {
     private TributoRepository tributoRepository;
     @Autowired
     private TipologiaTributoService tipologiaTributoService;
+    @Autowired
+    private ApplicazioneService applicazioneService;
 
     @Autowired
     private EnteService enteService;
@@ -39,17 +42,30 @@ public class TributoService {
     public Tributo getTributiTipologia(TipologiaTributo tipologiaTributo) {
         return tributoRepository.findByTipologiaTributo(tipologiaTributo);
     }
-
+    public Tributo  getByEnteTipologiaTributoCodIntegrazione(Ente e, TipologiaTributo tipologiaTributo,String codIntegrazione ){
+        return tributoRepository.findByEnteAndTipologiaTributoAndCodIntegrazioneAndLogdDateIsNull(e, tipologiaTributo, codIntegrazione);
+    }
     public List<Tributo> getAllTributi() {
-        return tributoRepository.findByLogdDateIsNull();
+        return tributoRepository.findByLogdDateIsNullOrderByDescrizione();
     }
 
     public List<Tributo> findAllByEnte(Ente e) {
-        return tributoRepository.findByEnteAndLogdDateIsNull(e);
+        return tributoRepository.findByEnteAndLogdDateIsNullOrderByDescrizione(e);
+    }
+
+    public List<Tributo> findAllByEnteTipologia(Ente e, TipologiaTributo tipologiaTributo) {
+        return tributoRepository.findByEnteAndTipologiaTributoAndLogdDateIsNullOrderByDescrizione(e, tipologiaTributo);
+    }
+
+    public List<Tributo> findAllByApplicazione(Applicazione applicazione) {
+        return tributoRepository.findAllByApplicazione(applicazione);
+    }
+    public Tributo findByCodice(String codice) {
+        return tributoRepository.findByCodice(codice);
     }
 
     public Page<Tributo> getAllTributi(Pageable pageable) {
-        return tributoRepository.findByLogdDateIsNull(pageable);
+        return tributoRepository.findByLogdDateIsNullOrderByDescrizione(pageable);
     }
 
     public Tributo delete(Long id, String username) {
@@ -65,22 +81,27 @@ public class TributoService {
             Tributo tributoMod = this.getTributo(tributo.getId());
             tributoMod.setNome(tributo.getNome());
             tributoMod.setDescrizione(tributo.getDescrizione());
-            tributoMod.setResponsabile(tributo.getResponsabile());
-
+            tributoMod.setCodIntegrazione(tributo.getCodIntegrazione());
+            tributoMod.setAllegati(tributo.getAllegati());
             if (tributo.getTipologiaTributo() != null) {
                 tributoMod.setTipologiaTributo(getTipologiaTributoService().getTipologia(tributo.getTipologiaTributo().getId()));
             }
+            if (tributo.getApplicazione() != null) {
+                tributoMod.setApplicazione(applicazioneService.getApplicazione(tributo.getApplicazione().getId()));
+            }
+            tributoMod.setCodice(tributo.getCodice());
+            tributoMod.setAnno(tributo.getAnno());
             tributoMod.setEnte(ente);
-
             tributoMod.setLoguUser(username);
             tributoMod.setLoguDate(new Date());
             return tributoRepository.saveAndFlush(tributoMod);
         } else {
-
             if (tributo.getTipologiaTributo() != null) {
                 tributo.setTipologiaTributo(getTipologiaTributoService().getTipologia(tributo.getTipologiaTributo().getId()));
             }
-
+            if (tributo.getApplicazione() != null) {
+                tributo.setApplicazione(applicazioneService.getApplicazione(tributo.getApplicazione().getId()));
+            }
             tributo.setEnte(ente);
             tributo.setLogcUser(username);
             tributo.setLogcDate(new Date());
